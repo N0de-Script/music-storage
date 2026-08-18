@@ -375,9 +375,7 @@ audio {
 <div id="videoBackground">
 
 
-    <!--
-        3번 i told u v1 배경
-    -->
+    <!-- 3번 i told u v1 배경 -->
 
     <video
         id="backgroundVideo1"
@@ -385,18 +383,12 @@ audio {
         muted
         loop
         playsinline
-        preload="auto">
-
-        <source
-            src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20%282%29.mp4"
-            type="video/mp4">
-
+        preload="auto"
+        src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20%282%29.mp4">
     </video>
 
 
-    <!--
-        4번 너 배경
-    -->
+    <!-- 4번 너 배경 -->
 
     <video
         id="backgroundVideo2"
@@ -404,12 +396,8 @@ audio {
         muted
         loop
         playsinline
-        preload="auto">
-
-        <source
-            src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20%281%29.mp4"
-            type="video/mp4">
-
+        preload="auto"
+        src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20%281%29.mp4">
     </video>
 
 </div>
@@ -600,6 +588,10 @@ const songs = [
 
 function hideAllBackgrounds() {
 
+    backgroundVideo1.pause();
+    backgroundVideo2.pause();
+
+
     backgroundVideo1.classList.remove(
         "active"
     );
@@ -607,11 +599,6 @@ function hideAllBackgrounds() {
     backgroundVideo2.classList.remove(
         "active"
     );
-
-
-    backgroundVideo1.pause();
-
-    backgroundVideo2.pause();
 
 
     background.classList.remove(
@@ -622,7 +609,7 @@ function hideAllBackgrounds() {
 
 
 /* ==========================================
-   배경 선택
+   현재 배경 가져오기
 ========================================== */
 
 function getBackgroundVideo() {
@@ -655,7 +642,7 @@ function getBackgroundVideo() {
 
 
 /* ==========================================
-   배경 재생
+   배경 시작
 ========================================== */
 
 function startBackground() {
@@ -663,6 +650,10 @@ function startBackground() {
     const video =
         getBackgroundVideo();
 
+
+    /*
+     * 현재 곡에 배경이 없는 경우
+     */
 
     if (!video) {
 
@@ -674,7 +665,7 @@ function startBackground() {
 
 
     /*
-     * 다른 배경 정지
+     * 다른 배경 완전히 정리
      */
 
     if (
@@ -712,35 +703,60 @@ function startBackground() {
     );
 
 
+    /*
+     * 음악 위치와 영상 위치 맞추기
+     */
+
+    if (
+        video.readyState >= 1
+    ) {
+
+        try {
+
+            video.currentTime =
+                audio.currentTime;
+
+        } catch (error) {
+
+            console.error(
+                "영상 위치 변경 실패:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /*
+     * 영상 표시
+     */
+
     video.classList.add(
         "active"
     );
 
 
     /*
-     * 음악과 영상 위치 맞추기
-     */
-
-    try {
-
-        if (
-            video.readyState >= 1
-        ) {
-
-            video.currentTime =
-                audio.currentTime;
-
-        }
-
-    } catch (error) {}
-
-
-    /*
      * 영상 재생
      */
 
-    video
-        .play()
+    video.play()
+        .then(() => {
+
+            /*
+             * 영상이 정상적으로 재생되었을 때
+             */
+
+            video.classList.add(
+                "active"
+            );
+
+            background.classList.add(
+                "show"
+            );
+
+        })
         .catch(
             error => {
 
@@ -834,14 +850,14 @@ function loadSong(index) {
 
 
     /*
-     * 음악 정지
+     * 기존 음악 정지
      */
 
     audio.pause();
 
 
     /*
-     * 배경 정지
+     * 기존 배경 정지
      */
 
     hideAllBackgrounds();
@@ -858,7 +874,7 @@ function loadSong(index) {
 
 
     /*
-     * 정보 변경
+     * 제목 변경
      */
 
     songTitle.textContent =
@@ -877,14 +893,18 @@ function loadSong(index) {
 
 
     /*
-     * 바로 재생
+     * 음악 재생
      */
 
     audio.play()
         .then(() => {
 
+            /*
+             * 현재 곡에 배경이 있는 경우
+             */
+
             if (
-                song.background
+                song.background !== null
             ) {
 
                 startBackground();
@@ -907,7 +927,7 @@ function loadSong(index) {
 
 
 /* ==========================================
-   음악 재생
+   음악 재생 이벤트
 ========================================== */
 
 audio.addEventListener(
@@ -919,7 +939,7 @@ audio.addEventListener(
 
 
         if (
-            song.background
+            song.background !== null
         ) {
 
             startBackground();
@@ -946,9 +966,7 @@ audio.addEventListener(
             getBackgroundVideo();
 
 
-        if (
-            video
-        ) {
+        if (video) {
 
             video.pause();
 
@@ -970,9 +988,7 @@ audio.addEventListener(
             getBackgroundVideo();
 
 
-        if (
-            !video
-        ) {
+        if (!video) {
 
             return;
 
@@ -1024,9 +1040,7 @@ audio.addEventListener(
             getBackgroundVideo();
 
 
-        if (
-            !video
-        ) {
+        if (!video) {
 
             return;
 
@@ -1065,7 +1079,7 @@ audio.addEventListener(
 
 
 /* ==========================================
-   배경 영상 로딩 완료
+   배경 영상 1 로딩 완료
 ========================================== */
 
 backgroundVideo1.addEventListener(
@@ -1085,6 +1099,10 @@ backgroundVideo1.addEventListener(
 );
 
 
+/* ==========================================
+   배경 영상 2 로딩 완료
+========================================== */
+
 backgroundVideo2.addEventListener(
     "loadeddata",
     () => {
@@ -1103,7 +1121,7 @@ backgroundVideo2.addEventListener(
 
 
 /* ==========================================
-   배경 영상 오류
+   배경 영상 1 오류
 ========================================== */
 
 backgroundVideo1.addEventListener(
@@ -1111,7 +1129,7 @@ backgroundVideo1.addEventListener(
     () => {
 
         console.error(
-            "기존 배경 영상 로딩 실패:",
+            "3번 배경 영상 로딩 실패:",
             backgroundVideo1.error
         );
 
@@ -1119,12 +1137,16 @@ backgroundVideo1.addEventListener(
 );
 
 
+/* ==========================================
+   배경 영상 2 오류
+========================================== */
+
 backgroundVideo2.addEventListener(
     "error",
     () => {
 
         console.error(
-            "새 배경 영상 로딩 실패:",
+            "4번 배경 영상 로딩 실패:",
             backgroundVideo2.error
         );
 
