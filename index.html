@@ -6,6 +6,7 @@
 
 <title>N0DE SOUNDS</title>
 
+<!-- Pretendard Web Font -->
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 
 <style>
@@ -25,7 +26,7 @@ html, body {
 }
 
 body {
-    background: #060709;
+    background: #121212;
     color: #ffffff;
     min-height: 100vh;
     overflow: hidden;
@@ -46,10 +47,10 @@ body {
     height: 100vh;
     z-index: 0;
     overflow: hidden;
-    background: #060709;
+    background: #121212;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.8s ease, visibility 0.8s ease;
     pointer-events: none;
 }
 
@@ -67,10 +68,11 @@ body {
     height: 110%;
     object-fit: cover;
     display: block;
-    filter: blur(30px) brightness(0.35) saturate(1.3);
-    transform: scale(1.05);
+    /* 약간만 흐릿하게 설정 (8px) */
+    filter: blur(8px) brightness(0.4) saturate(1.1);
+    transform: scale(1.03);
     opacity: 0;
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.8s ease;
     pointer-events: none;
 }
 
@@ -92,12 +94,12 @@ body {
     height: 100vh;
     z-index: 1;
     pointer-events: none;
-    background: radial-gradient(circle at center, rgba(10, 12, 18, 0.1) 0%, rgba(6, 7, 9, 0.85) 100%);
+    background: radial-gradient(circle at center, rgba(18, 18, 18, 0.2) 0%, #121212 90%);
 }
 
 
 /* ==========================================
-   iOS Liquid Glass Player
+   Solid Modern Player (투명도/Glass 없음)
 ========================================== */
 
 .player {
@@ -105,90 +107,23 @@ body {
     z-index: 10;
     width: calc(100% - 32px);
     max-width: 380px;
-    padding: 30px 26px;
-    border-radius: 36px;
-    
-    /* Liquid Glass Effect */
-    background: rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(40px) saturate(210%);
-    -webkit-backdrop-filter: blur(40px) saturate(210%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 
-        0 30px 60px -12px rgba(0, 0, 0, 0.7),
-        inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.35),
-        inset 0 -1.5px 1.5px 0 rgba(0, 0, 0, 0.2);
-    
+    padding: 32px 26px;
+    border-radius: 24px;
+    background: #1e1e24; /* 불투명 솔리드 컬러 */
+    border: 1px solid #2d2d38;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* Header Tag */
 .brand-tag {
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.18em;
-    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.2em;
+    color: #6366f1;
     margin-bottom: 20px;
     text-transform: uppercase;
-}
-
-
-/* ==========================================
-   Album Vinyl Record UI
-========================================== */
-
-.album-container {
-    width: 170px;
-    height: 170px;
-    margin-bottom: 22px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.album-disc {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: radial-gradient(circle, #222 18%, #111 20%, #151515 40%, #050505 70%);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255,255,255,0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: spin 16s linear infinite;
-    animation-play-state: paused;
-}
-
-.player.playing .album-disc {
-    animation-play-state: running;
-}
-
-.disc-center {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #a855f7);
-    border: 3px solid #111;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
-}
-
-.disc-center::after {
-    content: '';
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #060709;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-@keyframes spin {
-    100% { transform: rotate(360deg); }
 }
 
 
@@ -199,41 +134,41 @@ body {
 .track-info {
     text-align: center;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .title {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     letter-spacing: -0.02em;
     color: #ffffff;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .artist {
-    font-size: 13.5px;
-    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    color: #94a3b8;
     font-weight: 500;
 }
 
 
 /* ==========================================
-   Custom Progress Bar
+   Progress Bar
 ========================================== */
 
 .progress-section {
     width: 100%;
-    margin-bottom: 22px;
+    margin-bottom: 24px;
 }
 
 .progress-bar-container {
     width: 100%;
     height: 6px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
+    background: #2a2a36;
+    border-radius: 8px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -242,67 +177,70 @@ body {
 .progress-fill {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #818cf8, #c084fc);
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+    background: #6366f1;
+    border-radius: 8px;
     transition: width 0.1s linear;
 }
 
 .time-display {
     display: flex;
     justify-content: space-between;
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    color: #64748b;
     margin-top: 8px;
     font-weight: 600;
 }
 
 
 /* ==========================================
-   Liquid Controls
+   Solid Controls
 ========================================== */
 
 .controls {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 24px;
-    margin-bottom: 26px;
+    gap: 20px;
+    margin-bottom: 28px;
     width: 100%;
 }
 
 .ctrl-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #282834;
+    border: 1px solid #383848;
     color: #ffffff;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(15px);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.ctrl-btn:hover {
+    background: #323242;
+    border-color: #4a4a5e;
 }
 
 .ctrl-btn:active {
-    transform: scale(0.9);
-    background: rgba(255, 255, 255, 0.25);
+    transform: scale(0.92);
 }
 
 .ctrl-btn.side-btn {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
 }
 
 .ctrl-btn.play-btn {
-    width: 62px;
-    height: 62px;
-    background: rgba(255, 255, 255, 0.22);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 
-        0 8px 20px rgba(0, 0, 0, 0.3),
-        inset 0 1px 1px rgba(255, 255, 255, 0.6);
+    width: 60px;
+    height: 60px;
+    background: #6366f1;
+    border: none;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+.ctrl-btn.play-btn:hover {
+    background: #4f46e5;
 }
 
 .ctrl-btn svg {
@@ -319,21 +257,21 @@ body {
 }
 
 .playlist-title {
-    font-size: 10.5px;
-    color: rgba(255, 255, 255, 0.4);
+    font-size: 11px;
+    color: #64748b;
     font-weight: 700;
-    letter-spacing: 0.12em;
-    margin-bottom: 10px;
-    padding-left: 4px;
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+    padding-left: 2px;
 }
 
 .playlist {
     list-style: none;
-    max-height: 160px;
+    max-height: 180px;
     overflow-y: auto;
-    border-radius: 18px;
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    background: #141418;
+    border: 1px solid #282832;
     padding: 6px;
 }
 
@@ -341,32 +279,34 @@ body {
     width: 4px;
 }
 .playlist::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
+    background: #2e2e3a;
+    border-radius: 8px;
 }
 
 .song {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 12px;
+    padding: 11px 14px;
     cursor: pointer;
-    border-radius: 12px;
-    margin-bottom: 2px;
+    border-radius: 10px;
+    margin-bottom: 3px;
+    background: transparent;
+    border: 1px solid transparent;
     transition: all 0.2s ease;
 }
 
 .song:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: #1f1f28;
 }
 
 .song.active {
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: #262636;
+    border: 1px solid #6366f1;
 }
 
 .song.active .number {
-    color: #c084fc;
+    color: #818cf8;
     font-weight: 700;
 }
 
@@ -378,7 +318,7 @@ body {
 .number {
     width: 18px;
     text-align: center;
-    color: rgba(255, 255, 255, 0.4);
+    color: #64748b;
     font-size: 12px;
 }
 
@@ -386,8 +326,8 @@ body {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 13.5px;
+    color: #cbd5e1;
 }
 
 </style>
@@ -396,6 +336,7 @@ body {
 
 <body>
 
+<!-- 배경 이미지/동영상 -->
 <div id="videoBackground">
     <div id="backgroundImage1" class="background-image"></div>
     <video id="backgroundVideo1" class="background-video" muted loop playsinline preload="auto" src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20(2).mp4"></video>
@@ -406,21 +347,18 @@ body {
 <div id="videoOverlay"></div>
 
 
-<div class="player" id="playerCard">
+<!-- Solid Modern Player Card -->
+<div class="player">
 
     <div class="brand-tag">N0DE SOUNDS</div>
 
-    <div class="album-container">
-        <div class="album-disc">
-            <div class="disc-center"></div>
-        </div>
-    </div>
-
+    <!-- Track Info -->
     <div class="track-info">
         <div class="title" id="songTitle">곡을 선택해주세요</div>
         <div class="artist" id="songArtist">N0DE SOUNDS</div>
     </div>
 
+    <!-- Progress Bar -->
     <div class="progress-section">
         <div class="progress-bar-container" id="progressBarContainer">
             <div class="progress-fill" id="progressFill"></div>
@@ -431,6 +369,7 @@ body {
         </div>
     </div>
 
+    <!-- Controls -->
     <div class="controls">
         <button class="ctrl-btn side-btn" id="prevBtn" title="이전 곡">
             <svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
@@ -444,8 +383,10 @@ body {
         </button>
     </div>
 
+    <!-- 숨겨진 오디오 태그 -->
     <audio id="audio" preload="metadata"></audio>
 
+    <!-- Playlist -->
     <div class="playlist-container">
         <div class="playlist-title">PLAYLIST</div>
         <ul class="playlist" id="playlist"></ul>
@@ -457,7 +398,6 @@ body {
 <script>
 
 const audio = document.getElementById("audio");
-const playerCard = document.getElementById("playerCard");
 const background = document.getElementById("videoBackground");
 const backgroundVideo1 = document.getElementById("backgroundVideo1");
 const backgroundVideo2 = document.getElementById("backgroundVideo2");
@@ -491,11 +431,11 @@ backgroundImage2.style.backgroundImage = "url('https://raw.githubusercontent.com
 
 
 /* ==========================================
-   음악 데이터
+   음악 데이터 (BrooklynBloodPop! 아티스트 -> Syko)
 ========================================== */
 
 const songs = [
-    { title: "BrooklynBloodPop!", artist: "Nightcore", file: "./Nightcore%20-%20BrooklynBloodPop!.mp3", background: "image1" },
+    { title: "BrooklynBloodPop!", artist: "Syko", file: "./Nightcore%20-%20BrooklynBloodPop!.mp3", background: "image1" },
     { title: "i told u v1", artist: "midwxst", file: "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3", background: "video1" },
     { title: "너", artist: "ycs", file: "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3", background: "video2" },
     { title: "relations", artist: "이상형", file: "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3", background: "image2" }
@@ -503,7 +443,7 @@ const songs = [
 
 
 /* ==========================================
-   배경 숨기기 / 제어
+   배경 제어
 ========================================== */
 
 function hideAllBackgrounds() {
@@ -552,7 +492,7 @@ function startBackground() {
 
 
 /* ==========================================
-   시간 포맷 함수 (예: 03:45)
+   시간 포맷
 ========================================== */
 
 function formatTime(seconds) {
@@ -613,7 +553,7 @@ function loadSong(index) {
 
 
 /* ==========================================
-   커스텀 컨트롤 버튼 이벤트
+   컨트롤 버튼 이벤트
 ========================================== */
 
 playPauseBtn.addEventListener("click", () => {
@@ -636,7 +576,7 @@ nextBtn.addEventListener("click", () => {
 
 
 /* ==========================================
-   프로그레스 바 클릭/시크 (Seek)
+   프로그레스 바 클릭/시크
 ========================================== */
 
 progressBarContainer.addEventListener("click", (e) => {
@@ -651,13 +591,12 @@ progressBarContainer.addEventListener("click", (e) => {
 
 
 /* ==========================================
-   음악 이벤트 리스너
+   오디오 이벤트
 ========================================== */
 
 audio.addEventListener("play", () => {
     playIcon.style.display = "none";
     pauseIcon.style.display = "block";
-    playerCard.classList.add("playing");
 
     const song = songs[currentIndex];
     if (song.background !== null) {
@@ -670,7 +609,6 @@ audio.addEventListener("play", () => {
 audio.addEventListener("pause", () => {
     playIcon.style.display = "block";
     pauseIcon.style.display = "none";
-    playerCard.classList.remove("playing");
 
     const el = getBackgroundElement();
     if (el === backgroundVideo1 || el === backgroundVideo2) {
@@ -679,7 +617,6 @@ audio.addEventListener("pause", () => {
 });
 
 audio.addEventListener("timeupdate", () => {
-    // 프로그레스 바 & 시간 업데이트
     if (audio.duration) {
         const progressPercent = (audio.currentTime / audio.duration) * 100;
         progressFill.style.width = `${progressPercent}%`;
@@ -687,7 +624,6 @@ audio.addEventListener("timeupdate", () => {
         durationTimeEl.textContent = formatTime(audio.duration);
     }
 
-    // 배경 비디오 동기화
     const el = getBackgroundElement();
     if (el !== backgroundVideo1 && el !== backgroundVideo2) return;
     if (el.readyState < 2) return;
