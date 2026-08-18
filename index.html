@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>N0DE SOUNDS</title>
+<title>N1gh7m4r3 Playlist</title>
 
 <!-- Pretendard Web Font -->
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
@@ -16,7 +16,7 @@
     margin: 0;
     padding: 0;
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    font-weight: 300; /* 전체 폰트를 얇고 얇게 조정 */
+    font-weight: 300;
     -webkit-user-select: none;
     user-select: none;
 }
@@ -26,7 +26,7 @@ html, body {
     height: 100%;
 }
 
-/* 전체 배경: 더욱 어두운 톤 (RGB 8, 8, 8) */
+/* 전체 배경: RGB (8, 8, 8) */
 body {
     background: rgb(8, 8, 8);
     color: #ffffff;
@@ -100,7 +100,7 @@ body {
 
 
 /* ==========================================
-   Player Card (UI 배경을 한층 더 어둡게)
+   Player Card
 ========================================== */
 
 .player {
@@ -110,7 +110,7 @@ body {
     max-width: 380px;
     padding: 28px 24px;
     border-radius: 20px;
-    background: rgb(12, 12, 12); /* 더 어두운 UI 배경 */
+    background: rgb(12, 12, 12);
     border: 1px solid rgb(24, 24, 24);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
     display: flex;
@@ -130,7 +130,7 @@ body {
 
 
 /* ==========================================
-   Track Info (얇고 고급스러운 타이포그래피)
+   Track Info
 ========================================== */
 
 .track-info {
@@ -141,7 +141,7 @@ body {
 
 .title {
     font-size: 20px;
-    font-weight: 400; /* 세련되게 얇게 조정 */
+    font-weight: 400;
     letter-spacing: -0.01em;
     color: #ffffff;
     margin-bottom: 4px;
@@ -159,17 +159,17 @@ body {
 
 
 /* ==========================================
-   Progress Bar (간격 조절)
+   Progress Bar
 ========================================== */
 
 .progress-section {
     width: 100%;
-    margin-bottom: 12px; /* 재생 버튼과 간격을 붙임 */
+    margin-bottom: 16px;
 }
 
 .progress-bar-container {
     width: 100%;
-    height: 4px; /* 더 슬림해진 노래 바 */
+    height: 4px;
     background: rgb(28, 28, 28);
     border-radius: 8px;
     cursor: pointer;
@@ -197,54 +197,41 @@ body {
 
 
 /* ==========================================
-   Controls (버튼과 바의 간격 축소)
+   Controls (동그란 배경 제거 & 아이콘 전용)
 ========================================== */
 
 .controls {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 18px;
-    margin-bottom: 20px; /* 목록창과의 간격 축소 */
+    gap: 32px;
+    margin-bottom: 22px;
     width: 100%;
 }
 
 .ctrl-btn {
-    background: rgb(16, 16, 16);
-    border: 1px solid rgb(28, 28, 28);
+    background: none;
+    border: none;
+    outline: none;
     color: #ffffff;
-    border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    padding: 4px;
+    opacity: 0.85;
+    transition: opacity 0.2s ease, transform 0.15s ease;
 }
 
 .ctrl-btn:hover {
-    background: rgb(26, 26, 26);
-    border-color: rgb(45, 45, 45);
+    opacity: 1;
+    transform: scale(1.12);
+    background: none;
+    border: none;
 }
 
 .ctrl-btn:active {
     transform: scale(0.92);
-}
-
-.ctrl-btn.side-btn {
-    width: 44px;
-    height: 44px;
-}
-
-.ctrl-btn.play-btn {
-    width: 56px;
-    height: 56px;
-    background: rgb(18, 18, 18);
-    border: 1px solid rgb(38, 38, 38);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
-}
-
-.ctrl-btn.play-btn:hover {
-    background: rgb(28, 28, 28);
 }
 
 .ctrl-btn svg {
@@ -296,7 +283,7 @@ body {
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 열고 닫히는 접힘 영역 효과 */
+/* 열고 닫히는 애니메이션 영역 */
 .playlist-wrapper {
     max-height: 250px;
     opacity: 1;
@@ -425,12 +412,12 @@ body {
 <!-- Solid Modern Player Card -->
 <div class="player">
 
-    <div class="brand-tag">N0DE SOUNDS</div>
+    <div class="brand-tag">N1gh7m4r3 Playlist</div>
 
     <!-- Track Info -->
     <div class="track-info">
         <div class="title" id="songTitle">곡을 선택해주세요</div>
-        <div class="artist" id="songArtist">N0DE SOUNDS</div>
+        <div class="artist" id="songArtist">N1gh7m4r3 Playlist</div>
     </div>
 
     <!-- Progress Bar -->
@@ -444,22 +431,24 @@ body {
         </div>
     </div>
 
-    <!-- Controls (10초 건너뛰기 버튼 적용) -->
+    <!-- Controls (동그라미 제거 및 깔끔한 화살표 아이콘 변경) -->
     <div class="controls">
-        <button class="ctrl-btn side-btn" id="rewindBtn" title="10초 뒤로">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
-                <text x="12" y="14.5" font-size="6.5" text-anchor="middle" fill="currentColor" stroke="none" font-weight="bold">10</text>
+        <button class="ctrl-btn" id="rewindBtn" title="10초 뒤로">
+            <svg width="28" height="24" viewBox="0 0 24 24">
+                <path d="M11 16.05V7.95c0-.56-.62-.9-1.08-.58l-5.6 4.05c-.39.28-.39.87 0 1.15l5.6 4.05c.46.33 1.08-.02 1.08-.57zm10 0V7.95c0-.56-.62-.9-1.08-.58l-5.6 4.05c-.39.28-.39.87 0 1.15l5.6 4.05c.46.33 1.08-.02 1.08-.57z"/>
             </svg>
         </button>
-        <button class="ctrl-btn play-btn" id="playPauseBtn" title="재생/일시정지">
-            <svg id="playIcon" width="20" height="20" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg id="pauseIcon" width="20" height="20" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        <button class="ctrl-btn" id="playPauseBtn" title="재생/일시정지">
+            <svg id="playIcon" width="30" height="30" viewBox="0 0 24 24">
+                <path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/>
+            </svg>
+            <svg id="pauseIcon" width="30" height="30" viewBox="0 0 24 24" style="display:none;">
+                <path d="M8 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zm6-12v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z"/>
+            </svg>
         </button>
-        <button class="ctrl-btn side-btn" id="forwardBtn" title="10초 앞으로">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/>
-                <text x="12" y="14.5" font-size="6.5" text-anchor="middle" fill="currentColor" stroke="none" font-weight="bold">10</text>
+        <button class="ctrl-btn" id="forwardBtn" title="10초 앞으로">
+            <svg width="28" height="24" viewBox="0 0 24 24">
+                <path d="M13 7.95v8.1c0 .56.62.9 1.08.58l5.6-4.05c.39-.28.39-.87 0-1.15l-5.6-4.05c-.46-.32-1.08.02-1.08.57zm-10 0v8.1c0 .56.62.9 1.08.58l5.6-4.05c.39-.28.39-.87 0-1.15L4.08 7.37C3.62 7.05 3 7.39 3 7.95z"/>
             </svg>
         </button>
     </div>
@@ -467,7 +456,7 @@ body {
     <!-- 숨겨진 오디오 태그 -->
     <audio id="audio" preload="metadata"></audio>
 
-    <!-- Playlist (열고 닫기 + 검색창 + 애니메이션 적용) -->
+    <!-- Playlist -->
     <div class="playlist-container" id="playlistContainer">
         <div class="playlist-header" id="playlistHeader">
             <div class="playlist-title">PLAYLIST</div>
@@ -599,7 +588,7 @@ function formatTime(seconds) {
 
 
 /* ==========================================
-   Playlist 렌더링 & 검색 기능
+   Playlist 렌더링 & 검색
 ========================================== */
 
 function renderPlaylist(filter = "") {
@@ -626,7 +615,6 @@ function renderPlaylist(filter = "") {
     });
 }
 
-// 검색어 입력 이벤트
 searchInput.addEventListener("input", (e) => {
     renderPlaylist(e.target.value);
 });
@@ -669,7 +657,7 @@ function loadSong(index) {
 
 
 /* ==========================================
-   컨트롤 버튼 이벤트 (10초 건너뛰기 적용)
+   컨트롤 버튼 이벤트 (10초 건너뛰기)
 ========================================== */
 
 playPauseBtn.addEventListener("click", () => {
@@ -680,14 +668,12 @@ playPauseBtn.addEventListener("click", () => {
     }
 });
 
-// 10초 뒤로 건너뛰기
 rewindBtn.addEventListener("click", () => {
     if (audio.duration) {
         audio.currentTime = Math.max(0, audio.currentTime - 10);
     }
 });
 
-// 10초 앞으로 건너뛰기
 forwardBtn.addEventListener("click", () => {
     if (audio.duration) {
         audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
