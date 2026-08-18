@@ -249,10 +249,6 @@ body {
     width: 100%;
 }
 
-.playlist-container + .playlist-container {
-    margin-top: 14px;
-}
-
 .playlist-header {
     display: flex;
     justify-content: space-between;
@@ -332,7 +328,7 @@ body {
 
 .playlist {
     list-style: none;
-    max-height: 140px;
+    max-height: 180px;
     overflow-y: auto;
     border-radius: 10px;
     background: rgb(8, 8, 8);
@@ -409,24 +405,25 @@ body {
     font-weight: 400;
 }
 
-/* 추가 예정 곡 배지 */
+/* 추가 예정 곡 비활성화 스타일 */
+.song.upcoming-item {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.song.upcoming-item:hover {
+    background: transparent !important;
+}
+
 .upcoming-badge {
     margin-left: auto;
     font-size: 10px;
     color: rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     padding: 2px 6px;
     border-radius: 4px;
     white-space: nowrap;
-}
-
-.song.upcoming-item {
-    cursor: default;
-    opacity: 0.7;
-}
-
-.song.upcoming-item:hover {
-    background: transparent;
 }
 
 
@@ -653,7 +650,7 @@ body {
     <!-- 오디오 태그 -->
     <audio id="audio" preload="metadata"></audio>
 
-    <!-- Playlist 1: 현재 재생목록 -->
+    <!-- 단일 PLAYLIST 목록창 -->
     <div class="playlist-container" id="playlistContainer">
         <div class="playlist-header" id="playlistHeader">
             <div class="playlist-title">PLAYLIST</div>
@@ -666,21 +663,6 @@ body {
         <div class="playlist-wrapper">
             <input type="text" class="search-input" id="searchInput" placeholder="곡 또는 아티스트 검색..." autocomplete="off">
             <ul class="playlist" id="playlist"></ul>
-        </div>
-    </div>
-
-    <!-- Playlist 2: 추가 예정 목록창 -->
-    <div class="playlist-container collapsed" id="upcomingContainer">
-        <div class="playlist-header" id="upcomingHeader">
-            <div class="playlist-title">추가 예정</div>
-            <button class="toggle-btn" id="toggleUpcomingBtn" title="목록 열기/닫기">
-                <svg class="toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-        </div>
-        <div class="playlist-wrapper">
-            <ul class="playlist" id="upcomingList"></ul>
         </div>
     </div>
 
@@ -705,7 +687,6 @@ const backgroundImage2 = document.getElementById("backgroundImage2");
 const songTitle = document.getElementById("songTitle");
 const songArtist = document.getElementById("songArtist");
 const playlist = document.getElementById("playlist");
-const upcomingList = document.getElementById("upcomingList");
 
 const playPauseBtn = document.getElementById("playPauseBtn");
 const playIcon = document.getElementById("playIcon");
@@ -720,8 +701,6 @@ const durationTimeEl = document.getElementById("durationTime");
 
 const playlistContainer = document.getElementById("playlistContainer");
 const playlistHeader = document.getElementById("playlistHeader");
-const upcomingContainer = document.getElementById("upcomingContainer");
-const upcomingHeader = document.getElementById("upcomingHeader");
 const searchInput = document.getElementById("searchInput");
 const toastContainer = document.getElementById("toastContainer");
 
@@ -733,17 +712,16 @@ backgroundImage1.style.backgroundImage = "url('https://raw.githubusercontent.com
 backgroundImage2.style.backgroundImage = "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg')";
 
 
+/* 일반 재생 곡 및 추가 예정 곡 통합 데이터 */
 const songs = [
-    { title: "BrooklynBloodPop!", artist: "Syko", file: "./Nightcore%20-%20BrooklynBloodPop!.mp3", background: "image1" },
-    { title: "i told u v1", artist: "midwxst", file: "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3", background: "video1" },
-    { title: "너", artist: "ycs", file: "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3", background: "video2" },
-    { title: "relations", artist: "이상형", file: "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3", background: "image2" }
-];
-
-/* 추가 예정 곡 목록 데이터 */
-const upcomingSongs = [
-    { title: "신곡 업데이트 예정 1", artist: "Artist A" },
-    { title: "신곡 업데이트 예정 2", artist: "Artist B" }
+    { title: "BrooklynBloodPop!", artist: "Syko", file: "./Nightcore%20-%20BrooklynBloodPop!.mp3", background: "image1", upcoming: false },
+    { title: "i told u v1", artist: "midwxst", file: "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3", background: "video1", upcoming: false },
+    { title: "너", artist: "ycs", file: "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3", background: "video2", upcoming: false },
+    { title: "relations", artist: "이상형", file: "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3", background: "image2", upcoming: false },
+    
+    /* 추가 예정 곡 (목록창 내 하단 위치, 선택 불가) */
+    { title: "신곡 업데이트 예정 1", artist: "Artist A", upcoming: true },
+    { title: "신곡 업데이트 예정 2", artist: "Artist B", upcoming: true }
 ];
 
 
@@ -789,6 +767,7 @@ function hideAllBackgrounds() {
 function getBackgroundElement() {
     if (currentIndex < 0 || currentIndex >= songs.length) return null;
     const song = songs[currentIndex];
+    if (song.upcoming) return null;
     if (song.background === "video1") return backgroundVideo1;
     if (song.background === "video2") return backgroundVideo2;
     if (song.background === "image1") return backgroundImage1;
@@ -830,7 +809,7 @@ function formatTime(seconds) {
 }
 
 
-/* 재생목록 렌더링 (재생 중 배지 추가) */
+/* 단일 재생목록 렌더링 (추가 예정 곡 및 재클릭 일시정지 처리) */
 function renderPlaylist(filter = "") {
     playlist.innerHTML = "";
     const cleanFilter = filter.toLowerCase().trim();
@@ -841,37 +820,49 @@ function renderPlaylist(filter = "") {
 
         if (matchTitle || matchArtist) {
             const item = document.createElement("li");
-            item.className = "song";
-            
-            const isPlaying = (currentIndex !== -1 && index === currentIndex);
-            if (isPlaying) {
-                item.classList.add("active");
+
+            if (song.upcoming) {
+                /* 추가 예정 곡 (선택 불가능) */
+                item.className = "song upcoming-item";
+                item.innerHTML = `
+                    <span class="number">${index + 1}</span>
+                    <span class="song-name">${song.title} <span class="artist-sub">- ${song.artist}</span></span>
+                    <span class="upcoming-badge">추가 예정</span>
+                `;
+            } else {
+                /* 일반 재생 가능 곡 */
+                item.className = "song";
+                const isPlaying = (currentIndex !== -1 && index === currentIndex);
+                
+                if (isPlaying) {
+                    item.classList.add("active");
+                }
+
+                item.innerHTML = `
+                    <span class="number">${index + 1}</span>
+                    <span class="song-name">${song.title} <span class="artist-sub">- ${song.artist}</span></span>
+                    ${isPlaying ? '<span class="playing-badge">재생 중</span>' : ''}
+                `;
+
+                item.addEventListener("click", () => {
+                    /* 목록에서 현재 재생/선택 중인 곡을 한 번 더 누른 경우 */
+                    if (currentIndex === index) {
+                        if (audio.paused) {
+                            audio.play().catch(e => console.error(e));
+                            showToast("노래 재생 성공");
+                        } else {
+                            audio.pause();
+                            showToast("노래 일시정지");
+                        }
+                    } else {
+                        /* 다른 곡 선택 시 로드 및 재생 */
+                        loadSong(index);
+                    }
+                });
             }
 
-            item.innerHTML = `
-                <span class="number">${index + 1}</span>
-                <span class="song-name">${song.title} <span class="artist-sub">- ${song.artist}</span></span>
-                ${isPlaying ? '<span class="playing-badge">재생 중</span>' : ''}
-            `;
-
-            item.addEventListener("click", () => loadSong(index));
             playlist.appendChild(item);
         }
-    });
-}
-
-/* 추가 예정 목록 렌더링 */
-function renderUpcomingList() {
-    upcomingList.innerHTML = "";
-    upcomingSongs.forEach((song, index) => {
-        const item = document.createElement("li");
-        item.className = "song upcoming-item";
-        item.innerHTML = `
-            <span class="number">${index + 1}</span>
-            <span class="song-name">${song.title} <span class="artist-sub">- ${song.artist}</span></span>
-            <span class="upcoming-badge">추가 예정</span>
-        `;
-        upcomingList.appendChild(item);
     });
 }
 
@@ -881,13 +872,9 @@ searchInput.addEventListener("input", (e) => {
 });
 
 
-/* 접기/펼치기 이벤트 */
+/* 목록 열기/닫기 */
 playlistHeader.addEventListener("click", () => {
     playlistContainer.classList.toggle("collapsed");
-});
-
-upcomingHeader.addEventListener("click", () => {
-    upcomingContainer.classList.toggle("collapsed");
 });
 
 
@@ -896,6 +883,8 @@ upcomingHeader.addEventListener("click", () => {
 ========================================== */
 
 function loadSong(index) {
+    if (songs[index].upcoming) return; // 추가 예정 곡은 로드 금지
+
     currentIndex = index;
     const song = songs[currentIndex];
 
@@ -978,7 +967,7 @@ audio.addEventListener("play", () => {
 
     if (currentIndex !== -1) {
         const song = songs[currentIndex];
-        if (song.background !== null) {
+        if (!song.upcoming && song.background !== null) {
             startBackground();
         } else {
             hideAllBackgrounds();
@@ -1019,8 +1008,12 @@ audio.addEventListener("seeking", () => {
 
 audio.addEventListener("ended", () => {
     if (currentIndex === -1) return;
-    const next = (currentIndex + 1) % songs.length;
-    loadSong(next);
+    
+    /* 재생 가능한 곡들 중에서 순환 */
+    const playableSongs = songs.filter(s => !s.upcoming);
+    const nextPlayableIndex = (currentIndex + 1) % playableSongs.length;
+    
+    loadSong(nextPlayableIndex);
 });
 
 
@@ -1035,7 +1028,6 @@ backgroundVideo2.addEventListener("loadeddata", () => {
 
 /* 초기 실행 */
 renderPlaylist();
-renderUpcomingList();
 showToast("원하는 노래를 틀어보세요!");
 
 </script>
