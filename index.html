@@ -69,10 +69,11 @@ body {
     height: 110%;
     object-fit: cover;
     display: block;
-    filter: blur(8px) brightness(0.3) saturate(1.1);
+    /* 기본 데스크톱 밝기 상향 조정 */
+    filter: blur(5px) brightness(0.55) saturate(1.1);
     transform: scale(1.03);
     opacity: 0;
-    transition: opacity 0.8s ease;
+    transition: opacity 0.8s ease, filter 0.3s ease;
     pointer-events: none;
 }
 
@@ -94,7 +95,9 @@ body {
     height: 100vh;
     z-index: 1;
     pointer-events: none;
-    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.3) 0%, #000000 90%);
+    /* 중앙 및 외곽 어두움 완화 */
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.65) 90%);
+    transition: background 0.3s ease;
 }
 
 
@@ -391,7 +394,7 @@ body {
 
 
 /* ==========================================
-   Toast Notification (부드러운 슬라이딩 & 페이드)
+   Toast Notification
 ========================================== */
 
 .toast-container {
@@ -420,7 +423,6 @@ body {
 
     opacity: 0;
     transform: translateX(calc(100% + 80px));
-    /* 부드러운 시작/종료 곡선 적용 (0.6s ease-in-out) */
     transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     pointer-events: auto;
     min-width: 240px;
@@ -444,15 +446,31 @@ body {
 
 
 /* ==========================================
-   Mobile Responsive Adjustments (모바일 반응형)
+   Mobile Responsive & Brightness Optimization (모바일 배경 최적화)
 ========================================== */
 
 @media (max-width: 480px) {
+    /* 모바일 배경 선명도 & 밝기 대폭 향상 */
+    .background-video,
+    .background-image {
+        filter: blur(3px) brightness(0.72) saturate(1.15);
+    }
+
+    /* 모바일 배경 오버레이를 매우 옅게 처리 */
+    #videoOverlay {
+        background: radial-gradient(circle at center, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.45) 90%);
+    }
+
+    /* 모바일 카드 살짝 반투명화하여 배경 비침 효과 추가 */
     .player {
         width: calc(100% - 24px);
         max-width: 340px;
         padding: 22px 18px;
-        border-radius: 16px;
+        border-radius: 18px;
+        background: rgba(12, 12, 12, 0.88);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .brand-tag {
@@ -512,6 +530,8 @@ body {
         max-width: 280px;
         padding: 11px 14px;
         font-size: 12px;
+        background: rgba(16, 16, 16, 0.95);
+        backdrop-filter: blur(8px);
     }
 }
 
@@ -647,7 +667,7 @@ const songs = [
 
 
 /* ==========================================
-   토스트 알림 함수 (부드러운 슬라이드 및 페이드)
+   토스트 알림 함수
 ========================================== */
 
 function showToast(message) {
@@ -659,14 +679,14 @@ function showToast(message) {
 
     toastContainer.appendChild(toast);
 
-    void toast.offsetWidth; // 강제 리플로우
+    void toast.offsetWidth;
     toast.classList.add("show");
 
     setTimeout(() => {
-        toast.classList.remove("show"); // 천천히 화면 밖으로 슬라이드 및 페이드 아웃
+        toast.classList.remove("show");
         setTimeout(() => {
             toast.remove();
-        }, 600); // CSS 0.6s 트랜지션 시간에 맞춤
+        }, 600);
     }, 2600);
 }
 
@@ -741,7 +761,6 @@ function renderPlaylist(filter = "") {
             const item = document.createElement("li");
             item.className = "song";
             
-            /* currentIndex가 유효하고 해당 번호일 때만 active 클래스 지정 */
             if (currentIndex !== -1 && index === currentIndex) {
                 item.classList.add("active");
             }
@@ -801,7 +820,6 @@ function loadSong(index) {
 ========================================== */
 
 playPauseBtn.addEventListener("click", () => {
-    // 초기 곡 미선택 상태에서 재생 클릭 시 첫 번째 곡 로드
     if (currentIndex === -1) {
         loadSong(0);
         return;
@@ -910,7 +928,7 @@ backgroundVideo2.addEventListener("loadeddata", () => {
 });
 
 
-/* 초기 실행: 곡 활성화 없이 목록 렌더링 및 첫 안내 팝업만 출력 */
+/* 초기 실행 */
 renderPlaylist();
 showToast("원하는 노래를 틀어보세요!");
 
