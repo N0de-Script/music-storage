@@ -126,7 +126,6 @@ body {
     color: #ffffff;
     opacity: 0.6;
     margin-bottom: 20px;
-    text-transform: uppercase;
 }
 
 
@@ -438,7 +437,6 @@ body {
     letter-spacing: 0.12em;
     margin-top: 20px;
     text-align: center;
-    text-transform: uppercase;
 }
 
 
@@ -611,7 +609,7 @@ body {
     <!-- Track Info -->
     <div class="track-info">
         <div class="title" id="songTitle">곡을 선택해주세요</div>
-        <div class="artist" id="songArtist">N1gh7m4r3 Playlist</div>
+        <div class="artist" id="songArtist">???</div>
     </div>
 
     <!-- Progress Bar -->
@@ -667,7 +665,7 @@ body {
     </div>
 
     <!-- UI 하단 Beta Version 문구 -->
-    <div class="beta-tag">Beta version</div>
+    <div class="beta-tag">Beta Version</div>
 
 </div>
 
@@ -719,9 +717,8 @@ const songs = [
     { title: "너", artist: "ycs", file: "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3", background: "video2", upcoming: false },
     { title: "relations", artist: "이상형", file: "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3", background: "image2", upcoming: false },
     
-    /* 추가 예정 곡 (목록창 내 하단 위치, 선택 불가) */
-    { title: "신곡 업데이트 예정 1", artist: "Artist A", upcoming: true },
-    { title: "신곡 업데이트 예정 2", artist: "Artist B", upcoming: true }
+    /* 추가 예정 곡 (단일 항목, 선택 불가) */
+    { title: "신곡 업데이트 예정", artist: "Artist", upcoming: true }
 ];
 
 
@@ -809,7 +806,7 @@ function formatTime(seconds) {
 }
 
 
-/* 단일 재생목록 렌더링 (추가 예정 곡 및 재클릭 일시정지 처리) */
+/* 재생목록 렌더링 */
 function renderPlaylist(filter = "") {
     playlist.innerHTML = "";
     const cleanFilter = filter.toLowerCase().trim();
@@ -826,7 +823,7 @@ function renderPlaylist(filter = "") {
                 item.className = "song upcoming-item";
                 item.innerHTML = `
                     <span class="number">${index + 1}</span>
-                    <span class="song-name">${song.title} <span class="artist-sub">- ${song.artist}</span></span>
+                    <span class="song-name">${song.title}</span>
                     <span class="upcoming-badge">추가 예정</span>
                 `;
             } else {
