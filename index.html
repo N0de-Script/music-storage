@@ -412,6 +412,7 @@ audio {
         muted
         loop
         playsinline
+        crossorigin="anonymous"
         preload="auto">
     </video>
 
@@ -507,22 +508,22 @@ let currentIndex = 0;
 
 
 /* ==========================================
-   배경 주소
+   배경 주소 (CORS 및 괄호 URL 문제 방지용 jsDelivr CDN 적용)
 ========================================== */
 
 const BACKGROUNDS = {
 
     number:
-        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/MeAndAnimes_pindown.io_1787032949.mp4",
+        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/MeAndAnimes_pindown.io_1787032949.mp4",
 
     video1:
-        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20%282%29.mp4",
+        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20(2).mp4",
 
     video2:
-        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20%281%29.mp4",
+        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20(1).mp4",
 
     relations:
-        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg"
+        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/40d89af3f71dddcdca7065a07fc6e069.jpg"
 
 };
 
@@ -641,31 +642,21 @@ const songs = [
 
 function clearBackground() {
 
-    background.classList.remove(
-        "show"
-    );
+    background.classList.remove("show");
 
-    backgroundVideo.classList.remove(
-        "show"
-    );
+    backgroundVideo.classList.remove("show");
 
-    backgroundImage.classList.remove(
-        "show"
-    );
+    backgroundImage.classList.remove("show");
 
-    backgroundVideo.onloadedmetadata = null;
-    backgroundVideo.oncanplay = null;
+    backgroundVideo.onloadeddata = null;
 
     backgroundVideo.pause();
 
-    backgroundVideo.removeAttribute(
-        "src"
-    );
+    backgroundVideo.removeAttribute("src");
 
     backgroundVideo.load();
 
-    backgroundImage.style.backgroundImage =
-        "none";
+    backgroundImage.style.backgroundImage = "none";
 
 }
 
@@ -679,27 +670,19 @@ function setBackground(song) {
     clearBackground();
 
 
-    if (
-        !song.background
-    ) {
+    if (!song || !song.background) {
 
         return;
 
     }
 
 
-    const url =
-        BACKGROUNDS[
-            song.background
-        ];
+    const url = BACKGROUNDS[song.background];
 
 
     if (!url) {
 
-        console.error(
-            "배경 주소를 찾을 수 없음:",
-            song.background
-        );
+        console.error("배경 주소를 찾을 수 없음:", song.background);
 
         return;
 
@@ -710,57 +693,13 @@ function setBackground(song) {
        JPG 이미지 배경
     ====================================== */
 
-    if (
-        song.backgroundType === "image"
-    ) {
+    if (song.backgroundType === "image") {
 
-        const img = new Image();
+        backgroundImage.style.backgroundImage = `url("${url}")`;
 
-        img.onload = () => {
+        background.classList.add("show");
 
-            backgroundImage.style.backgroundImage =
-                `url("${url}")`;
-
-            background.classList.add(
-                "show"
-            );
-
-            backgroundImage.classList.add(
-                "show"
-            );
-
-            console.log(
-                "이미지 배경 표시 성공:",
-                url
-            );
-
-        };
-
-        img.onerror = () => {
-
-            console.error(
-                "이미지 로딩 실패:",
-                url
-            );
-
-        };
-
-        img.src = url;
-
-        if (img.complete) {
-
-            backgroundImage.style.backgroundImage =
-                `url("${url}")`;
-
-            background.classList.add(
-                "show"
-            );
-
-            backgroundImage.classList.add(
-                "show"
-            );
-
-        }
+        backgroundImage.classList.add("show");
 
         return;
 
@@ -771,67 +710,25 @@ function setBackground(song) {
        MP4 동영상 배경
     ====================================== */
 
-    background.classList.add(
-        "show"
-    );
+    background.classList.add("show");
 
     backgroundVideo.src = url;
 
-    function playVideoSync() {
+    backgroundVideo.onloadeddata = () => {
 
         try {
 
-            backgroundVideo.currentTime =
-                audio.currentTime;
+            backgroundVideo.currentTime = audio.currentTime || 0;
 
-        } catch (error) {
+        } catch (e) {}
 
-            console.error(
-                "영상 위치 설정 실패:",
-                error
-            );
+        backgroundVideo.classList.add("show");
 
-        }
+        backgroundVideo.play().catch(() => {});
 
-        background.classList.add(
-            "show"
-        );
-
-        backgroundVideo.classList.add(
-            "show"
-        );
-
-        backgroundVideo.play()
-            .catch(
-                error => {
-
-                    console.warn(
-                        "배경 영상 재생 대기 중 (사용자 상호작용 필요):",
-                        error
-                    );
-
-                }
-            );
-
-    }
-
-    if (backgroundVideo.readyState >= 1) {
-
-        playVideoSync();
-
-    } else {
-
-        backgroundVideo.onloadedmetadata = playVideoSync;
-        backgroundVideo.oncanplay = playVideoSync;
-
-    }
+    };
 
     backgroundVideo.load();
-
-    console.log(
-        "영상 배경 로딩 시작:",
-        url
-    );
 
 }
 
@@ -845,78 +742,49 @@ function renderPlaylist() {
     playlist.innerHTML = "";
 
 
-    songs.forEach(
-        (song, index) => {
+    songs.forEach((song, index) => {
 
-            const item =
-                document.createElement("li");
+        const item = document.createElement("li");
 
-
-            item.className =
-                "song";
+        item.className = "song";
 
 
-            if (
-                index === currentIndex
-            ) {
+        if (index === currentIndex) {
 
-                item.classList.add(
-                    "active"
-                );
-
-            }
-
-
-            const number =
-                document.createElement("span");
-
-
-            number.className =
-                "number";
-
-
-            number.textContent =
-                index + 1;
-
-
-            const name =
-                document.createElement("span");
-
-
-            name.className =
-                "song-name";
-
-
-            name.textContent =
-                song.title;
-
-
-            item.appendChild(
-                number
-            );
-
-
-            item.appendChild(
-                name
-            );
-
-
-            item.addEventListener(
-                "click",
-                () => {
-
-                    loadSong(index);
-
-                }
-            );
-
-
-            playlist.appendChild(
-                item
-            );
+            item.classList.add("active");
 
         }
-    );
+
+
+        const number = document.createElement("span");
+
+        number.className = "number";
+
+        number.textContent = index + 1;
+
+
+        const name = document.createElement("span");
+
+        name.className = "song-name";
+
+        name.textContent = song.title;
+
+
+        item.appendChild(number);
+
+        item.appendChild(name);
+
+
+        item.addEventListener("click", () => {
+
+            loadSong(index);
+
+        });
+
+
+        playlist.appendChild(item);
+
+    });
 
 }
 
@@ -927,59 +795,32 @@ function renderPlaylist() {
 
 function loadSong(index) {
 
-    currentIndex =
-        index;
+    currentIndex = index;
 
-
-    const song =
-        songs[currentIndex];
-
-
-    console.log(
-        "곡 변경:",
-        song.title
-    );
+    const song = songs[currentIndex];
 
 
     audio.pause();
 
-
     clearBackground();
 
 
-    audio.src =
-        song.file;
+    audio.src = song.file;
 
     audio.load();
 
 
-    songTitle.textContent =
-        song.title;
+    songTitle.textContent = song.title;
 
-
-    songArtist.textContent =
-        song.artist;
+    songArtist.textContent = song.artist;
 
 
     renderPlaylist();
 
-
-    setBackground(
-        song
-    );
+    setBackground(song);
 
 
-    audio.play()
-        .catch(
-            error => {
-
-                console.warn(
-                    "자동재생 차단됨 (클릭 시 정상 재생됩니다):",
-                    error
-                );
-
-            }
-        );
+    audio.play().catch(() => {});
 
 }
 
@@ -988,200 +829,123 @@ function loadSong(index) {
    음악 재생
 ========================================== */
 
-audio.addEventListener(
-    "play",
-    () => {
+audio.addEventListener("play", () => {
 
-        const song =
-            songs[currentIndex];
+    const song = songs[currentIndex];
 
 
-        if (
-            !song || !song.background
-        ) {
+    if (!song || !song.background) {
 
-            return;
-
-        }
-
-
-        if (
-            song.backgroundType === "video"
-        ) {
-
-            background.classList.add("show");
-            backgroundVideo.classList.add("show");
-
-            try {
-
-                backgroundVideo.currentTime =
-                    audio.currentTime;
-
-            } catch (error) {}
-
-
-            backgroundVideo.play()
-                .catch(
-                    () => {}
-                );
-
-        }
+        return;
 
     }
-);
+
+
+    if (song.backgroundType === "video") {
+
+        background.classList.add("show");
+
+        backgroundVideo.classList.add("show");
+
+        try {
+
+            backgroundVideo.currentTime = audio.currentTime;
+
+        } catch (e) {}
+
+        backgroundVideo.play().catch(() => {});
+
+    }
+
+});
 
 
 /* ==========================================
    음악 일시정지
 ========================================== */
 
-audio.addEventListener(
-    "pause",
-    () => {
+audio.addEventListener("pause", () => {
 
-        backgroundVideo.pause();
+    backgroundVideo.pause();
 
-    }
-);
+});
 
 
 /* ==========================================
    음악 / 영상 싱크
 ========================================== */
 
-audio.addEventListener(
-    "timeupdate",
-    () => {
+audio.addEventListener("timeupdate", () => {
 
-        const song =
-            songs[currentIndex];
+    const song = songs[currentIndex];
 
 
-        if (
-            !song || song.backgroundType !== "video"
-        ) {
+    if (!song || song.backgroundType !== "video") {
 
-            return;
-
-        }
-
-
-        if (
-            backgroundVideo.readyState < 1
-        ) {
-
-            return;
-
-        }
-
-
-        const difference =
-            Math.abs(
-                backgroundVideo.currentTime -
-                audio.currentTime
-            );
-
-
-        if (
-            difference > 0.35
-        ) {
-
-            try {
-
-                backgroundVideo.currentTime =
-                    audio.currentTime;
-
-            } catch (error) {}
-
-        }
+        return;
 
     }
-);
+
+
+    if (backgroundVideo.readyState < 1) {
+
+        return;
+
+    }
+
+
+    const difference = Math.abs(backgroundVideo.currentTime - audio.currentTime);
+
+
+    if (difference > 0.35) {
+
+        try {
+
+            backgroundVideo.currentTime = audio.currentTime;
+
+        } catch (e) {}
+
+    }
+
+});
 
 
 /* ==========================================
    Seek
 ========================================== */
 
-audio.addEventListener(
-    "seeking",
-    () => {
+audio.addEventListener("seeking", () => {
 
-        const song =
-            songs[currentIndex];
+    const song = songs[currentIndex];
 
 
-        if (
-            !song || song.backgroundType !== "video"
-        ) {
+    if (!song || song.backgroundType !== "video") {
 
-            return;
-
-        }
-
-
-        try {
-
-            backgroundVideo.currentTime =
-                audio.currentTime;
-
-        } catch (error) {}
+        return;
 
     }
-);
+
+
+    try {
+
+        backgroundVideo.currentTime = audio.currentTime;
+
+    } catch (e) {}
+
+});
 
 
 /* ==========================================
    음악 종료
 ========================================== */
 
-audio.addEventListener(
-    "ended",
-    () => {
+audio.addEventListener("ended", () => {
 
-        const next =
-            (
-                currentIndex + 1
-            ) % songs.length;
+    const next = (currentIndex + 1) % songs.length;
 
+    loadSong(next);
 
-        loadSong(next);
-
-    }
-);
-
-
-/* ==========================================
-   영상 로딩 오류
-========================================== */
-
-backgroundVideo.addEventListener(
-    "error",
-    () => {
-
-        console.error(
-            "배경 MP4 로딩 오류:",
-            backgroundVideo.error
-        );
-
-    }
-);
-
-
-/* ==========================================
-   영상 재생 오류
-========================================== */
-
-backgroundVideo.addEventListener(
-    "stalled",
-    () => {
-
-        console.warn(
-            "배경 MP4 로딩이 지연되고 있습니다."
-        );
-
-    }
-);
+});
 
 
 /* ==========================================
