@@ -391,7 +391,7 @@ body {
 
 
 /* ==========================================
-   Toast Notification (화면 우측 슬라이딩)
+   Toast Notification (페이드 + 화면 우측 완벽 슬라이딩)
 ========================================== */
 
 .toast-container {
@@ -418,10 +418,12 @@ body {
     align-items: center;
     gap: 10px;
 
-    /* 화면 우측 밖으로 위치 설정 (100% + 60px) */
+    /* 완전히 화면 바깥 우측에 위치 + 페이드 효과를 위한 opacity: 0 */
     opacity: 0;
-    transform: translateX(calc(100% + 60px));
-    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+    transform: translateX(calc(100% + 80px));
+    
+    /* 슬라이딩과 페이드(opacity) 효과를 동시에 적용 */
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: auto;
     min-width: 240px;
     max-width: 320px;
@@ -573,7 +575,7 @@ const songs = [
 
 
 /* ==========================================
-   토스트 알림 함수 (슬라이드 애니메이션 보정)
+   토스트 알림 함수 (슬라이드 & 페이드 인/아웃)
 ========================================== */
 
 function showToast(message) {
@@ -585,17 +587,18 @@ function showToast(message) {
 
     toastContainer.appendChild(toast);
 
-    // 강제로 동기 리플로우를 발생시켜 브라우저가 화면 밖 위치를 계산하게 만듦
+    // 강제로 동기 리플로우를 발생시켜 출발 지점(화면 우측 밖 + opacity:0)을 인식시킴
     void toast.offsetWidth;
 
-    // show 클래스를 추가하여 우측에서 슬라이드 인 실행
+    // show 클래스 추가로 화면 안으로 슬라이드되며 페이드 인
     toast.classList.add("show");
 
     setTimeout(() => {
-        toast.classList.remove("show"); // 우측 밖으로 슬라이드 아웃
+        // show 클래스 제거로 화면 밖으로 슬라이드되며 페이드 아웃
+        toast.classList.remove("show");
         setTimeout(() => {
             toast.remove();
-        }, 450);
+        }, 500); // css transition 시간과 맞춤
     }, 2500);
 }
 
@@ -691,7 +694,7 @@ playlistHeader.addEventListener("click", () => {
    곡 로드 및 알림 발생
 ========================================== */
 
-function loadSong(index) {
+function loadSong(index, isInitial = false) {
     currentIndex = index;
     const song = songs[currentIndex];
 
@@ -706,7 +709,12 @@ function loadSong(index) {
 
     renderPlaylist(searchInput.value);
 
-    showToast(`'${song.title}' 곡이 선택되었습니다`);
+    // 첫 진입 시에는 안내 팝업, 이후 곡 변경 시에는 선택 알림 팝업
+    if (isInitial) {
+        showToast("원하는 노래를 틀어보세요!");
+    } else {
+        showToast(`'${song.title}' 곡이 선택되었습니다`);
+    }
 
     audio.play()
         .then(() => {
@@ -817,9 +825,9 @@ backgroundVideo2.addEventListener("loadeddata", () => {
 });
 
 
-/* 초기화 */
+/* 초기 실행: 첫 접속 팝업 활성화(true) */
 renderPlaylist();
-loadSong(0);
+loadSong(0, true);
 
 </script>
 
