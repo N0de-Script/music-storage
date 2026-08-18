@@ -507,22 +507,22 @@ let currentIndex = 0;
 
 
 /* ==========================================
-   배경 주소
+   배경 주소 (jsdelivr CDN)
 ========================================== */
 
 const BACKGROUNDS = {
 
     number:
-        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/MeAndAnimes_pindown.io_1787032949.mp4",
+        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/MeAndAnimes_pindown.io_1787032949.mp4",
 
     video1:
-        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20%282%29.mp4",
+        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20%282%29.mp4",
 
     video2:
-        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20%281%29.mp4",
+        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20%281%29.mp4",
 
     relations:
-        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg"
+        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/40d89af3f71dddcdca7065a07fc6e069.jpg"
 
 };
 
@@ -678,10 +678,12 @@ function setBackground(song) {
     const url = BACKGROUNDS[song.background];
 
     if (!url) {
+
         console.error(
             "배경 주소를 찾을 수 없음:",
             song.background
         );
+
         return;
     }
 
@@ -712,6 +714,7 @@ function setBackground(song) {
         };
 
         img.onerror = function () {
+
             console.error(
                 "이미지 배경 로딩 실패:",
                 url
@@ -736,9 +739,12 @@ function setBackground(song) {
         );
 
         try {
+
             backgroundVideo.currentTime =
                 audio.currentTime;
+
         } catch (error) {
+
             console.error(
                 "영상 위치 설정 실패:",
                 error
@@ -753,6 +759,7 @@ function setBackground(song) {
 
         backgroundVideo.play()
             .catch(error => {
+
                 console.error(
                     "배경 영상 재생 실패:",
                     error
@@ -866,6 +873,7 @@ function loadSong(index) {
 
     audio.play()
         .catch(error => {
+
             console.error(
                 "음악 재생 실패:",
                 error
@@ -893,8 +901,10 @@ audio.addEventListener(
             if (backgroundVideo.readyState >= 2) {
 
                 try {
+
                     backgroundVideo.currentTime =
                         audio.currentTime;
+
                 } catch (error) {}
 
                 backgroundVideo.play()
@@ -944,8 +954,10 @@ audio.addEventListener(
         if (difference > 0.35) {
 
             try {
+
                 backgroundVideo.currentTime =
                     audio.currentTime;
+
             } catch (error) {}
         }
     }
@@ -971,8 +983,10 @@ audio.addEventListener(
         }
 
         try {
+
             backgroundVideo.currentTime =
                 audio.currentTime;
+
         } catch (error) {}
     }
 );
@@ -1001,6 +1015,7 @@ audio.addEventListener(
 backgroundVideo.addEventListener(
     "error",
     () => {
+
         console.error(
             "배경 MP4 로딩 오류:",
             backgroundVideo.error
@@ -1016,6 +1031,7 @@ backgroundVideo.addEventListener(
 backgroundVideo.addEventListener(
     "stalled",
     () => {
+
         console.warn(
             "배경 MP4 로딩이 지연되고 있습니다."
         );
