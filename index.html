@@ -391,7 +391,7 @@ body {
 
 
 /* ==========================================
-   Windows Style Notification (오른쪽 화면 바깥 슬라이드)
+   Toast Notification (화면 우측 슬라이딩)
 ========================================== */
 
 .toast-container {
@@ -418,13 +418,14 @@ body {
     align-items: center;
     gap: 10px;
 
-    /* 화면 우측 화면 바깥 위치 설정 및 슬라이드 효과 */
+    /* 화면 우측 밖으로 위치 설정 (100% + 60px) */
     opacity: 0;
-    transform: translateX(calc(100% + 40px));
-    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    transform: translateX(calc(100% + 60px));
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
     pointer-events: auto;
     min-width: 240px;
     max-width: 320px;
+    will-change: transform, opacity;
 }
 
 .toast.show {
@@ -502,7 +503,7 @@ body {
         </button>
     </div>
 
-    <!-- 숨겨진 오디오 태그 -->
+    <!-- 오디오 태그 -->
     <audio id="audio" preload="metadata"></audio>
 
     <!-- Playlist -->
@@ -523,7 +524,7 @@ body {
 
 </div>
 
-<!-- 우측 하단 알림창 컨테이너 -->
+<!-- 토스트 알림 컨테이너 -->
 <div class="toast-container" id="toastContainer"></div>
 
 
@@ -572,7 +573,7 @@ const songs = [
 
 
 /* ==========================================
-   알림 팝업 함수 (슬라이드 인/아웃 연출)
+   토스트 알림 함수 (슬라이드 애니메이션 보정)
 ========================================== */
 
 function showToast(message) {
@@ -584,12 +585,14 @@ function showToast(message) {
 
     toastContainer.appendChild(toast);
 
-    setTimeout(() => {
-        toast.classList.add("show");
-    }, 20);
+    // 강제로 동기 리플로우를 발생시켜 브라우저가 화면 밖 위치를 계산하게 만듦
+    void toast.offsetWidth;
+
+    // show 클래스를 추가하여 우측에서 슬라이드 인 실행
+    toast.classList.add("show");
 
     setTimeout(() => {
-        toast.classList.remove("show");
+        toast.classList.remove("show"); // 우측 밖으로 슬라이드 아웃
         setTimeout(() => {
             toast.remove();
         }, 450);
@@ -703,7 +706,6 @@ function loadSong(index) {
 
     renderPlaylist(searchInput.value);
 
-    // 느낌표 제거된 곡 선택 알림
     showToast(`'${song.title}' 곡이 선택되었습니다`);
 
     audio.play()
@@ -715,7 +717,7 @@ function loadSong(index) {
 
 
 /* ==========================================
-   컨트롤 버튼 및 수정된 알림 문구
+   컨트롤 버튼 클릭 이벤트
 ========================================== */
 
 playPauseBtn.addEventListener("click", () => {
