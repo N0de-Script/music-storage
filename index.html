@@ -675,6 +675,7 @@ body {
 
 <script>
 
+// DOM element references instantiated for application state manipulation.
 const audio = document.getElementById("audio");
 const background = document.getElementById("videoBackground");
 const backgroundVideo1 = document.getElementById("backgroundVideo1");
@@ -702,7 +703,7 @@ const playlistHeader = document.getElementById("playlistHeader");
 const searchInput = document.getElementById("searchInput");
 const toastContainer = document.getElementById("toastContainer");
 
-/* -1 설정으로 초기 곡 선택 미활성화 */
+// Sentinel variable governing active track index selection (-1 signifies quiescent baseline state).
 let currentIndex = -1;
 
 
@@ -710,22 +711,23 @@ backgroundImage1.style.backgroundImage = "url('https://raw.githubusercontent.com
 backgroundImage2.style.backgroundImage = "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg')";
 
 
-/* 일반 재생 곡 및 추가 예정 곡 통합 데이터 */
+// Data repository encapsulating playable compositions and prospective upcoming items.
 const songs = [
     { title: "BrooklynBloodPop!", artist: "Syko", file: "./Nightcore%20-%20BrooklynBloodPop!.mp3", background: "image1", upcoming: false },
     { title: "i told u v1", artist: "midwxst", file: "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3", background: "video1", upcoming: false },
     { title: "너", artist: "ycs", file: "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3", background: "video2", upcoming: false },
     { title: "relations", artist: "이상형", file: "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3", background: "image2", upcoming: false },
     
-    /* 추가 예정 곡 (단일 항목, 선택 불가) */
+    /* Pending integration composition (non-interactive placeholder item) */
     { title: "신곡 업데이트 예정", artist: "Artist", upcoming: true }
 ];
 
 
 /* ==========================================
-   토스트 알림 함수
+   Asynchronous Toast Notification Pipeline
 ========================================== */
 
+// Instantiates temporary DOM notifications to communicate operational status dynamically.
 function showToast(message) {
     if (!toastContainer) return;
 
@@ -735,7 +737,7 @@ function showToast(message) {
 
     toastContainer.appendChild(toast);
 
-    void toast.offsetWidth;
+    void toast.offsetWidth; // Forces synchronous layout recalculation to trigger CSS transitions reliably.
     toast.classList.add("show");
 
     setTimeout(() => {
@@ -748,9 +750,10 @@ function showToast(message) {
 
 
 /* ==========================================
-   배경 제어
+   Visual Background Attenuation & Rendering
 ========================================== */
 
+// Deactivates and suppresses all active dynamic background multimedia assets.
 function hideAllBackgrounds() {
     backgroundVideo1.pause();
     backgroundVideo2.pause();
@@ -761,6 +764,7 @@ function hideAllBackgrounds() {
     background.classList.remove("show");
 }
 
+// Determines appropriate DOM node reference associated with current track background metadata.
 function getBackgroundElement() {
     if (currentIndex < 0 || currentIndex >= songs.length) return null;
     const song = songs[currentIndex];
@@ -772,6 +776,7 @@ function getBackgroundElement() {
     return null;
 }
 
+// Orchestrates synchronicity between acoustic playback and visual backdrop presentation.
 function startBackground() {
     const el = getBackgroundElement();
     if (!el) {
@@ -798,6 +803,7 @@ function startBackground() {
 }
 
 
+// Converts floating-point temporal duration into standardized sexagesimal string representation.
 function formatTime(seconds) {
     if (isNaN(seconds)) return "0:00";
     const mins = Math.floor(seconds / 60);
@@ -806,7 +812,7 @@ function formatTime(seconds) {
 }
 
 
-/* 재생목록 렌더링 */
+/* Playlist DOM Construction & State Synchronization Protocol */
 function renderPlaylist(filter = "") {
     playlist.innerHTML = "";
     const cleanFilter = filter.toLowerCase().trim();
@@ -819,7 +825,7 @@ function renderPlaylist(filter = "") {
             const item = document.createElement("li");
 
             if (song.upcoming) {
-                /* 추가 예정 곡 (선택 불가능) */
+                // Non-selectable placeholder item configuration
                 item.className = "song upcoming-item";
                 item.innerHTML = `
                     <span class="number">${index + 1}</span>
@@ -827,7 +833,7 @@ function renderPlaylist(filter = "") {
                     <span class="upcoming-badge">추가 예정</span>
                 `;
             } else {
-                /* 일반 재생 가능 곡 */
+                // Playable track item DOM setup and state binding
                 item.className = "song";
                 const isPlaying = (currentIndex !== -1 && index === currentIndex);
                 
@@ -842,17 +848,25 @@ function renderPlaylist(filter = "") {
                 `;
 
                 item.addEventListener("click", () => {
-                    /* 목록에서 현재 재생/선택 중인 곡을 한 번 더 누른 경우 */
+                    // Re-selection event logic: Halts acoustic playback, nullifies selection state, and cleans UI indicators
                     if (currentIndex === index) {
-                        if (audio.paused) {
-                            audio.play().catch(e => console.error(e));
-                            showToast("노래 재생 성공");
-                        } else {
-                            audio.pause();
-                            showToast("노래 일시정지");
-                        }
+                        audio.pause();
+                        audio.currentTime = 0;
+                        currentIndex = -1; // Nullifies index to revert selection highlights & active badges
+
+                        hideAllBackgrounds();
+
+                        // Reverts metadata display artifacts to baseline state
+                        songTitle.textContent = "곡을 선택해주세요";
+                        songArtist.textContent = "???";
+                        progressFill.style.width = "0%";
+                        currentTimeEl.textContent = "0:00";
+                        durationTimeEl.textContent = "0:00";
+
+                        renderPlaylist(searchInput.value);
+                        showToast("노래 재생 중지");
                     } else {
-                        /* 다른 곡 선택 시 로드 및 재생 */
+                        // Executes track loading pipeline for newly selected index
                         loadSong(index);
                     }
                 });
@@ -869,18 +883,18 @@ searchInput.addEventListener("input", (e) => {
 });
 
 
-/* 목록 열기/닫기 */
+// Toggles playlist UI container expansion state
 playlistHeader.addEventListener("click", () => {
     playlistContainer.classList.toggle("collapsed");
 });
 
 
 /* ==========================================
-   곡 로드 처리
+   Track Acquisition and Media Loading Pipeline
 ========================================== */
 
 function loadSong(index) {
-    if (songs[index].upcoming) return; // 추가 예정 곡은 로드 금지
+    if (songs[index].upcoming) return; // Restricts invocation on non-playable items
 
     currentIndex = index;
     const song = songs[currentIndex];
@@ -907,7 +921,7 @@ function loadSong(index) {
 
 
 /* ==========================================
-   컨트롤 버튼 이벤트
+   Playback Control Event Binders
 ========================================== */
 
 playPauseBtn.addEventListener("click", () => {
@@ -955,7 +969,7 @@ progressBarContainer.addEventListener("click", (e) => {
 
 
 /* ==========================================
-   오디오 이벤트
+   HTMLAudioElement Event Handlers
 ========================================== */
 
 audio.addEventListener("play", () => {
@@ -1006,7 +1020,7 @@ audio.addEventListener("seeking", () => {
 audio.addEventListener("ended", () => {
     if (currentIndex === -1) return;
     
-    /* 재생 가능한 곡들 중에서 순환 */
+    // Cyclical iteration protocol across valid playable items
     const playableSongs = songs.filter(s => !s.upcoming);
     const nextPlayableIndex = (currentIndex + 1) % playableSongs.length;
     
@@ -1023,7 +1037,7 @@ backgroundVideo2.addEventListener("loadeddata", () => {
 });
 
 
-/* 초기 실행 */
+// Initialization execution
 renderPlaylist();
 showToast("원하는 노래를 틀어보세요!");
 
