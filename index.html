@@ -27,7 +27,7 @@ html, body {
 }
 
 body {
-    background: rgb(8, 8, 8);
+    background: #000000;
     color: #ffffff;
     min-height: 100vh;
     overflow: hidden;
@@ -48,7 +48,7 @@ body {
     height: 100vh;
     z-index: 0;
     overflow: hidden;
-    background: rgb(8, 8, 8);
+    background: #000000;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.8s ease, visibility 0.8s ease;
@@ -94,7 +94,7 @@ body {
     height: 100vh;
     z-index: 1;
     pointer-events: none;
-    background: radial-gradient(circle at center, rgba(8, 8, 8, 0.3) 0%, rgb(8, 8, 8) 90%);
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.3) 0%, #000000 90%);
 }
 
 
@@ -391,7 +391,7 @@ body {
 
 
 /* ==========================================
-   Toast Notification (페이드 + 화면 우측 완벽 슬라이딩)
+   Toast Notification (페이드 + 슬라이딩)
 ========================================== */
 
 .toast-container {
@@ -418,11 +418,8 @@ body {
     align-items: center;
     gap: 10px;
 
-    /* 완전히 화면 바깥 우측에 위치 + 페이드 효과를 위한 opacity: 0 */
     opacity: 0;
     transform: translateX(calc(100% + 80px));
-    
-    /* 슬라이딩과 페이드(opacity) 효과를 동시에 적용 */
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: auto;
     min-width: 240px;
@@ -575,7 +572,7 @@ const songs = [
 
 
 /* ==========================================
-   토스트 알림 함수 (슬라이드 & 페이드 인/아웃)
+   토스트 알림 함수
 ========================================== */
 
 function showToast(message) {
@@ -587,21 +584,21 @@ function showToast(message) {
 
     toastContainer.appendChild(toast);
 
-    // 강제로 동기 리플로우를 발생시켜 출발 지점(화면 우측 밖 + opacity:0)을 인식시킴
-    void toast.offsetWidth;
-
-    // show 클래스 추가로 화면 안으로 슬라이드되며 페이드 인
+    void toast.offsetWidth; // 강제 동기 리플로우
     toast.classList.add("show");
 
     setTimeout(() => {
-        // show 클래스 제거로 화면 밖으로 슬라이드되며 페이드 아웃
         toast.classList.remove("show");
         setTimeout(() => {
             toast.remove();
-        }, 500); // css transition 시간과 맞춤
+        }, 500);
     }, 2500);
 }
 
+
+/* ==========================================
+   배경 숨김 및 제어 (노래 안 틀어있을 땐 검은색)
+========================================== */
 
 function hideAllBackgrounds() {
     backgroundVideo1.pause();
@@ -691,7 +688,7 @@ playlistHeader.addEventListener("click", () => {
 
 
 /* ==========================================
-   곡 로드 및 알림 발생
+   곡 로드 처리
 ========================================== */
 
 function loadSong(index, isInitial = false) {
@@ -699,7 +696,7 @@ function loadSong(index, isInitial = false) {
     const song = songs[currentIndex];
 
     audio.pause();
-    hideAllBackgrounds();
+    hideAllBackgrounds(); // 배경 숨겨서 검은색 유지
 
     audio.src = song.file;
     audio.load();
@@ -709,23 +706,22 @@ function loadSong(index, isInitial = false) {
 
     renderPlaylist(searchInput.value);
 
-    // 첫 진입 시에는 안내 팝업, 이후 곡 변경 시에는 선택 알림 팝업
+    // 첫 진입 시에는 자동 재생하지 않고 안내 팝업만 표시
     if (isInitial) {
         showToast("원하는 노래를 틀어보세요!");
     } else {
         showToast(`'${song.title}' 곡이 선택되었습니다`);
+        audio.play()
+            .then(() => {
+                if (song.background !== null) startBackground();
+            })
+            .catch(e => console.error("Autoplay restricted or file not found:", e));
     }
-
-    audio.play()
-        .then(() => {
-            if (song.background !== null) startBackground();
-        })
-        .catch(e => console.error("Autoplay restricted or file not found:", e));
 }
 
 
 /* ==========================================
-   컨트롤 버튼 클릭 이벤트
+   컨트롤 버튼 이벤트
 ========================================== */
 
 playPauseBtn.addEventListener("click", () => {
@@ -764,6 +760,10 @@ progressBarContainer.addEventListener("click", (e) => {
 });
 
 
+/* ==========================================
+   오디오 재생/일시정지 상태에 따른 배경 제어
+========================================== */
+
 audio.addEventListener("play", () => {
     playIcon.style.display = "none";
     pauseIcon.style.display = "block";
@@ -780,10 +780,8 @@ audio.addEventListener("pause", () => {
     playIcon.style.display = "block";
     pauseIcon.style.display = "none";
 
-    const el = getBackgroundElement();
-    if (el === backgroundVideo1 || el === backgroundVideo2) {
-        el.pause();
-    }
+    // 노래가 멈춰있을 땐 배경을 페이드아웃 후 검은색으로 고정
+    hideAllBackgrounds();
 });
 
 audio.addEventListener("timeupdate", () => {
@@ -825,7 +823,7 @@ backgroundVideo2.addEventListener("loadeddata", () => {
 });
 
 
-/* 초기 실행: 첫 접속 팝업 활성화(true) */
+/* 초기 실행: 첫 곡 설정만 하고 자동 재생 안 함 */
 renderPlaylist();
 loadSong(0, true);
 
