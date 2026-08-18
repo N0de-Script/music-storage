@@ -151,12 +151,33 @@
   </div>
 
   <script>
+    // 캡처 목록에 있는 정식 MP3 파일명 그대로 매핑
     const songs = [
-      { title: "midwxst - i told u v1", artist: "midwxst", audioSrc: "1.mp3" },
-      { title: "Nightcore - BrooklynBloodPop!", artist: "SyKo", audioSrc: "2.mp3" },
-      { title: "NUMBER TWERKNATION28", artist: "Artist", audioSrc: "3.mp3" },
-      { title: "ycs - 너", artist: "ycs", audioSrc: "4.mp3" },
-      { title: "이상형 - relations", artist: "이상형", audioSrc: "5.mp3" }
+      {
+        title: "midwxst - i told u v1",
+        artist: "midwxst",
+        audioSrc: "midwxst - i told u v1 [unofficial video].mp3"
+      },
+      {
+        title: "Nightcore - BrooklynBloodPop!",
+        artist: "SyKo",
+        audioSrc: "Nightcore - BrooklynBloodPop!.mp3"
+      },
+      {
+        title: "NUMBER TWERKNATION28",
+        artist: "Artist",
+        audioSrc: "NUMBER TWERKNATION28 (sped upnightcore).mp3"
+      },
+      {
+        title: "ycs - 너",
+        artist: "ycs",
+        audioSrc: "ycs - 너 (Official Audio).mp3"
+      },
+      {
+        title: "이상형 - relations",
+        artist: "이상형",
+        audioSrc: "이상형 - relations [Official Music Video].mp3"
+      }
     ];
 
     const audioPlayer = document.getElementById('audio-player');
@@ -184,7 +205,9 @@
 
       currentTitle.textContent = song.title;
       currentArtist.textContent = song.artist;
-      audioPlayer.src = song.audioSrc;
+
+      // 파일명 내 한글/공백/특수문자 인코딩 처리
+      audioPlayer.src = encodeURI(song.audioSrc);
 
       renderPlaylist();
 
@@ -194,7 +217,7 @@
       }
     }
 
-    // 화면 첫 클릭 시 브라우저 자동재생 차단 해제 및 영상 재생
+    // 첫 클릭 시 배경 영상 재생 (브라우저 자동재생 차단 방지)
     document.body.addEventListener('click', () => {
       bgVideo.play().catch(() => {});
     }, { once: true });
