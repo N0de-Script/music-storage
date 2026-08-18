@@ -234,16 +234,15 @@ audio {
 
 <script>
 
-const audio          = document.getElementById("audio");
-const background     = document.getElementById("background");
-const backgroundVideo= document.getElementById("backgroundVideo");
-const backgroundImage= document.getElementById("backgroundImage");
-const songTitle      = document.getElementById("songTitle");
-const songArtist     = document.getElementById("songArtist");
-const playlist       = document.getElementById("playlist");
+const audio           = document.getElementById("audio");
+const background      = document.getElementById("background");
+const backgroundVideo = document.getElementById("backgroundVideo");
+const backgroundImage = document.getElementById("backgroundImage");
+const songTitle       = document.getElementById("songTitle");
+const songArtist      = document.getElementById("songArtist");
+const playlist        = document.getElementById("playlist");
 
 let currentIndex = 0;
-let currentBlobUrl = null;
 
 
 /* ==========================================
@@ -253,7 +252,7 @@ let currentBlobUrl = null;
 const BACKGROUNDS = {
 
     brooklyn:
-        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/85a074861f51fc3a560a6077e1162bbb.gif",
+        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/85a074861f51fc3a560a6077e1162bbb.gif",
 
     video1:
         "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20(2).mp4",
@@ -262,7 +261,7 @@ const BACKGROUNDS = {
         "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20(1).mp4",
 
     relations:
-        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/40d89af3f71dddcdca7065a07fc6e069.jpg"
+        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg"
 
 };
 
@@ -274,51 +273,38 @@ const BACKGROUNDS = {
 const songs = [
 
     {
-        title:       "BrooklynBloodPop!",
-        artist:      "Nightcore",
-        file:        "./Nightcore%20-%20BrooklynBloodPop!.mp3",
-        background:  "brooklyn",
+        title:          "BrooklynBloodPop!",
+        artist:         "Nightcore",
+        file:           "./Nightcore%20-%20BrooklynBloodPop!.mp3",
+        background:     "brooklyn",
         backgroundType: "image"
     },
 
     {
-        title:       "i told u v1",
-        artist:      "midwxst",
-        file:        "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3",
-        background:  "video1",
+        title:          "i told u v1",
+        artist:         "midwxst",
+        file:           "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3",
+        background:     "video1",
         backgroundType: "video"
     },
 
     {
-        title:       "너",
-        artist:      "ycs",
-        file:        "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3",
-        background:  "video2",
+        title:          "너",
+        artist:         "ycs",
+        file:           "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3",
+        background:     "video2",
         backgroundType: "video"
     },
 
     {
-        title:       "relations",
-        artist:      "이상형",
-        file:        "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3",
-        background:  "relations",
+        title:          "relations",
+        artist:         "이상형",
+        file:           "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3",
+        background:     "relations",
         backgroundType: "image"
     }
 
 ];
-
-
-/* ==========================================
-   Blob URL 해제
-========================================== */
-
-function revokeBlobUrl() {
-
-    if (currentBlobUrl) {
-        URL.revokeObjectURL(currentBlobUrl);
-        currentBlobUrl = null;
-    }
-}
 
 
 /* ==========================================
@@ -332,44 +318,10 @@ function clearBackground() {
     backgroundImage.classList.remove("show");
 
     backgroundVideo.pause();
-    backgroundVideo.src = "";
+    backgroundVideo.removeAttribute("src");
     backgroundVideo.load();
 
     backgroundImage.style.backgroundImage = "";
-
-    revokeBlobUrl();
-}
-
-
-/* ==========================================
-   MP4를 fetch로 Blob URL 변환 후 재생
-========================================== */
-
-async function loadVideoAsBlob(url) {
-
-    try {
-
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        const blob = await response.blob();
-
-        const blobUrl = URL.createObjectURL(
-            new Blob([blob], { type: "video/mp4" })
-        );
-
-        currentBlobUrl = blobUrl;
-
-        return blobUrl;
-
-    } catch (error) {
-
-        console.error("MP4 fetch 실패:", error);
-        return null;
-    }
 }
 
 
@@ -377,7 +329,7 @@ async function loadVideoAsBlob(url) {
    배경 표시
 ========================================== */
 
-async function setBackground(song) {
+function setBackground(song) {
 
     if (!song.background) {
         return;
@@ -386,13 +338,13 @@ async function setBackground(song) {
     const url = BACKGROUNDS[song.background];
 
     if (!url) {
-        console.error("배경 주소를 찾을 수 없음:", song.background);
+        console.error("배경 주소 없음:", song.background);
         return;
     }
 
 
     /* ======================================
-       이미지 / GIF 배경
+       이미지 / GIF
     ====================================== */
 
     if (song.backgroundType === "image") {
@@ -420,17 +372,8 @@ async function setBackground(song) {
 
 
     /* ======================================
-       MP4 배경 (Blob URL 우회)
+       MP4
     ====================================== */
-
-    const blobUrl = await loadVideoAsBlob(url);
-
-    if (!blobUrl) {
-        return;
-    }
-
-    backgroundVideo.src = blobUrl;
-    backgroundVideo.load();
 
     function onCanPlay() {
 
@@ -452,6 +395,9 @@ async function setBackground(song) {
     }
 
     backgroundVideo.addEventListener("canplay", onCanPlay);
+
+    backgroundVideo.src = url;
+    backgroundVideo.load();
 }
 
 
@@ -514,7 +460,9 @@ function loadSong(index) {
 
     renderPlaylist();
 
-    setBackground(song);
+    requestAnimationFrame(() => {
+        setBackground(song);
+    });
 
     audio.play().catch(e => {
         console.error("음악 재생 실패:", e);
