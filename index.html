@@ -113,7 +113,7 @@ body {
 
 
 /* ==========================================
-   이미지 배경
+   이미지 / GIF 배경
 ========================================== */
 
 #backgroundImage {
@@ -512,8 +512,8 @@ let currentIndex = 0;
 
 const BACKGROUNDS = {
 
-    number:
-        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/MeAndAnimes_pindown.io_1787032949.mp4",
+    brooklyn:
+        "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/85a074861f51fc3a560a6077e1162bbb.gif",
 
     video1:
         "https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20%282%29.mp4",
@@ -537,26 +537,6 @@ const songs = [
 
     {
         title:
-            "NUMBER TWERKNATION28",
-
-        artist:
-            "sped up / nightcore",
-
-        file:
-            "./NUMBER%20TWERKNATION28%20(sped%20upnightcore).mp3",
-
-        background:
-            "number",
-
-        backgroundType:
-            "video"
-    },
-
-
-    /* 2번 */
-
-    {
-        title:
             "BrooklynBloodPop!",
 
         artist:
@@ -566,14 +546,14 @@ const songs = [
             "./Nightcore%20-%20BrooklynBloodPop!.mp3",
 
         background:
-            null,
+            "brooklyn",
 
         backgroundType:
-            null
+            "image"
     },
 
 
-    /* 3번 */
+    /* 2번 */
 
     {
         title:
@@ -593,7 +573,7 @@ const songs = [
     },
 
 
-    /* 4번 */
+    /* 3번 */
 
     {
         title:
@@ -613,7 +593,7 @@ const songs = [
     },
 
 
-    /* 5번 */
+    /* 4번 */
 
     {
         title:
@@ -689,7 +669,7 @@ function setBackground(song) {
 
 
     /* ======================================
-       JPG 배경
+       이미지 / GIF 배경
     ====================================== */
 
     if (song.backgroundType === "image") {
