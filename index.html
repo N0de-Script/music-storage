@@ -131,9 +131,9 @@
 </head>
 <body>
 
-  <!-- mp4-storage의 GitHub Pages 동영상 스트리밍 주소 연결 -->
+  <!-- 새로 올려주신 mp4 파일 연결 -->
   <div class="bg-video-container">
-    <video id="bg-video" src="https://n0de-script.github.io/mp4-storage/videoplayback.mp4" autoplay loop muted playsinline crossorigin="anonymous"></video>
+    <video id="bg-video" src="https://n0de-script.github.io/mp4-storage/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20(2).mp4" autoplay loop muted playsinline></video>
   </div>
   <div class="overlay"></div>
 
@@ -152,31 +152,11 @@
 
   <script>
     const songs = [
-      {
-        title: "midwxst - i told u v1",
-        artist: "midwxst",
-        audioSrc: "midwxst - i told u v1 [unofficial video].mp3"
-      },
-      {
-        title: "Nightcore - BrooklynBloodPop!",
-        artist: "SyKo",
-        audioSrc: "Nightcore - BrooklynBloodPop!.mp3"
-      },
-      {
-        title: "NUMBER TWERKNATION28 (sped up/nightcore)",
-        artist: "Artist",
-        audioSrc: "NUMBER TWERKNATION28 (sped upnightcore).mp3"
-      },
-      {
-        title: "ycs - 너",
-        artist: "ycs",
-        audioSrc: "ycs - 너 (Official Audio).mp3"
-      },
-      {
-        title: "이상형 - relations",
-        artist: "이상형",
-        audioSrc: "이상형 - relations [Official Music Video].mp3"
-      }
+      { title: "midwxst - i told u v1", artist: "midwxst", audioSrc: "1.mp3" },
+      { title: "Nightcore - BrooklynBloodPop!", artist: "SyKo", audioSrc: "2.mp3" },
+      { title: "NUMBER TWERKNATION28", artist: "Artist", audioSrc: "3.mp3" },
+      { title: "ycs - 너", artist: "ycs", audioSrc: "4.mp3" },
+      { title: "이상형 - relations", artist: "이상형", audioSrc: "5.mp3" }
     ];
 
     const audioPlayer = document.getElementById('audio-player');
@@ -213,6 +193,11 @@
         bgVideo.play().catch(() => {});
       }
     }
+
+    // 첫 클릭 시 배경 영상 재생 (자동재생 보안 차단 방지)
+    document.body.addEventListener('click', () => {
+      bgVideo.play().catch(() => {});
+    }, { once: true });
 
     audioPlayer.addEventListener('play', () => bgVideo.play().catch(() => {}));
     audioPlayer.addEventListener('pause', () => bgVideo.pause());
