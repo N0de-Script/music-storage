@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>N0DE SOUNDS</title>
 
 <style>
@@ -12,416 +11,393 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
-html,
-body {
+html, body {
     width: 100%;
     height: 100%;
 }
 
 body {
-    font-family:
-        Arial,
-        "Segoe UI",
-        sans-serif;
-
-    background: #10131a;
-    color: white;
-
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    background: #090b10;
+    color: #ffffff;
     min-height: 100vh;
-
     overflow: hidden;
-
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
+/* ==========================================
+   Liquid Ambient Mesh Glow
+========================================== */
+.liquid-glow {
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.45) 0%, rgba(168, 85, 247, 0.25) 50%, rgba(0, 0, 0, 0) 70%);
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: 2;
+    animation: liquidFloat 12s infinite alternate ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes liquidFloat {
+    0% { transform: translate(-30px, -40px) scale(1); }
+    100% { transform: translate(40px, 30px) scale(1.15); }
+}
 
 /* ==========================================
    배경
 ========================================== */
-
 #videoBackground {
-
     position: fixed;
-
     inset: 0;
-
     width: 100vw;
     height: 100vh;
-
     z-index: 0;
-
     overflow: hidden;
-
-    background: #10131a;
-
+    background: #090b10;
     opacity: 0;
-
     visibility: hidden;
-
-    transition:
-        opacity 0.5s ease,
-        visibility 0.5s ease;
-
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s ease;
     pointer-events: none;
 }
 
-
 #videoBackground.show {
-
     opacity: 1;
-
     visibility: visible;
 }
 
-
-/* ==========================================
-   배경 영상
-========================================== */
-
-.background-video {
-
-    position: absolute;
-
-    top: -4%;
-    left: -4%;
-
-    width: 108%;
-    height: 108%;
-
-    object-fit: cover;
-
-    display: block;
-
-    filter:
-        blur(10px)
-        brightness(0.48);
-
-    transform: scale(1.03);
-
-    opacity: 0;
-
-    transition:
-        opacity 0.5s ease;
-
-    pointer-events: none;
-}
-
-
-.background-video.active {
-
-    opacity: 1;
-}
-
-
-/* ==========================================
-   배경 이미지 / GIF
-========================================== */
-
+.background-video,
 .background-image {
-
     position: absolute;
-
-    inset: -4%;
-
-    width: 108%;
-    height: 108%;
-
+    inset: -5%;
+    width: 110%;
+    height: 110%;
+    object-fit: cover;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-
-    filter:
-        blur(10px)
-        brightness(0.48);
-
-    transform: scale(1.03);
-
+    filter: blur(24px) brightness(0.45) saturate(140%);
+    transform: scale(1.05);
     opacity: 0;
-
-    transition:
-        opacity 0.5s ease;
-
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
 }
 
-
+.background-video.active,
 .background-image.active {
-
     opacity: 1;
 }
 
-
-/* ==========================================
-   배경 오버레이
-========================================== */
-
 #videoOverlay {
-
     position: fixed;
-
     inset: 0;
-
-    width: 100vw;
-    height: 100vh;
-
     z-index: 1;
-
     pointer-events: none;
-
-    background:
-        rgba(0, 0, 0, 0.25);
+    background: radial-gradient(circle at center, rgba(16, 19, 26, 0.2) 0%, rgba(9, 11, 16, 0.7) 100%);
 }
 
-
 /* ==========================================
-   플레이어
+   iOS 26 Liquid Glass Player
 ========================================== */
-
 .player {
-
     position: relative;
-
     z-index: 10;
-
-    width: calc(100% - 30px);
-
-    max-width: 430px;
-
-    padding: 28px;
-
-    border-radius: 24px;
-
-    background:
-        rgba(20, 25, 35, 0.82);
-
-    backdrop-filter: blur(18px);
-
-    -webkit-backdrop-filter: blur(18px);
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.15);
-
-    box-shadow:
-        0 25px 60px
-        rgba(0, 0, 0, 0.6);
+    width: calc(100% - 32px);
+    max-width: 420px;
+    padding: 24px;
+    border-radius: 32px;
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(35px) saturate(210%);
+    -webkit-backdrop-filter: blur(35px) saturate(210%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 
+        0 30px 80px rgba(0, 0, 0, 0.55),
+        inset 0 1px 2px rgba(255, 255, 255, 0.4),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-
 /* ==========================================
-   앨범
+   앨범 아트 Glass
 ========================================== */
-
 .album {
-
     width: 100%;
-    height: 180px;
-
-    border-radius: 18px;
-
+    height: 170px;
+    border-radius: 22px;
     display: flex;
-
     align-items: center;
     justify-content: center;
-
-    font-size: 60px;
-
+    font-size: 64px;
     margin-bottom: 18px;
-
-    background:
-        rgba(255, 255, 255, 0.06);
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 12px 24px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px);
 }
-
-
-/* ==========================================
-   제목
-========================================== */
 
 .title {
-
     text-align: center;
-
-    font-size: 19px;
-
+    font-size: 20px;
     font-weight: 700;
-
-    line-height: 1.4;
-
+    letter-spacing: -0.02em;
+    line-height: 1.3;
     word-break: break-word;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
-
 
 .artist {
-
     text-align: center;
-
-    margin-top: 5px;
-
+    margin-top: 4px;
     margin-bottom: 18px;
-
-    color: #aeb8c7;
-
+    color: rgba(255, 255, 255, 0.65);
     font-size: 14px;
+    font-weight: 500;
 }
 
-
-/* ==========================================
-   오디오
-========================================== */
-
+/* 오디오 컨트롤 */
 audio {
-
     width: 100%;
-
-    margin-bottom: 22px;
+    margin-bottom: 18px;
+    outline: none;
+    border-radius: 12px;
+    filter: invert(1) hue-rotate(180deg) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    opacity: 0.9;
 }
 
-
 /* ==========================================
-   Playlist
+   Playlist Header & Controls
 ========================================== */
+.playlist-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 4px 10px 4px;
+}
 
 .playlist-title {
-
     font-size: 12px;
-
-    color: #94a3b8;
-
+    color: rgba(255, 255, 255, 0.6);
     font-weight: 700;
-
-    letter-spacing: 0.08em;
-
-    margin-bottom: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
-
-.playlist {
-
-    list-style: none;
-
-    max-height: 210px;
-
-    overflow-y: auto;
-
-    border-radius: 14px;
-
-    background:
-        rgba(0, 0, 0, 0.2);
-}
-
-
-.song {
-
+.playlist-toggle-btn {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
     display: flex;
-
     align-items: center;
-
-    gap: 12px;
-
-    padding: 13px 15px;
-
+    justify-content: center;
     cursor: pointer;
-
-    border-bottom:
-        1px solid
-        rgba(255, 255, 255, 0.05);
-
-    transition:
-        background 0.2s ease;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.3);
 }
 
-
-.song:hover {
-
-    background:
-        rgba(255, 255, 255, 0.08);
+.playlist-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: scale(1.05);
 }
 
-
-.song.active {
-
-    background:
-        rgba(99, 102, 241, 0.35);
+.playlist-toggle-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-
-.number {
-
-    width: 22px;
-
-    min-width: 22px;
-
-    text-align: center;
-
-    color: #94a3b8;
-
-    font-size: 12px;
+.playlist-toggle-btn.closed svg {
+    transform: rotate(180deg);
 }
-
-
-.song-name {
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-
-    font-size: 13px;
-}
-
 
 /* ==========================================
-   모바일
+   Playlist Collapsible Box
 ========================================== */
+.playlist-collapsible {
+    display: grid;
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transition: grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                opacity 0.35s ease, 
+                margin 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
+.playlist-collapsible.closed {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    margin-top: 0;
+    pointer-events: none;
+}
+
+.playlist-inner {
+    overflow: hidden;
+}
+
+/* ==========================================
+   Search Input (Liquid Glass)
+========================================== */
+.search-container {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    fill: rgba(255, 255, 255, 0.45);
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 12px 10px 34px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font-size: 13px;
+    outline: none;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.search-input:focus {
+    background: rgba(0, 0, 0, 0.35);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 12px rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================
+   Playlist Items
+========================================== */
+.playlist {
+    list-style: none;
+    max-height: 190px;
+    overflow-y: auto;
+    border-radius: 18px;
+    background: rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 4px;
+}
+
+.playlist::-webkit-scrollbar {
+    width: 4px;
+}
+
+.playlist::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.song {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    cursor: pointer;
+    border-radius: 12px;
+    margin-bottom: 2px;
+    transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.song:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.song.active {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.number {
+    width: 20px;
+    min-width: 20px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.song.active .number {
+    color: #ffffff;
+}
+
+.song-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.song-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.song-artist-sub {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 1px;
+}
+
+.no-result {
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* ==========================================
+   모바일 대응
+========================================== */
 @media (max-width: 500px) {
-
     .player {
-
         padding: 20px;
+        border-radius: 28px;
     }
 
     .album {
-
-        height: 150px;
-
-        font-size: 50px;
+        height: 140px;
+        font-size: 52px;
     }
-
 }
 
 </style>
 </head>
 
-
 <body>
 
+<div class="liquid-glow"></div>
 
 <!-- ==========================================
      배경
 ========================================== -->
-
 <div id="videoBackground">
 
-
-    <!-- 1번 BrooklynBloodPop! GIF 배경 -->
-
-    <div
-        id="backgroundImage1"
-        class="background-image">
-    </div>
-
-
-    <!-- 2번 i told u v1 영상 배경 -->
+    <div id="backgroundImage1" class="background-image"></div>
 
     <video
         id="backgroundVideo1"
@@ -433,9 +409,6 @@ audio {
         src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20(2).mp4">
     </video>
 
-
-    <!-- 3번 너 영상 배경 -->
-
     <video
         id="backgroundVideo2"
         class="background-video"
@@ -446,198 +419,105 @@ audio {
         src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20(1).mp4">
     </video>
 
-
-    <!-- 4번 relations 이미지 배경 -->
-
-    <div
-        id="backgroundImage2"
-        class="background-image">
-    </div>
-
+    <div id="backgroundImage2" class="background-image"></div>
 
 </div>
 
-
 <div id="videoOverlay"></div>
-
 
 <!-- ==========================================
      플레이어
 ========================================== -->
-
 <div class="player">
 
+    <div class="album">🎧</div>
 
-    <div class="album">
-        🎧
+    <div class="title" id="songTitle">곡을 선택해주세요</div>
+    <div class="artist" id="songArtist">N0DE SOUNDS</div>
+
+    <audio id="audio" controls preload="metadata"></audio>
+
+    <div class="playlist-header">
+        <span class="playlist-title">PLAYLIST</span>
+        <button class="playlist-toggle-btn" id="playlistToggleBtn" title="플레이리스트 접기/펼치기">
+            <svg viewBox="0 0 24 24">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+            </svg>
+        </button>
     </div>
 
+    <div class="playlist-collapsible" id="playlistCollapsible">
+        <div class="playlist-inner">
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" id="searchInput" class="search-input" placeholder="곡 제목 또는 아티스트 검색..." autocomplete="off">
+            </div>
 
-    <div
-        class="title"
-        id="songTitle">
-
-        곡을 선택해주세요
-
+            <ul class="playlist" id="playlist"></ul>
+        </div>
     </div>
-
-
-    <div
-        class="artist"
-        id="songArtist">
-
-        N0DE SOUNDS
-
-    </div>
-
-
-    <audio
-        id="audio"
-        controls
-        preload="metadata">
-    </audio>
-
-
-    <div class="playlist-title">
-        PLAYLIST
-    </div>
-
-
-    <ul
-        class="playlist"
-        id="playlist">
-    </ul>
-
 
 </div>
 
-
 <script>
-
-const audio =
-    document.getElementById("audio");
-
-const background =
-    document.getElementById("videoBackground");
-
-const backgroundVideo1 =
-    document.getElementById("backgroundVideo1");
-
-const backgroundVideo2 =
-    document.getElementById("backgroundVideo2");
-
-const backgroundImage1 =
-    document.getElementById("backgroundImage1");
-
-const backgroundImage2 =
-    document.getElementById("backgroundImage2");
-
-const songTitle =
-    document.getElementById("songTitle");
-
-const songArtist =
-    document.getElementById("songArtist");
-
-const playlist =
-    document.getElementById("playlist");
-
+const audio = document.getElementById("audio");
+const background = document.getElementById("videoBackground");
+const backgroundVideo1 = document.getElementById("backgroundVideo1");
+const backgroundVideo2 = document.getElementById("backgroundVideo2");
+const backgroundImage1 = document.getElementById("backgroundImage1");
+const backgroundImage2 = document.getElementById("backgroundImage2");
+const songTitle = document.getElementById("songTitle");
+const songArtist = document.getElementById("songArtist");
+const playlist = document.getElementById("playlist");
+const searchInput = document.getElementById("searchInput");
+const playlistToggleBtn = document.getElementById("playlistToggleBtn");
+const playlistCollapsible = document.getElementById("playlistCollapsible");
 
 let currentIndex = 0;
-
+let searchQuery = "";
 
 /* ==========================================
    이미지 배경 미리 로드
 ========================================== */
-
-backgroundImage1.style.backgroundImage =
-    "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/85a074861f51fc3a560a6077e1162bbb.gif')";
-
-backgroundImage2.style.backgroundImage =
-    "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg')";
-
+backgroundImage1.style.backgroundImage = "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/85a074861f51fc3a560a6077e1162bbb.gif')";
+backgroundImage2.style.backgroundImage = "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg')";
 
 /* ==========================================
    음악 데이터
 ========================================== */
-
 const songs = [
-
-    /* 1번 */
-
     {
-        title:
-            "BrooklynBloodPop!",
-
-        artist:
-            "Nightcore",
-
-        file:
-            "./Nightcore%20-%20BrooklynBloodPop!.mp3",
-
-        background:
-            "image1"
+        title: "BrooklynBloodPop!",
+        artist: "Nightcore",
+        file: "./Nightcore%20-%20BrooklynBloodPop!.mp3",
+        background: "image1"
     },
-
-
-    /* 2번 */
-
     {
-        title:
-            "i told u v1",
-
-        artist:
-            "midwxst",
-
-        file:
-            "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3",
-
-        background:
-            "video1"
+        title: "i told u v1",
+        artist: "midwxst",
+        file: "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3",
+        background: "video1"
     },
-
-
-    /* 3번 */
-
     {
-        title:
-            "너",
-
-        artist:
-            "ycs",
-
-        file:
-            "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3",
-
-        background:
-            "video2"
+        title: "너",
+        artist: "ycs",
+        file: "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3",
+        background: "video2"
     },
-
-
-    /* 4번 */
-
     {
-        title:
-            "relations",
-
-        artist:
-            "이상형",
-
-        file:
-            "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3",
-
-        background:
-            "image2"
+        title: "relations",
+        artist: "이상형",
+        file: "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3",
+        background: "image2"
     }
-
 ];
-
 
 /* ==========================================
    모든 배경 숨기기
 ========================================== */
-
 function hideAllBackgrounds() {
-
     backgroundVideo1.pause();
     backgroundVideo2.pause();
 
@@ -649,14 +529,12 @@ function hideAllBackgrounds() {
     background.classList.remove("show");
 }
 
-
 /* ==========================================
    현재 배경 요소 가져오기
 ========================================== */
-
 function getBackgroundElement() {
-
     const song = songs[currentIndex];
+    if (!song) return null;
 
     if (song.background === "video1") return backgroundVideo1;
     if (song.background === "video2") return backgroundVideo2;
@@ -666,13 +544,10 @@ function getBackgroundElement() {
     return null;
 }
 
-
 /* ==========================================
    배경 시작
 ========================================== */
-
 function startBackground() {
-
     const el = getBackgroundElement();
 
     if (!el) {
@@ -680,35 +555,27 @@ function startBackground() {
         return;
     }
 
-    const isVideo =
-        el === backgroundVideo1 ||
-        el === backgroundVideo2;
-
+    const isVideo = el === backgroundVideo1 || el === backgroundVideo2;
 
     if (el !== backgroundVideo1) {
         backgroundVideo1.pause();
         backgroundVideo1.classList.remove("active");
     }
-
     if (el !== backgroundVideo2) {
         backgroundVideo2.pause();
         backgroundVideo2.classList.remove("active");
     }
-
     if (el !== backgroundImage1) {
         backgroundImage1.classList.remove("active");
     }
-
     if (el !== backgroundImage2) {
         backgroundImage2.classList.remove("active");
     }
 
     background.classList.add("show");
-
     el.classList.add("active");
 
     if (isVideo) {
-
         if (el.readyState >= 1) {
             try {
                 el.currentTime = audio.currentTime;
@@ -721,52 +588,55 @@ function startBackground() {
     }
 }
 
-
 /* ==========================================
-   Playlist
+   Playlist Render & Search Filter
 ========================================== */
-
 function renderPlaylist() {
-
     playlist.innerHTML = "";
 
-    songs.forEach((song, index) => {
+    const filtered = songs.filter(song => 
+        song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        song.artist.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
-        const item =
-            document.createElement("li");
+    if (filtered.length === 0) {
+        playlist.innerHTML = `<li class="no-result">검색 결과가 없습니다</li>`;
+        return;
+    }
 
+    filtered.forEach((song) => {
+        const originalIndex = songs.findIndex(s => s === song);
+        const item = document.createElement("li");
         item.className = "song";
 
-        if (index === currentIndex) {
+        if (originalIndex === currentIndex) {
             item.classList.add("active");
         }
 
         item.innerHTML = `
-            <span class="number">${index + 1}</span>
-            <span class="song-name">${song.title}</span>
+            <span class="number">${originalIndex + 1}</span>
+            <div class="song-info">
+                <span class="song-name">${song.title}</span>
+                <span class="song-artist-sub">${song.artist}</span>
+            </div>
         `;
 
         item.addEventListener("click", () => {
-            loadSong(index);
+            loadSong(originalIndex);
         });
 
         playlist.appendChild(item);
     });
 }
 
-
 /* ==========================================
    곡 변경
 ========================================== */
-
 function loadSong(index) {
-
     currentIndex = index;
-
     const song = songs[currentIndex];
 
     audio.pause();
-
     hideAllBackgrounds();
 
     audio.src = song.file;
@@ -788,15 +658,24 @@ function loadSong(index) {
         });
 }
 
-
 /* ==========================================
-   음악 재생
+   이벤트 리스너
 ========================================== */
+// 검색 입력 이벤트
+searchInput.addEventListener("input", (e) => {
+    searchQuery = e.target.value.trim();
+    renderPlaylist();
+});
 
+// 플레이리스트 토글 버튼 이벤트
+playlistToggleBtn.addEventListener("click", () => {
+    playlistCollapsible.classList.toggle("closed");
+    playlistToggleBtn.classList.toggle("closed");
+});
+
+// 재생 이벤트
 audio.addEventListener("play", () => {
-
     const song = songs[currentIndex];
-
     if (song.background !== null) {
         startBackground();
     } else {
@@ -804,47 +683,21 @@ audio.addEventListener("play", () => {
     }
 });
 
-
-/* ==========================================
-   음악 일시정지
-========================================== */
-
+// 일시정지 이벤트
 audio.addEventListener("pause", () => {
-
     const el = getBackgroundElement();
-
-    if (
-        el === backgroundVideo1 ||
-        el === backgroundVideo2
-    ) {
+    if (el === backgroundVideo1 || el === backgroundVideo2) {
         el.pause();
     }
 });
 
-
-/* ==========================================
-   싱크
-========================================== */
-
+// 싱크 조절
 audio.addEventListener("timeupdate", () => {
-
     const el = getBackgroundElement();
+    if (el !== backgroundVideo1 && el !== backgroundVideo2) return;
+    if (el.readyState < 2) return;
 
-    if (
-        el !== backgroundVideo1 &&
-        el !== backgroundVideo2
-    ) {
-        return;
-    }
-
-    if (el.readyState < 2) {
-        return;
-    }
-
-    const diff = Math.abs(
-        el.currentTime - audio.currentTime
-    );
-
+    const diff = Math.abs(el.currentTime - audio.currentTime);
     if (diff > 0.35) {
         try {
             el.currentTime = audio.currentTime;
@@ -852,85 +705,40 @@ audio.addEventListener("timeupdate", () => {
     }
 });
 
-
-/* ==========================================
-   Seek
-========================================== */
-
+// 탐색(Seek) 이벤트
 audio.addEventListener("seeking", () => {
-
     const el = getBackgroundElement();
-
-    if (
-        el !== backgroundVideo1 &&
-        el !== backgroundVideo2
-    ) {
-        return;
-    }
-
+    if (el !== backgroundVideo1 && el !== backgroundVideo2) return;
     try {
         el.currentTime = audio.currentTime;
     } catch (e) {}
 });
 
-
-/* ==========================================
-   음악 종료
-========================================== */
-
+// 자동 다음 곡 재생
 audio.addEventListener("ended", () => {
-
     const next = (currentIndex + 1) % songs.length;
     loadSong(next);
 });
 
-
-/* ==========================================
-   영상 로딩 완료 이벤트
-========================================== */
-
+// 영상 로딩 이벤트
 backgroundVideo1.addEventListener("loadeddata", () => {
-
-    if (
-        songs[currentIndex].background === "video1" &&
-        !audio.paused
-    ) {
+    if (songs[currentIndex].background === "video1" && !audio.paused) {
         startBackground();
     }
 });
 
 backgroundVideo2.addEventListener("loadeddata", () => {
-
-    if (
-        songs[currentIndex].background === "video2" &&
-        !audio.paused
-    ) {
+    if (songs[currentIndex].background === "video2" && !audio.paused) {
         startBackground();
     }
 });
 
-
-/* ==========================================
-   영상 오류
-========================================== */
-
-backgroundVideo1.addEventListener("error", () => {
-    console.error("배경 영상1 로딩 실패:", backgroundVideo1.error);
-});
-
-backgroundVideo2.addEventListener("error", () => {
-    console.error("배경 영상2 로딩 실패:", backgroundVideo2.error);
-});
-
-
 /* ==========================================
    초기화
 ========================================== */
-
 renderPlaylist();
 loadSong(0);
 
 </script>
-
 </body>
 </html>
