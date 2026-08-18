@@ -391,7 +391,7 @@ body {
 
 
 /* ==========================================
-   Windows Style Notification (오른쪽 하단 팝업)
+   Windows Style Notification (오른쪽 화면 바깥 슬라이드)
 ========================================== */
 
 .toast-container {
@@ -417,9 +417,11 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+
+    /* 화면 우측 화면 바깥 위치 설정 및 슬라이드 효과 */
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateX(calc(100% + 40px));
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
     pointer-events: auto;
     min-width: 240px;
     max-width: 320px;
@@ -427,7 +429,7 @@ body {
 
 .toast.show {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
 }
 
 .toast-icon {
@@ -570,7 +572,7 @@ const songs = [
 
 
 /* ==========================================
-   알림 팝업 함수 (Windows 토스트)
+   알림 팝업 함수 (슬라이드 인/아웃 연출)
 ========================================== */
 
 function showToast(message) {
@@ -582,16 +584,15 @@ function showToast(message) {
 
     toastContainer.appendChild(toast);
 
-    // setTimeout을 이용해 DOM 생성 후 딜레이 없이 확실하게 트랜지션 실행
     setTimeout(() => {
         toast.classList.add("show");
-    }, 10);
+    }, 20);
 
     setTimeout(() => {
         toast.classList.remove("show");
         setTimeout(() => {
             toast.remove();
-        }, 300);
+        }, 450);
     }, 2500);
 }
 
@@ -702,8 +703,8 @@ function loadSong(index) {
 
     renderPlaylist(searchInput.value);
 
-    // 곡 선택 시 팝업 알림 출력
-    showToast(`'${song.title}' 곡이 선택되었습니다!`);
+    // 느낌표 제거된 곡 선택 알림
+    showToast(`'${song.title}' 곡이 선택되었습니다`);
 
     audio.play()
         .then(() => {
@@ -714,16 +715,16 @@ function loadSong(index) {
 
 
 /* ==========================================
-   컨트롤 버튼 및 알림 구현
+   컨트롤 버튼 및 수정된 알림 문구
 ========================================== */
 
 playPauseBtn.addEventListener("click", () => {
     if (audio.paused) {
         audio.play().catch(e => console.error(e));
-        showToast("노래 재생을 시작했습니다!");
+        showToast("노래 재생 성공");
     } else {
         audio.pause();
-        showToast("노래를 일시정지했습니다.");
+        showToast("노래 일시정지");
     }
 });
 
