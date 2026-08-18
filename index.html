@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>N0DE SOUNDS</title>
+<title>N0DE SOUNDS - Liquid Glass</title>
 
 <style>
 * {
@@ -17,52 +17,81 @@
 html, body {
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Pretendard", sans-serif;
-    background: #080a10;
+    background: #030712;
     color: #ffffff;
     min-height: 100vh;
-    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 /* ==========================================
-   동적 리퀴드 오라 배경
+   iOS Liquid Glass 빛 산란 오라 (배경 이펙트)
 ========================================== */
-.liquid-glow {
+.liquid-canvas {
     position: fixed;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(120, 119, 198, 0.35) 0%, rgba(255, 255, 255, 0) 70%);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    filter: blur(80px);
+    inset: 0;
+    z-index: 0;
     pointer-events: none;
-    animation: liquidFloat 8s infinite alternate ease-in-out;
+    overflow: hidden;
 }
 
-@keyframes liquidFloat {
-    0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-    100% { transform: translate(-45%, -55%) scale(1.2) rotate(15deg); }
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.7;
+    animation: liquidMove 12s infinite alternate ease-in-out;
+}
+
+.blob-1 {
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, #6366f1 0%, rgba(99,102,241,0) 70%);
+    top: -10%;
+    left: 10%;
+}
+
+.blob-2 {
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, #ec4899 0%, rgba(236,72,153,0) 70%);
+    bottom: -10%;
+    right: 5%;
+    animation-delay: -4s;
+}
+
+.blob-3 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, #06b6d4 0%, rgba(6,182,212,0) 70%);
+    top: 40%;
+    left: 50%;
+    animation-delay: -8s;
+}
+
+@keyframes liquidMove {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(60px, -40px) scale(1.15) rotate(45deg); }
+    100% { transform: translate(-40px, 50px) scale(0.9) rotate(-30deg); }
 }
 
 /* ==========================================
-   배경 미디어 레이어
+   동적 미디어 배경 레이어
 ========================================== */
 #videoBackground {
     position: fixed;
     inset: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 0;
+    z-index: 1;
     overflow: hidden;
-    background: #080a10;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.8s ease, visibility 0.8s ease;
@@ -84,7 +113,7 @@ body {
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    filter: blur(40px) brightness(0.5) saturate(1.5);
+    filter: blur(35px) brightness(0.6) saturate(1.6);
     transform: scale(1.05);
     opacity: 0;
     transition: opacity 0.8s ease;
@@ -96,121 +125,173 @@ body {
     opacity: 1;
 }
 
-#videoOverlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
-}
-
 /* ==========================================
-   iOS Liquid Glass Player Frame
+   iOS Liquid Glass 카드 
 ========================================== */
 .player {
     position: relative;
     z-index: 10;
-    width: calc(100% - 32px);
-    max-width: 420px;
-    padding: 28px;
-    border-radius: 40px;
+    width: calc(100% - 36px);
+    max-width: 410px;
+    padding: 30px 26px;
+    border-radius: 44px;
     
-    /* Liquid Glass Effect */
+    /* Ultra Liquid Glass Fill */
     background: linear-gradient(
         135deg, 
-        rgba(255, 255, 255, 0.22) 0%, 
-        rgba(255, 255, 255, 0.03) 40%, 
-        rgba(255, 255, 255, 0.12) 100%
+        rgba(255, 255, 255, 0.28) 0%, 
+        rgba(255, 255, 255, 0.05) 35%, 
+        rgba(255, 255, 255, 0.15) 100%
     );
-    backdrop-filter: blur(50px) saturate(220%);
-    -webkit-backdrop-filter: blur(50px) saturate(220%);
+    backdrop-filter: blur(60px) saturate(230%);
+    -webkit-backdrop-filter: blur(60px) saturate(230%);
     
-    /* Glass Borders & Edge Gloss */
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-top: 1.5px solid rgba(255, 255, 255, 0.65);
-    border-left: 1.5px solid rgba(255, 255, 255, 0.45);
+    /* Glass Specular Reflection Border */
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-top: 1.5px solid rgba(255, 255, 255, 0.7);
+    border-left: 1.5px solid rgba(255, 255, 255, 0.5);
     
     box-shadow: 
-        0 30px 80px rgba(0, 0, 0, 0.65),
-        inset 0 1px 2px rgba(255, 255, 255, 0.8),
-        inset 0 -2px 15px rgba(255, 255, 255, 0.08);
+        0 35px 80px -15px rgba(0, 0, 0, 0.65),
+        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -2px 20px 0 rgba(255, 255, 255, 0.08);
+    
+    overflow: hidden;
 }
 
-/* 앨범 아트 */
+/* 유리 광택 레이어 (Shine overlay) */
+.player::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+        60deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.12) 48%,
+        rgba(255, 255, 255, 0.25) 50%,
+        rgba(255, 255, 255, 0.12) 52%,
+        transparent 70%
+    );
+    pointer-events: none;
+}
+
+/* 앨범 아트 & 오디오 비주얼라이저 */
 .album {
+    position: relative;
     width: 100%;
     height: 180px;
-    border-radius: 26px;
+    border-radius: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 64px;
-    margin-bottom: 20px;
-    background: linear-gradient(145deg, rgba(255,255,255,0.18), rgba(0,0,0,0.3));
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    margin-bottom: 22px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.35));
+    border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 
-        inset 0 1px 2px rgba(255, 255, 255, 0.5),
-        0 15px 30px rgba(0, 0, 0, 0.35);
-    transition: transform 0.3s ease;
+        inset 0 1px 3px rgba(255, 255, 255, 0.6),
+        0 15px 35px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
 }
 
-.album:hover {
-    transform: scale(1.02);
+.album-emoji {
+    font-size: 64px;
+    z-index: 2;
+    transition: transform 0.4s ease;
 }
 
-/* 곡 타이틀 */
+/* 유기적 파동 비주얼라이저 Bar */
+.visualizer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+    padding-bottom: 12px;
+    z-index: 1;
+}
+
+.v-bar {
+    width: 4px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    transition: height 0.1s ease;
+}
+
+.player.playing .v-bar {
+    animation: barPulse 0.6s infinite alternate ease-in-out;
+}
+
+.v-bar:nth-child(1) { animation-delay: 0.1s; }
+.v-bar:nth-child(2) { animation-delay: 0.3s; }
+.v-bar:nth-child(3) { animation-delay: 0.2s; }
+.v-bar:nth-child(4) { animation-delay: 0.4s; }
+.v-bar:nth-child(5) { animation-delay: 0.15s; }
+
+@keyframes barPulse {
+    0% { height: 6px; }
+    100% { height: 32px; }
+}
+
+/* 곡 정보 */
 .title {
     text-align: center;
     font-size: 21px;
     font-weight: 700;
-    line-height: 1.3;
+    line-height: 1.25;
     letter-spacing: -0.02em;
-    word-break: break-word;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .artist {
     text-align: center;
-    margin-top: 4px;
+    margin-top: 5px;
     margin-bottom: 22px;
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 14px;
     font-weight: 500;
 }
 
 /* ==========================================
-   커스텀 Liquid Glass 오디오 컨트롤러
+   Liquid Glass 컨트롤 스파인
 ========================================== */
 .controls-container {
     margin-bottom: 22px;
 }
 
-/* 탐색 바 및 시간 표시 */
 .progress-area {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 }
 
 .progress-bar-container {
     position: relative;
     width: 100%;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.15);
+    height: 8px;
+    background: rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     cursor: pointer;
     overflow: hidden;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
 }
 
 .progress-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), #ffffff);
+    background: linear-gradient(90deg, rgba(255,255,255,0.7), #ffffff);
     border-radius: 10px;
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
     transition: width 0.1s linear;
 }
 
@@ -218,82 +299,82 @@ body {
     display: flex;
     justify-content: space-between;
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.6);
     font-weight: 600;
-    padding: 0 2px;
 }
 
-/* 버튼 모음 */
 .button-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 22px;
 }
 
 .glass-btn {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-top: 1px solid rgba(255, 255, 255, 0.45);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.08));
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.6);
     color: #ffffff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255,255,255,0.4);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.6);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.18));
     transform: scale(1.08);
 }
 
 .glass-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.92);
 }
 
 .btn-small {
-    width: 42px;
-    height: 42px;
-    font-size: 14px;
+    width: 44px;
+    height: 44px;
+    font-size: 15px;
 }
 
 .btn-large {
-    width: 58px;
-    height: 58px;
-    font-size: 20px;
-    background: rgba(255, 255, 255, 0.22);
+    width: 62px;
+    height: 62px;
+    font-size: 22px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.12));
 }
 
 /* ==========================================
-   Liquid Playlist & 검색 영역
+   플레이리스트 & 실시간 검색창
 ========================================== */
 .playlist-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 4px 6px;
+    padding: 6px 8px;
     margin-bottom: 10px;
     cursor: pointer;
 }
 
 .playlist-title {
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.55);
-    font-weight: 700;
-    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 800;
+    letter-spacing: 0.14em;
 }
 
 .toggle-btn {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
     border-radius: 50%;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -301,7 +382,7 @@ body {
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* 접기/펼치기 부드러운 그리드 애니메이션 */
+/* 접기/펼치기 부드러운 애니메이션 래퍼 */
 .playlist-wrapper {
     display: grid;
     grid-template-rows: 1fr;
@@ -319,7 +400,6 @@ body {
     overflow: hidden;
 }
 
-/* 유리 검색창 */
 .search-container {
     position: relative;
     margin-bottom: 10px;
@@ -327,42 +407,41 @@ body {
 
 .search-input {
     width: 100%;
-    padding: 10px 14px;
-    border-radius: 14px;
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 11px 16px;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     color: #fff;
     font-size: 13px;
     outline: none;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(15px);
     transition: all 0.25s ease;
 }
 
 .search-input::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.45);
 }
 
 .search-input:focus {
-    background: rgba(0, 0, 0, 0.35);
-    border-color: rgba(255, 255, 255, 0.35);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.45);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.15);
 }
 
-/* 목록 */
 .playlist {
     list-style: none;
-    max-height: 170px;
+    max-height: 160px;
     overflow-y: auto;
-    border-radius: 18px;
-    background: rgba(0, 0, 0, 0.22);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .playlist::-webkit-scrollbar {
     width: 4px;
 }
 .playlist::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.3);
     border-radius: 4px;
 }
 
@@ -370,9 +449,9 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 11px 14px;
+    padding: 12px 16px;
     cursor: pointer;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transition: background 0.2s ease, transform 0.15s ease;
 }
 
@@ -381,7 +460,7 @@ body {
 }
 
 .song:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .song:active {
@@ -389,17 +468,17 @@ body {
 }
 
 .song.active {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.05));
-    border-left: 3px solid #ffffff;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.08));
+    border-left: 3.5px solid #ffffff;
 }
 
 .number {
     width: 20px;
     min-width: 20px;
     text-align: center;
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(255, 255, 255, 0.5);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .song-info {
@@ -418,25 +497,24 @@ body {
 
 .song-artist-sub {
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.5);
-    margin-top: 1px;
+    color: rgba(255, 255, 255, 0.55);
+    margin-top: 2px;
 }
 
 .empty-search {
-    padding: 16px;
+    padding: 18px;
     text-align: center;
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.45);
 }
 
 @media (max-width: 500px) {
     .player {
-        padding: 22px;
-        border-radius: 34px;
+        padding: 24px 20px;
+        border-radius: 36px;
     }
     .album {
-        height: 140px;
-        font-size: 52px;
+        height: 150px;
     }
 }
 </style>
@@ -444,9 +522,14 @@ body {
 
 <body>
 
-<div class="liquid-glow"></div>
+<!-- iOS 액체 오브 오라 배경 -->
+<div class="liquid-canvas">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+</div>
 
-<!-- 배경 레이어 -->
+<!-- 동적 미디어 배경 레이어 -->
 <div id="videoBackground">
     <div id="backgroundImage1" class="background-image"></div>
     <video id="backgroundVideo1" class="background-video" muted loop playsinline preload="auto" src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20(2).mp4"></video>
@@ -454,18 +537,25 @@ body {
     <div id="backgroundImage2" class="background-image"></div>
 </div>
 
-<div id="videoOverlay"></div>
-
 <!-- iOS Liquid Glass 플레이어 카드 -->
-<div class="player">
-    <div class="album">🎧</div>
+<div class="player" id="playerCard">
+    <div class="album">
+        <span class="album-emoji">🎧</span>
+        <div class="visualizer">
+            <div class="v-bar"></div>
+            <div class="v-bar"></div>
+            <div class="v-bar"></div>
+            <div class="v-bar"></div>
+            <div class="v-bar"></div>
+        </div>
+    </div>
+
     <div class="title" id="songTitle">곡을 선택해주세요</div>
     <div class="artist" id="songArtist">N0DE SOUNDS</div>
 
-    <!-- 숨김 오디오 엘리먼트 -->
     <audio id="audio" preload="metadata"></audio>
 
-    <!-- 커스텀 오디오 컨트롤러 -->
+    <!-- 커스텀 Liquid 오디오 컨트롤러 -->
     <div class="controls-container">
         <div class="progress-area">
             <div class="progress-bar-container" id="progressBarContainer">
@@ -490,7 +580,7 @@ body {
         <button class="toggle-btn" id="toggleIcon">▲</button>
     </div>
 
-    <!-- 플레이리스트 & 검색 -->
+    <!-- 플레이리스트 & 실시간 검색창 -->
     <div class="playlist-wrapper" id="playlistWrapper">
         <div class="playlist-inner">
             <div class="search-container">
@@ -503,6 +593,7 @@ body {
 
 <script>
 const audio = document.getElementById("audio");
+const playerCard = document.getElementById("playerCard");
 const background = document.getElementById("videoBackground");
 const backgroundVideo1 = document.getElementById("backgroundVideo1");
 const backgroundVideo2 = document.getElementById("backgroundVideo2");
@@ -589,10 +680,10 @@ function formatTime(seconds) {
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
-/* 커스텀 오디오 컨트롤 동작 */
+/* 재생 및 이전/다음 컨트롤 */
 playBtn.addEventListener("click", () => {
     if (audio.paused) {
-        audio.play().catch(e => console.error("재생 실패:", e));
+        audio.play().catch(e => console.error("재생 오류:", e));
     } else {
         audio.pause();
     }
@@ -609,7 +700,6 @@ nextBtn.addEventListener("click", () => {
     loadSong(nextIndex);
 });
 
-/* 프로그레스 바 클릭 시 탐색 */
 progressBarContainer.addEventListener("click", (e) => {
     const rect = progressBarContainer.getBoundingClientRect();
     const clickPosition = (e.clientX - rect.left) / rect.width;
@@ -618,7 +708,6 @@ progressBarContainer.addEventListener("click", (e) => {
     }
 });
 
-/* 오디오 시간 업데이트 핸들러 */
 audio.addEventListener("timeupdate", () => {
     if (audio.duration) {
         const percent = (audio.currentTime / audio.duration) * 100;
@@ -643,6 +732,7 @@ audio.addEventListener("loadedmetadata", () => {
 
 audio.addEventListener("play", () => {
     playBtn.textContent = "❚❚";
+    playerCard.classList.add("playing");
     const song = songs[currentIndex];
     if (song.background !== null) startBackground();
     else hideAllBackgrounds();
@@ -650,6 +740,7 @@ audio.addEventListener("play", () => {
 
 audio.addEventListener("pause", () => {
     playBtn.textContent = "▶";
+    playerCard.classList.remove("playing");
     const el = getBackgroundElement();
     if (el === backgroundVideo1 || el === backgroundVideo2) el.pause();
 });
@@ -659,7 +750,7 @@ audio.addEventListener("ended", () => {
     loadSong(next);
 });
 
-/* 재생목록 렌더링 & 검색 */
+/* 실시간 검색 및 재생목록 처리 */
 function renderPlaylist(filter = "") {
     playlist.innerHTML = "";
     const cleanFilter = filter.trim().toLowerCase();
@@ -699,6 +790,7 @@ searchInput.addEventListener("input", (e) => {
     renderPlaylist(e.target.value);
 });
 
+/* 목록 접기/펼치기 토글 */
 playlistToggle.addEventListener("click", () => {
     isCollapsed = !isCollapsed;
     if (isCollapsed) {
@@ -729,7 +821,7 @@ function loadSong(index) {
         .then(() => {
             if (song.background !== null) startBackground();
         })
-        .catch(e => console.error("음악 재생 실패:", e));
+        .catch(e => console.error("음악 파일 로드 대기 중:", e));
 }
 
 backgroundVideo1.addEventListener("loadeddata", () => {
