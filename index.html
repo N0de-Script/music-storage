@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -61,8 +60,6 @@ body {
 
     opacity: 0;
 
-    visibility: hidden;
-
     transition:
         opacity 0.5s ease;
 
@@ -70,19 +67,17 @@ body {
 }
 
 
-#background.visible {
+#background.show {
 
     opacity: 1;
-
-    visibility: visible;
 }
 
 
 /* ==========================================
-   배경 미디어
+   동영상 배경
 ========================================== */
 
-.bg {
+#backgroundVideo {
 
     position: absolute;
 
@@ -94,15 +89,15 @@ body {
 
     object-fit: cover;
 
-    opacity: 0;
-
-    visibility: hidden;
+    display: block;
 
     filter:
         blur(10px)
         brightness(0.48);
 
     transform: scale(1.03);
+
+    opacity: 0;
 
     transition:
         opacity 0.5s ease;
@@ -111,23 +106,62 @@ body {
 }
 
 
-.bg.visible {
+#backgroundVideo.show {
 
     opacity: 1;
-
-    visibility: visible;
 }
 
 
 /* ==========================================
-   오버레이
+   이미지 배경
 ========================================== */
 
-#overlay {
+#backgroundImage {
+
+    position: absolute;
+
+    inset: -4%;
+
+    width: 108%;
+    height: 108%;
+
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    filter:
+        blur(10px)
+        brightness(0.48);
+
+    transform: scale(1.03);
+
+    opacity: 0;
+
+    transition:
+        opacity 0.5s ease;
+
+    pointer-events: none;
+}
+
+
+#backgroundImage.show {
+
+    opacity: 1;
+}
+
+
+/* ==========================================
+   배경 오버레이
+========================================== */
+
+#backgroundOverlay {
 
     position: fixed;
 
     inset: 0;
+
+    width: 100vw;
+    height: 100vh;
 
     z-index: 1;
 
@@ -368,75 +402,26 @@ audio {
 
 
 <!-- ==========================================
-     배경 미디어
+     배경
 ========================================== -->
 
 <div id="background">
 
-
-    <!-- 1번 NUMBER TWERKNATION28 -->
-
     <video
-        id="bgNumber"
-        class="bg"
+        id="backgroundVideo"
         muted
         loop
         playsinline
         preload="auto">
-
-        <source
-            src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/MeAndAnimes_pindown.io_1787032949.mp4"
-            type="video/mp4">
-
     </video>
 
 
-    <!-- 3번 i told u v1 -->
-
-    <video
-        id="bgVideo1"
-        class="bg"
-        muted
-        loop
-        playsinline
-        preload="auto">
-
-        <source
-            src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20%282%29.mp4"
-            type="video/mp4">
-
-    </video>
-
-
-    <!-- 4번 너 -->
-
-    <video
-        id="bgVideo2"
-        class="bg"
-        muted
-        loop
-        playsinline
-        preload="auto">
-
-        <source
-            src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20%281%29.mp4"
-            type="video/mp4">
-
-    </video>
-
-
-    <!-- 5번 relations -->
-
-    <img
-        id="bgRelations"
-        class="bg"
-        src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg"
-        alt="relations background">
+    <div id="backgroundImage"></div>
 
 </div>
 
 
-<div id="overlay"></div>
+<div id="backgroundOverlay"></div>
 
 
 <!-- ==========================================
@@ -492,7 +477,6 @@ audio {
 
 <script>
 
-
 /* ==========================================
    요소
 ========================================== */
@@ -503,17 +487,11 @@ const audio =
 const background =
     document.getElementById("background");
 
-const bgNumber =
-    document.getElementById("bgNumber");
+const backgroundVideo =
+    document.getElementById("backgroundVideo");
 
-const bgVideo1 =
-    document.getElementById("bgVideo1");
-
-const bgVideo2 =
-    document.getElementById("bgVideo2");
-
-const bgRelations =
-    document.getElementById("bgRelations");
+const backgroundImage =
+    document.getElementById("backgroundImage");
 
 const songTitle =
     document.getElementById("songTitle");
@@ -529,10 +507,33 @@ let currentIndex = 0;
 
 
 /* ==========================================
-   음악
+   배경 주소
+========================================== */
+
+const BACKGROUNDS = {
+
+    number:
+        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/MeAndAnimes_pindown.io_1787032949.mp4",
+
+    video1:
+        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20%282%29.mp4",
+
+    video2:
+        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20%281%29.mp4",
+
+    relations:
+        "https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg"
+
+};
+
+
+/* ==========================================
+   음악 데이터
 ========================================== */
 
 const songs = [
+
+    /* 1번 */
 
     {
         title:
@@ -545,9 +546,14 @@ const songs = [
             "./NUMBER%20TWERKNATION28%20(sped%20upnightcore).mp3",
 
         background:
-            "number"
+            "number",
+
+        backgroundType:
+            "video"
     },
 
+
+    /* 2번 */
 
     {
         title:
@@ -560,9 +566,14 @@ const songs = [
             "./Nightcore%20-%20BrooklynBloodPop!.mp3",
 
         background:
+            null,
+
+        backgroundType:
             null
     },
 
+
+    /* 3번 */
 
     {
         title:
@@ -575,9 +586,14 @@ const songs = [
             "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3",
 
         background:
-            "video1"
+            "video1",
+
+        backgroundType:
+            "video"
     },
 
+
+    /* 4번 */
 
     {
         title:
@@ -590,9 +606,14 @@ const songs = [
             "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3",
 
         background:
-            "video2"
+            "video2",
+
+        backgroundType:
+            "video"
     },
 
+
+    /* 5번 */
 
     {
         title:
@@ -605,63 +626,49 @@ const songs = [
             "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3",
 
         background:
-            "relations"
+            "relations",
+
+        backgroundType:
+            "image"
     }
 
 ];
 
 
 /* ==========================================
-   배경 목록
+   배경 완전히 제거
 ========================================== */
 
-const backgrounds = {
-
-    number:
-        bgNumber,
-
-    video1:
-        bgVideo1,
-
-    video2:
-        bgVideo2,
-
-    relations:
-        bgRelations
-
-};
-
-
-/* ==========================================
-   모든 배경 숨기기
-========================================== */
-
-function hideBackgrounds() {
-
-    Object.values(backgrounds)
-        .forEach(
-            media => {
-
-                media.classList.remove(
-                    "visible"
-                );
-
-
-                if (
-                    media.tagName === "VIDEO"
-                ) {
-
-                    media.pause();
-
-                }
-
-            }
-        );
-
+function clearBackground() {
 
     background.classList.remove(
-        "visible"
+        "show"
     );
+
+
+    backgroundVideo.classList.remove(
+        "show"
+    );
+
+
+    backgroundImage.classList.remove(
+        "show"
+    );
+
+
+    backgroundVideo.pause();
+
+
+    backgroundVideo.removeAttribute(
+        "src"
+    );
+
+
+    backgroundVideo.load();
+
+
+    backgroundImage.style.backgroundImage =
+        "none";
 
 }
 
@@ -670,53 +677,13 @@ function hideBackgrounds() {
    배경 표시
 ========================================== */
 
-function showBackground(type) {
+function setBackground(song) {
 
-    hideBackgrounds();
+    clearBackground();
 
-
-    if (!type) {
-
-        return;
-
-    }
-
-
-    const media =
-        backgrounds[type];
-
-
-    if (!media) {
-
-        return;
-
-    }
-
-
-    /*
-     * 배경 컨테이너 표시
-     */
-
-    background.classList.add(
-        "visible"
-    );
-
-
-    /*
-     * 배경 미디어 표시
-     */
-
-    media.classList.add(
-        "visible"
-    );
-
-
-    /*
-     * JPG
-     */
 
     if (
-        media.tagName === "IMG"
+        !song.background
     ) {
 
         return;
@@ -724,49 +691,122 @@ function showBackground(type) {
     }
 
 
-    /*
-     * MP4 위치를 음악 위치에 맞춤
-     */
-
-    try {
-
-        media.currentTime =
-            audio.currentTime;
-
-    } catch (error) {}
+    const url =
+        BACKGROUNDS[
+            song.background
+        ];
 
 
-    /*
-     * MP4 재생
-     */
+    if (!url) {
 
-    media.play()
-        .catch(
-            error => {
+        console.error(
+            "배경 주소를 찾을 수 없음:",
+            song.background
+        );
+
+        return;
+
+    }
+
+
+    /* ======================================
+       JPG 배경
+    ====================================== */
+
+    if (
+        song.backgroundType === "image"
+    ) {
+
+        backgroundImage.style.backgroundImage =
+            `url("${url}")`;
+
+
+        background.classList.add(
+            "show"
+        );
+
+
+        backgroundImage.classList.add(
+            "show"
+        );
+
+
+        console.log(
+            "이미지 배경 표시:",
+            url
+        );
+
+
+        return;
+
+    }
+
+
+    /* ======================================
+       MP4 배경
+    ====================================== */
+
+    background.classList.add(
+        "show"
+    );
+
+
+    backgroundVideo.src =
+        url;
+
+
+    backgroundVideo.load();
+
+
+    backgroundVideo.addEventListener(
+        "loadedmetadata",
+        function syncVideo() {
+
+            backgroundVideo.removeEventListener(
+                "loadedmetadata",
+                syncVideo
+            );
+
+
+            try {
+
+                backgroundVideo.currentTime =
+                    audio.currentTime;
+
+            } catch (error) {
 
                 console.error(
-                    "배경 영상 재생 실패:",
+                    "영상 위치 설정 실패:",
                     error
                 );
 
             }
-        );
-
-}
 
 
-/* ==========================================
-   현재 배경 표시
-========================================== */
-
-function showCurrentBackground() {
-
-    const song =
-        songs[currentIndex];
+            backgroundVideo.classList.add(
+                "show"
+            );
 
 
-    showBackground(
-        song.background
+            backgroundVideo.play()
+                .catch(
+                    error => {
+
+                        console.error(
+                            "배경 영상 재생 실패:",
+                            error
+                        );
+
+                    }
+                );
+
+        }
+    );
+
+
+    console.log(
+        "영상 배경 로딩:",
+        url
     );
 
 }
@@ -868,21 +908,27 @@ function loadSong(index) {
 
 
     const song =
-        songs[index];
+        songs[currentIndex];
+
+
+    console.log(
+        "곡 변경:",
+        song.title
+    );
+
+
+    /*
+     * 기존 음악 정지
+     */
+
+    audio.pause();
 
 
     /*
      * 기존 배경 제거
      */
 
-    hideBackgrounds();
-
-
-    /*
-     * 음악 정지
-     */
-
-    audio.pause();
+    clearBackground();
 
 
     /*
@@ -892,12 +938,11 @@ function loadSong(index) {
     audio.src =
         song.file;
 
-
     audio.load();
 
 
     /*
-     * 정보 변경
+     * 제목 변경
      */
 
     songTitle.textContent =
@@ -909,25 +954,19 @@ function loadSong(index) {
 
 
     /*
-     * Playlist 갱신
+     * Playlist
      */
 
     renderPlaylist();
 
 
     /*
-     * 배경을 음악과 독립적으로 표시
+     * 배경 먼저 설정
      */
 
-    if (
-        song.background
-    ) {
-
-        showBackground(
-            song.background
-        );
-
-    }
+    setBackground(
+        song
+    );
 
 
     /*
@@ -939,7 +978,7 @@ function loadSong(index) {
             error => {
 
                 console.error(
-                    "음악 자동 재생 실패:",
+                    "음악 재생 실패:",
                     error
                 );
 
@@ -962,58 +1001,41 @@ audio.addEventListener(
 
 
         if (
-            song.background
+            !song.background
         ) {
 
-            const media =
-                backgrounds[
-                    song.background
-                ];
+            return;
+
+        }
 
 
-            /*
-             * 현재 배경이 영상이면 재생
-             */
+        /*
+         * 영상이 이미 로드되어 있다면
+         * 음악과 다시 동기화
+         */
+
+        if (
+            song.backgroundType === "video"
+        ) {
 
             if (
-                media &&
-                media.tagName === "VIDEO"
+                backgroundVideo.readyState >= 2
             ) {
 
                 try {
 
-                    media.currentTime =
+                    backgroundVideo.currentTime =
                         audio.currentTime;
 
                 } catch (error) {}
 
 
-                media.play()
+                backgroundVideo.play()
                     .catch(
-                        error => {
-
-                            console.error(
-                                "배경 재생 실패:",
-                                error
-                            );
-
-                        }
+                        () => {}
                     );
 
             }
-
-
-            /*
-             * 배경 자체는 항상 표시
-             */
-
-            background.classList.add(
-                "visible"
-            );
-
-            media.classList.add(
-                "visible"
-            );
 
         }
 
@@ -1029,31 +1051,7 @@ audio.addEventListener(
     "pause",
     () => {
 
-        const song =
-            songs[currentIndex];
-
-
-        if (!song.background) {
-
-            return;
-
-        }
-
-
-        const media =
-            backgrounds[
-                song.background
-            ];
-
-
-        if (
-            media &&
-            media.tagName === "VIDEO"
-        ) {
-
-            media.pause();
-
-        }
+        backgroundVideo.pause();
 
     }
 );
@@ -1071,22 +1069,8 @@ audio.addEventListener(
             songs[currentIndex];
 
 
-        if (!song.background) {
-
-            return;
-
-        }
-
-
-        const media =
-            backgrounds[
-                song.background
-            ];
-
-
         if (
-            !media ||
-            media.tagName !== "VIDEO"
+            song.backgroundType !== "video"
         ) {
 
             return;
@@ -1095,7 +1079,7 @@ audio.addEventListener(
 
 
         if (
-            media.readyState < 2
+            backgroundVideo.readyState < 2
         ) {
 
             return;
@@ -1105,7 +1089,7 @@ audio.addEventListener(
 
         const difference =
             Math.abs(
-                media.currentTime -
+                backgroundVideo.currentTime -
                 audio.currentTime
             );
 
@@ -1116,7 +1100,7 @@ audio.addEventListener(
 
             try {
 
-                media.currentTime =
+                backgroundVideo.currentTime =
                     audio.currentTime;
 
             } catch (error) {}
@@ -1128,7 +1112,7 @@ audio.addEventListener(
 
 
 /* ==========================================
-   음악 seek
+   Seek
 ========================================== */
 
 audio.addEventListener(
@@ -1139,22 +1123,17 @@ audio.addEventListener(
             songs[currentIndex];
 
 
-        if (!song.background) {
+        if (
+            song.backgroundType !== "video"
+        ) {
 
             return;
 
         }
 
 
-        const media =
-            backgrounds[
-                song.background
-            ];
-
-
         if (
-            !media ||
-            media.tagName !== "VIDEO"
+            backgroundVideo.readyState < 1
         ) {
 
             return;
@@ -1164,7 +1143,7 @@ audio.addEventListener(
 
         try {
 
-            media.currentTime =
+            backgroundVideo.currentTime =
                 audio.currentTime;
 
         } catch (error) {}
@@ -1194,144 +1173,32 @@ audio.addEventListener(
 
 
 /* ==========================================
-   NUMBER MP4 로딩
+   영상 로딩 오류
 ========================================== */
 
-bgNumber.addEventListener(
-    "loadeddata",
-    () => {
-
-        if (
-            songs[currentIndex].background === "number"
-        ) {
-
-            if (
-                !audio.paused
-            ) {
-
-                bgNumber.currentTime =
-                    audio.currentTime;
-
-                bgNumber.play()
-                    .catch(() => {});
-
-            }
-
-        }
-
-    }
-);
-
-
-/* ==========================================
-   3번 MP4 로딩
-========================================== */
-
-bgVideo1.addEventListener(
-    "loadeddata",
-    () => {
-
-        if (
-            songs[currentIndex].background === "video1"
-        ) {
-
-            if (
-                !audio.paused
-            ) {
-
-                bgVideo1.currentTime =
-                    audio.currentTime;
-
-                bgVideo1.play()
-                    .catch(() => {});
-
-            }
-
-        }
-
-    }
-);
-
-
-/* ==========================================
-   4번 MP4 로딩
-========================================== */
-
-bgVideo2.addEventListener(
-    "loadeddata",
-    () => {
-
-        if (
-            songs[currentIndex].background === "video2"
-        ) {
-
-            if (
-                !audio.paused
-            ) {
-
-                bgVideo2.currentTime =
-                    audio.currentTime;
-
-                bgVideo2.play()
-                    .catch(() => {});
-
-            }
-
-        }
-
-    }
-);
-
-
-/* ==========================================
-   오류 확인
-========================================== */
-
-bgNumber.addEventListener(
+backgroundVideo.addEventListener(
     "error",
     () => {
 
         console.error(
-            "NUMBER MP4 오류:",
-            bgNumber.error
+            "배경 MP4 로딩 오류:",
+            backgroundVideo.error
         );
 
     }
 );
 
 
-bgVideo1.addEventListener(
-    "error",
+/* ==========================================
+   영상 재생 오류
+========================================== */
+
+backgroundVideo.addEventListener(
+    "stalled",
     () => {
 
-        console.error(
-            "3번 MP4 오류:",
-            bgVideo1.error
-        );
-
-    }
-);
-
-
-bgVideo2.addEventListener(
-    "error",
-    () => {
-
-        console.error(
-            "4번 MP4 오류:",
-            bgVideo2.error
-        );
-
-    }
-);
-
-
-bgRelations.addEventListener(
-    "error",
-    () => {
-
-        console.error(
-            "relations JPG 오류"
+        console.warn(
+            "배경 MP4 로딩이 지연되고 있습니다."
         );
 
     }
@@ -1350,4 +1217,3 @@ loadSong(0);
 
 </body>
 </html>
-```
