@@ -7,928 +7,2105 @@
 <title>N0DE SOUNDS</title>
 
 <style>
-
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --glass: rgba(255,255,255,0.105);
+    --glass-strong: rgba(255,255,255,0.16);
+    --glass-soft: rgba(255,255,255,0.065);
+
+    --border:
+        rgba(255,255,255,0.25);
+
+    --border-bright:
+        rgba(255,255,255,0.48);
+
+    --text: #ffffff;
+    --text-soft: rgba(255,255,255,0.68);
+    --text-dim: rgba(255,255,255,0.45);
+
+    --shadow:
+        0 30px 80px rgba(0,0,0,0.45);
+
+    --ease:
+        cubic-bezier(.22,1,.36,1);
 }
 
 html,
 body {
-    width: 100%;
-    height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 body {
-    font-family:
-        Arial,
-        "Segoe UI",
-        sans-serif;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "SF Pro Text",
+        "Segoe UI",
+        Arial,
+        sans-serif;
 
-    background: #10131a;
-    color: white;
+    color: var(--text);
 
-    min-height: 100vh;
+    background:
+        #11131a;
 
-    overflow: hidden;
+    overflow: hidden;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    -webkit-font-smoothing: antialiased;
 }
 
 
-/* ==========================================
-   배경
-========================================== */
+/* =========================================================
+   BACKGROUND
+========================================================= */
 
 #videoBackground {
+    position: fixed;
+    inset: 0;
 
-    position: fixed;
+    width: 100vw;
+    height: 100vh;
 
-    inset: 0;
+    z-index: 0;
 
-    width: 100vw;
-    height: 100vh;
+    overflow: hidden;
 
-    z-index: 0;
+    background: #11131a;
 
-    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
 
-    background: #10131a;
+    transition:
+        opacity .6s var(--ease),
+        visibility .6s var(--ease);
 
-    opacity: 0;
-
-    visibility: hidden;
-
-    transition:
-        opacity 0.5s ease,
-        visibility 0.5s ease;
-
-    pointer-events: none;
+    pointer-events: none;
 }
-
 
 #videoBackground.show {
-
-    opacity: 1;
-
-    visibility: visible;
+    opacity: 1;
+    visibility: visible;
 }
 
 
-/* ==========================================
-   배경 영상
-========================================== */
+/* =========================================================
+   BACKGROUND VIDEO
+========================================================= */
 
 .background-video {
+    position: absolute;
 
-    position: absolute;
+    top: -1%;
+    left: -1%;
 
-    top: -4%;
-    left: -4%;
+    width: 102%;
+    height: 102%;
 
-    width: 108%;
-    height: 108%;
+    object-fit: cover;
 
-    object-fit: cover;
+    /*
+       기존 blur(10px)를 제거.
+       배경을 최대한 선명하게 유지.
+    */
 
-    display: block;
+    filter:
+        brightness(0.72)
+        saturate(1.08);
 
-    filter:
-        blur(10px)
-        brightness(0.48);
+    transform: scale(1.01);
 
-    transform: scale(1.03);
+    opacity: 0;
 
-    opacity: 0;
+    transition:
+        opacity .7s var(--ease),
+        transform 1s var(--ease);
 
-    transition:
-        opacity 0.5s ease;
-
-    pointer-events: none;
+    pointer-events: none;
 }
-
 
 .background-video.active {
-
-    opacity: 1;
+    opacity: 1;
+    transform: scale(1);
 }
 
 
-/* ==========================================
-   배경 이미지 / GIF
-========================================== */
+/* =========================================================
+   BACKGROUND IMAGE / GIF
+========================================================= */
 
 .background-image {
+    position: absolute;
 
-    position: absolute;
+    inset: 0;
 
-    inset: -4%;
+    width: 100%;
+    height: 100%;
 
-    width: 108%;
-    height: 108%;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+    /*
+       이미지도 blur 제거.
+    */
 
-    filter:
-        blur(10px)
-        brightness(0.48);
+    filter:
+        brightness(0.72)
+        saturate(1.08);
 
-    transform: scale(1.03);
+    transform: scale(1.01);
 
-    opacity: 0;
+    opacity: 0;
 
-    transition:
-        opacity 0.5s ease;
+    transition:
+        opacity .7s var(--ease),
+        transform 1s var(--ease);
 
-    pointer-events: none;
+    pointer-events: none;
 }
-
 
 .background-image.active {
-
-    opacity: 1;
+    opacity: 1;
+    transform: scale(1);
 }
 
 
-/* ==========================================
-   배경 오버레이
-========================================== */
+/* =========================================================
+   BACKGROUND DARKENING
+========================================================= */
 
 #videoOverlay {
+    position: fixed;
+    inset: 0;
 
-    position: fixed;
+    width: 100vw;
+    height: 100vh;
 
-    inset: 0;
+    z-index: 1;
 
-    width: 100vw;
-    height: 100vh;
+    pointer-events: none;
 
-    z-index: 1;
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(0,0,0,0.02),
+            rgba(0,0,0,0.35)
+        );
 
-    pointer-events: none;
-
-    background:
-        rgba(0, 0, 0, 0.25);
+    backdrop-filter:
+        brightness(0.9);
 }
 
 
-/* ==========================================
-   플레이어
-========================================== */
+/* =========================================================
+   LIQUID GLASS PLAYER
+========================================================= */
 
 .player {
+    position: relative;
 
-    position: relative;
+    z-index: 10;
 
-    z-index: 10;
+    width: min(430px, calc(100% - 28px));
 
-    width: calc(100% - 30px);
+    max-height: calc(100vh - 28px);
 
-    max-width: 430px;
+    padding: 28px;
 
-    padding: 28px;
+    border-radius: 32px;
 
-    border-radius: 24px;
+    /*
+       Liquid Glass base
+    */
 
-    background:
-        rgba(20, 25, 35, 0.82);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.19),
+            rgba(255,255,255,0.075) 45%,
+            rgba(255,255,255,0.045)
+        );
 
-    backdrop-filter: blur(18px);
+    backdrop-filter:
+        blur(34px)
+        saturate(175%);
 
-    -webkit-backdrop-filter: blur(18px);
+    -webkit-backdrop-filter:
+        blur(34px)
+        saturate(175%);
 
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.15);
+    border:
+        1px solid var(--border);
 
-    box-shadow:
-        0 25px 60px
-        rgba(0, 0, 0, 0.6);
+    box-shadow:
+        var(--shadow),
+        inset 0 1px 0 rgba(255,255,255,0.32),
+        inset 0 -1px 0 rgba(0,0,0,0.12);
+
+    overflow: hidden;
+
+    isolation: isolate;
+
+    animation:
+        playerIn .8s var(--ease) both;
 }
 
 
-/* ==========================================
-   앨범
-========================================== */
+/* =========================================================
+   GLASS REFLECTION
+========================================================= */
+
+.player::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: -1;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            115deg,
+            rgba(255,255,255,0.20) 0%,
+            rgba(255,255,255,0.055) 23%,
+            transparent 43%,
+            transparent 68%,
+            rgba(255,255,255,0.055) 100%
+        );
+
+    opacity: .8;
+}
+
+
+/* =========================================================
+   TOP SPECULAR LINE
+========================================================= */
+
+.player::after {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 7%;
+
+    width: 86%;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.7),
+            transparent
+        );
+
+    opacity: .65;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   ALBUM / COVER
+========================================================= */
 
 .album {
+    position: relative;
 
-    width: 100%;
-    height: 180px;
+    width: 100%;
+    height: 150px;
 
-    border-radius: 18px;
+    border-radius: 24px;
 
-    display: flex;
+    margin-bottom: 22px;
 
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
 
-    font-size: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    margin-bottom: 18px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.17),
+            rgba(255,255,255,0.055)
+        );
 
-    background:
-        rgba(255, 255, 255, 0.06);
+    border:
+        1px solid rgba(255,255,255,0.22);
 
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.1);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.30),
+        inset 0 -1px 0 rgba(0,0,0,0.10),
+        0 15px 35px rgba(0,0,0,0.18);
+}
+
+.album::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 30% 20%,
+            rgba(255,255,255,0.22),
+            transparent 35%
+        );
+
+    pointer-events: none;
+}
+
+.album-icon {
+    font-size: 48px;
+
+    filter:
+        drop-shadow(
+            0 5px 10px rgba(0,0,0,0.2)
+        );
+
+    opacity: .92;
 }
 
 
-/* ==========================================
-   제목
-========================================== */
+/* =========================================================
+   SONG INFO
+========================================================= */
 
 .title {
+    position: relative;
 
-    text-align: center;
+    text-align: center;
 
-    font-size: 19px;
+    font-size: 21px;
+    font-weight: 700;
 
-    font-weight: 700;
+    line-height: 1.35;
 
-    line-height: 1.4;
+    word-break: break-word;
 
-    word-break: break-word;
+    letter-spacing: -0.025em;
+
+    text-shadow:
+        0 2px 12px rgba(0,0,0,0.22);
 }
-
 
 .artist {
+    text-align: center;
 
-    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 20px;
 
-    margin-top: 5px;
+    color: var(--text-soft);
 
-    margin-bottom: 18px;
+    font-size: 14px;
 
-    color: #aeb8c7;
-
-    font-size: 14px;
+    font-weight: 500;
 }
 
 
-/* ==========================================
-   오디오
-========================================== */
+/* =========================================================
+   CUSTOM PLAYER
+========================================================= */
 
-audio {
-
-    width: 100%;
-
-    margin-bottom: 22px;
+.custom-player {
+    margin-bottom: 23px;
 }
 
 
-/* ==========================================
-   Playlist
-========================================== */
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress-area {
+    width: 100%;
+
+    cursor: pointer;
+
+    padding: 8px 0;
+
+    touch-action: none;
+}
+
+.progress-track {
+    position: relative;
+
+    width: 100%;
+    height: 5px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,0.17);
+
+    box-shadow:
+        inset 0 1px 2px rgba(0,0,0,0.18);
+
+    overflow: visible;
+}
+
+.progress-fill {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 0%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.95),
+            rgba(255,255,255,0.72)
+        );
+
+    box-shadow:
+        0 0 8px rgba(255,255,255,0.35);
+}
+
+.progress-knob {
+    position: absolute;
+
+    top: 50%;
+    left: 0%;
+
+    width: 13px;
+    height: 13px;
+
+    transform:
+        translate(-50%, -50%)
+        scale(0);
+
+    border-radius: 50%;
+
+    background: #fff;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.25);
+
+    transition:
+        transform .18s var(--ease);
+}
+
+.progress-area:hover .progress-knob,
+.progress-area.dragging .progress-knob {
+    transform:
+        translate(-50%, -50%)
+        scale(1);
+}
+
+
+/* =========================================================
+   TIME
+========================================================= */
+
+.time-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 7px;
+
+    color: var(--text-dim);
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   CONTROL BUTTONS
+========================================================= */
+
+.controls {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 22px;
+
+    margin-top: 13px;
+}
+
+.glass-button {
+    position: relative;
+
+    border: 1px solid
+        rgba(255,255,255,0.24);
+
+    color: white;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.16),
+            rgba(255,255,255,0.075)
+        );
+
+    backdrop-filter:
+        blur(20px)
+        saturate(160%);
+
+    -webkit-backdrop-filter:
+        blur(20px)
+        saturate(160%);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.30),
+        0 7px 20px rgba(0,0,0,0.18);
+
+    width: 56px;
+    height: 56px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        transform .18s var(--ease),
+        background .22s ease,
+        box-shadow .22s ease,
+        border-color .22s ease;
+
+    user-select: none;
+}
+
+.glass-button::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 1px;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.18),
+            transparent 45%
+        );
+
+    pointer-events: none;
+}
+
+.glass-button:hover {
+    transform: translateY(-2px) scale(1.035);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.24),
+            rgba(255,255,255,0.10)
+        );
+
+    border-color:
+        rgba(255,255,255,0.40);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.42),
+        0 10px 28px rgba(0,0,0,0.22),
+        0 0 20px rgba(255,255,255,0.06);
+}
+
+.glass-button:active {
+    transform:
+        translateY(1px)
+        scale(.91);
+
+    background:
+        rgba(255,255,255,0.12);
+
+    box-shadow:
+        inset 0 2px 5px rgba(0,0,0,0.18),
+        0 3px 8px rgba(0,0,0,0.18);
+}
+
+
+/* =========================================================
+   MAIN PLAY BUTTON
+========================================================= */
+
+.play-button {
+    width: 72px;
+    height: 72px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.25),
+            rgba(255,255,255,0.105)
+        );
+
+    border-color:
+        rgba(255,255,255,0.35);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.42),
+        0 12px 30px rgba(0,0,0,0.25);
+}
+
+.play-button:hover {
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.5),
+        0 14px 35px rgba(0,0,0,0.28),
+        0 0 25px rgba(255,255,255,0.08);
+}
+
+
+/* =========================================================
+   ICONS
+========================================================= */
+
+.icon {
+    position: relative;
+
+    z-index: 2;
+
+    font-size: 18px;
+
+    line-height: 1;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.play-icon {
+    font-size: 24px;
+
+    margin-left: 3px;
+}
+
+
+/* =========================================================
+   PLAYLIST HEADER
+========================================================= */
+
+.playlist-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+}
 
 .playlist-title {
+    font-size: 12px;
 
-    font-size: 12px;
+    color:
+        rgba(255,255,255,0.62);
 
-    color: #94a3b8;
+    font-weight: 700;
 
-    font-weight: 700;
-
-    letter-spacing: 0.08em;
-
-    margin-bottom: 10px;
+    letter-spacing: .1em;
 }
 
+.playlist-count {
+    font-size: 11px;
+
+    color:
+        rgba(255,255,255,0.42);
+}
+
+
+/* =========================================================
+   PLAYLIST
+========================================================= */
 
 .playlist {
+    list-style: none;
 
-    list-style: none;
+    max-height: 210px;
 
-    max-height: 210px;
+    overflow-y: auto;
 
-    overflow-y: auto;
+    border-radius: 20px;
 
-    border-radius: 14px;
+    background:
+        rgba(0,0,0,0.11);
 
-    background:
-        rgba(0, 0, 0, 0.2);
+    border:
+        1px solid rgba(255,255,255,0.12);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
+
+/* Scrollbar */
+
+.playlist::-webkit-scrollbar {
+    width: 5px;
+}
+
+.playlist::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.playlist::-webkit-scrollbar-thumb {
+    background:
+        rgba(255,255,255,0.28);
+
+    border-radius: 999px;
+}
+
+
+/* =========================================================
+   SONG
+========================================================= */
 
 .song {
+    position: relative;
 
-    display: flex;
+    display: flex;
 
-    align-items: center;
+    align-items: center;
 
-    gap: 12px;
+    gap: 12px;
 
-    padding: 13px 15px;
+    min-height: 64px;
 
-    cursor: pointer;
+    padding: 11px 14px;
 
-    border-bottom:
-        1px solid
-        rgba(255, 255, 255, 0.05);
+    cursor: pointer;
 
-    transition:
-        background 0.2s ease;
+    border-bottom:
+        1px solid rgba(255,255,255,0.055);
+
+    transition:
+        background .2s ease,
+        transform .18s var(--ease),
+        padding .18s var(--ease);
 }
 
+.song:last-child {
+    border-bottom: none;
+}
 
 .song:hover {
+    background:
+        rgba(255,255,255,0.075);
 
-    background:
-        rgba(255, 255, 255, 0.08);
+    padding-left: 17px;
 }
 
+.song:active {
+    transform: scale(.985);
+}
 
 .song.active {
+    background:
+        linear-gradient(
+            100deg,
+            rgba(255,255,255,0.19),
+            rgba(255,255,255,0.07)
+        );
 
-    background:
-        rgba(99, 102, 241, 0.35);
+    box-shadow:
+        inset 3px 0 0 rgba(255,255,255,0.72),
+        inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
+
+/* =========================================================
+   NUMBER
+========================================================= */
 
 .number {
+    width: 24px;
+    min-width: 24px;
 
-    width: 22px;
+    text-align: center;
 
-    min-width: 22px;
+    color:
+        rgba(255,255,255,0.45);
 
-    text-align: center;
+    font-size: 12px;
 
-    color: #94a3b8;
-
-    font-size: 12px;
+    font-weight: 600;
 }
 
+
+/* =========================================================
+   SONG INFORMATION
+========================================================= */
+
+.song-info {
+    min-width: 0;
+
+    flex: 1;
+}
 
 .song-name {
+    display: block;
 
-    overflow: hidden;
+    overflow: hidden;
 
-    white-space: nowrap;
+    white-space: nowrap;
 
-    text-overflow: ellipsis;
+    text-overflow: ellipsis;
 
-    font-size: 13px;
+    font-size: 14px;
+
+    font-weight: 650;
+}
+
+.song-artist {
+    display: block;
+
+    margin-top: 3px;
+
+    color:
+        rgba(255,255,255,0.45);
+
+    font-size: 11px;
 }
 
 
-/* ==========================================
-   모바일
-========================================== */
+/* =========================================================
+   ACTIVE INDICATOR
+========================================================= */
+
+.active-dot {
+    width: 7px;
+    height: 7px;
+
+    min-width: 7px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.9);
+
+    box-shadow:
+        0 0 10px rgba(255,255,255,.55);
+
+    opacity: 0;
+
+    transform: scale(.5);
+
+    transition:
+        opacity .2s ease,
+        transform .2s var(--ease);
+}
+
+.song.active .active-dot {
+    opacity: 1;
+
+    transform: scale(1);
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes playerIn {
+    from {
+        opacity: 0;
+        transform:
+            translateY(18px)
+            scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 500px) {
 
-    .player {
+    body {
+        align-items: center;
+    }
 
-        padding: 20px;
-    }
+    .player {
+        width: calc(100% - 18px);
 
-    .album {
+        padding: 20px;
 
-        height: 150px;
+        border-radius: 27px;
+    }
 
-        font-size: 50px;
-    }
+    .album {
+        height: 125px;
 
+        border-radius: 20px;
+
+        margin-bottom: 18px;
+    }
+
+    .controls {
+        gap: 16px;
+    }
+
+    .glass-button {
+        width: 50px;
+        height: 50px;
+    }
+
+    .play-button {
+        width: 64px;
+        height: 64px;
+    }
+
+    .playlist {
+        max-height: 185px;
+    }
 }
 
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
 </style>
 </head>
-
 
 <body>
 
 
-<!-- ==========================================
-     배경
-========================================== -->
+<!-- =======================================================
+     BACKGROUND
+======================================================= -->
 
 <div id="videoBackground">
 
+    <div
+        id="backgroundImage1"
+        class="background-image">
+    </div>
 
-    <!-- 1번 BrooklynBloodPop! GIF 배경 -->
+    <video
+        id="backgroundVideo1"
+        class="background-video"
+        muted
+        loop
+        playsinline
+        preload="auto"
+        src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20(2).mp4">
+    </video>
 
-    <div
-        id="backgroundImage1"
-        class="background-image">
-    </div>
+    <video
+        id="backgroundVideo2"
+        class="background-video"
+        muted
+        loop
+        playsinline
+        preload="auto"
+        src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20(1).mp4">
+    </video>
 
-
-    <!-- 2번 i told u v1 영상 배경 -->
-
-    <video
-        id="backgroundVideo1"
-        class="background-video"
-        muted
-        loop
-        playsinline
-        preload="auto"
-        src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20(2).mp4">
-    </video>
-
-
-    <!-- 3번 너 영상 배경 -->
-
-    <video
-        id="backgroundVideo2"
-        class="background-video"
-        muted
-        loop
-        playsinline
-        preload="auto"
-        src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_Media_TiOpGgCXeT0_001_480p%20(1).mp4">
-    </video>
-
-
-    <!-- 4번 relations 이미지 배경 -->
-
-    <div
-        id="backgroundImage2"
-        class="background-image">
-    </div>
-
+    <div
+        id="backgroundImage2"
+        class="background-image">
+    </div>
 
 </div>
-
 
 <div id="videoOverlay"></div>
 
 
-<!-- ==========================================
-     플레이어
-========================================== -->
+<!-- =======================================================
+     PLAYER
+======================================================= -->
 
 <div class="player">
 
-
-    <div class="album">
-        🎧
-    </div>
-
-
-    <div
-        class="title"
-        id="songTitle">
-
-        곡을 선택해주세요
-
-    </div>
+    <div class="album">
+        <span class="album-icon">♫</span>
+    </div>
 
 
-    <div
-        class="artist"
-        id="songArtist">
-
-        N0DE SOUNDS
-
-    </div>
+    <div
+        class="title"
+        id="songTitle">
+        곡을 선택해주세요
+    </div>
 
 
-    <audio
-        id="audio"
-        controls
-        preload="metadata">
-    </audio>
+    <div
+        class="artist"
+        id="songArtist">
+        N0DE SOUNDS
+    </div>
 
 
-    <div class="playlist-title">
-        PLAYLIST
-    </div>
+    <!-- ===================================================
+         CUSTOM AUDIO PLAYER
+    =================================================== -->
+
+    <div class="custom-player">
+
+        <div
+            class="progress-area"
+            id="progressArea">
+
+            <div class="progress-track">
+
+                <div
+                    class="progress-fill"
+                    id="progressFill">
+                </div>
+
+                <div
+                    class="progress-knob"
+                    id="progressKnob">
+                </div>
+
+            </div>
+
+        </div>
 
 
-    <ul
-        class="playlist"
-        id="playlist">
-    </ul>
+        <div class="time-row">
 
+            <span id="currentTime">
+                0:00
+            </span>
+
+            <span id="duration">
+                0:00
+            </span>
+
+        </div>
+
+
+        <div class="controls">
+
+            <button
+                class="glass-button"
+                id="previousButton"
+                aria-label="이전 곡">
+
+                <span class="icon">
+                    ⏮
+                </span>
+
+            </button>
+
+
+            <button
+                class="glass-button play-button"
+                id="playButton"
+                aria-label="재생">
+
+                <span
+                    class="icon play-icon"
+                    id="playIcon">
+                    ▶
+                </span>
+
+            </button>
+
+
+            <button
+                class="glass-button"
+                id="nextButton"
+                aria-label="다음 곡">
+
+                <span class="icon">
+                    ⏭
+                </span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         PLAYLIST HEADER
+    =================================================== -->
+
+    <div class="playlist-header">
+
+        <div class="playlist-title">
+            PLAYLIST
+        </div>
+
+        <div
+            class="playlist-count"
+            id="playlistCount">
+            0 TRACKS
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         PLAYLIST
+    =================================================== -->
+
+    <ul
+        class="playlist"
+        id="playlist">
+    </ul>
 
 </div>
 
 
 <script>
 
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
 const audio =
-    document.getElementById("audio");
+    new Audio();
+
+audio.preload = "metadata";
 
 const background =
-    document.getElementById("videoBackground");
+    document.getElementById(
+        "videoBackground"
+    );
 
 const backgroundVideo1 =
-    document.getElementById("backgroundVideo1");
+    document.getElementById(
+        "backgroundVideo1"
+    );
 
 const backgroundVideo2 =
-    document.getElementById("backgroundVideo2");
+    document.getElementById(
+        "backgroundVideo2"
+    );
 
 const backgroundImage1 =
-    document.getElementById("backgroundImage1");
+    document.getElementById(
+        "backgroundImage1"
+    );
 
 const backgroundImage2 =
-    document.getElementById("backgroundImage2");
+    document.getElementById(
+        "backgroundImage2"
+    );
 
 const songTitle =
-    document.getElementById("songTitle");
+    document.getElementById(
+        "songTitle"
+    );
 
 const songArtist =
-    document.getElementById("songArtist");
+    document.getElementById(
+        "songArtist"
+    );
 
 const playlist =
-    document.getElementById("playlist");
+    document.getElementById(
+        "playlist"
+    );
+
+const playlistCount =
+    document.getElementById(
+        "playlistCount"
+    );
+
+const playButton =
+    document.getElementById(
+        "playButton"
+    );
+
+const playIcon =
+    document.getElementById(
+        "playIcon"
+    );
+
+const previousButton =
+    document.getElementById(
+        "previousButton"
+    );
+
+const nextButton =
+    document.getElementById(
+        "nextButton"
+    );
+
+const progressArea =
+    document.getElementById(
+        "progressArea"
+    );
+
+const progressFill =
+    document.getElementById(
+        "progressFill"
+    );
+
+const progressKnob =
+    document.getElementById(
+        "progressKnob"
+    );
+
+const currentTimeElement =
+    document.getElementById(
+        "currentTime"
+    );
+
+const durationElement =
+    document.getElementById(
+        "duration"
+    );
 
 
 let currentIndex = 0;
+let isDragging = false;
 
 
-/* ==========================================
-   이미지 배경 미리 로드
-========================================== */
+/* =========================================================
+   BACKGROUND IMAGES
+========================================================= */
 
 backgroundImage1.style.backgroundImage =
-    "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/85a074861f51fc3a560a6077e1162bbb.gif')";
+    "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/85a074861f51fc3a560a6077e1162bbb.gif')";
 
 backgroundImage2.style.backgroundImage =
-    "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg')";
+    "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg')";
 
 
-/* ==========================================
-   음악 데이터
-========================================== */
+/* =========================================================
+   SONG DATA
+========================================================= */
 
 const songs = [
 
-    /* 1번 */
+    {
+        title:
+            "BrooklynBloodPop!",
 
-    {
-        title:
-            "BrooklynBloodPop!",
+        artist:
+            "Nightcore",
 
-        artist:
-            "Nightcore",
+        file:
+            "./Nightcore%20-%20BrooklynBloodPop!.mp3",
 
-        file:
-            "./Nightcore%20-%20BrooklynBloodPop!.mp3",
+        background:
+            "image1"
+    },
 
-        background:
-            "image1"
-    },
+    {
+        title:
+            "i told u v1",
 
+        artist:
+            "midwxst",
 
-    /* 2번 */
+        file:
+            "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3",
 
-    {
-        title:
-            "i told u v1",
+        background:
+            "video1"
+    },
 
-        artist:
-            "midwxst",
+    {
+        title:
+            "너",
 
-        file:
-            "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3",
+        artist:
+            "ycs",
 
-        background:
-            "video1"
-    },
+        file:
+            "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3",
 
+        background:
+            "video2"
+    },
 
-    /* 3번 */
+    {
+        title:
+            "relations",
 
-    {
-        title:
-            "너",
+        artist:
+            "이상형",
 
-        artist:
-            "ycs",
+        file:
+            "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3",
 
-        file:
-            "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3",
-
-        background:
-            "video2"
-    },
-
-
-    /* 4번 */
-
-    {
-        title:
-            "relations",
-
-        artist:
-            "이상형",
-
-        file:
-            "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3",
-
-        background:
-            "image2"
-    }
+        background:
+            "image2"
+    }
 
 ];
 
 
-/* ==========================================
-   모든 배경 숨기기
-========================================== */
+/* =========================================================
+   TIME FORMAT
+========================================================= */
+
+function formatTime(seconds) {
+
+    if (!Number.isFinite(seconds)) {
+        return "0:00";
+    }
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+    const secs =
+        Math.floor(seconds % 60)
+            .toString()
+            .padStart(2, "0");
+
+    return `${minutes}:${secs}`;
+}
+
+
+/* =========================================================
+   HIDE BACKGROUNDS
+========================================================= */
 
 function hideAllBackgrounds() {
 
-    backgroundVideo1.pause();
-    backgroundVideo2.pause();
+    backgroundVideo1.pause();
+    backgroundVideo2.pause();
 
-    backgroundVideo1.classList.remove("active");
-    backgroundVideo2.classList.remove("active");
-    backgroundImage1.classList.remove("active");
-    backgroundImage2.classList.remove("active");
+    backgroundVideo1.classList.remove(
+        "active"
+    );
 
-    background.classList.remove("show");
+    backgroundVideo2.classList.remove(
+        "active"
+    );
+
+    backgroundImage1.classList.remove(
+        "active"
+    );
+
+    backgroundImage2.classList.remove(
+        "active"
+    );
+
+    background.classList.remove(
+        "show"
+    );
 }
 
 
-/* ==========================================
-   현재 배경 요소 가져오기
-========================================== */
+/* =========================================================
+   GET CURRENT BACKGROUND
+========================================================= */
 
 function getBackgroundElement() {
 
-    const song = songs[currentIndex];
+    const song =
+        songs[currentIndex];
 
-    if (song.background === "video1") return backgroundVideo1;
-    if (song.background === "video2") return backgroundVideo2;
-    if (song.background === "image1") return backgroundImage1;
-    if (song.background === "image2") return backgroundImage2;
+    if (
+        song.background ===
+        "video1"
+    ) {
+        return backgroundVideo1;
+    }
 
-    return null;
+    if (
+        song.background ===
+        "video2"
+    ) {
+        return backgroundVideo2;
+    }
+
+    if (
+        song.background ===
+        "image1"
+    ) {
+        return backgroundImage1;
+    }
+
+    if (
+        song.background ===
+        "image2"
+    ) {
+        return backgroundImage2;
+    }
+
+    return null;
 }
 
 
-/* ==========================================
-   배경 시작
-========================================== */
+/* =========================================================
+   START BACKGROUND
+========================================================= */
 
 function startBackground() {
 
-    const el = getBackgroundElement();
+    const el =
+        getBackgroundElement();
 
-    if (!el) {
-        hideAllBackgrounds();
-        return;
-    }
+    if (!el) {
+        hideAllBackgrounds();
+        return;
+    }
 
-    const isVideo =
-        el === backgroundVideo1 ||
-        el === backgroundVideo2;
+    backgroundVideo1.pause();
+    backgroundVideo2.pause();
+
+    backgroundVideo1.classList.remove(
+        "active"
+    );
+
+    backgroundVideo2.classList.remove(
+        "active"
+    );
+
+    backgroundImage1.classList.remove(
+        "active"
+    );
+
+    backgroundImage2.classList.remove(
+        "active"
+    );
+
+    background.classList.add(
+        "show"
+    );
+
+    el.classList.add(
+        "active"
+    );
 
 
-    if (el !== backgroundVideo1) {
-        backgroundVideo1.pause();
-        backgroundVideo1.classList.remove("active");
-    }
+    const isVideo =
+        el === backgroundVideo1 ||
+        el === backgroundVideo2;
 
-    if (el !== backgroundVideo2) {
-        backgroundVideo2.pause();
-        backgroundVideo2.classList.remove("active");
-    }
 
-    if (el !== backgroundImage1) {
-        backgroundImage1.classList.remove("active");
-    }
+    if (isVideo) {
 
-    if (el !== backgroundImage2) {
-        backgroundImage2.classList.remove("active");
-    }
+        try {
+            el.currentTime =
+                audio.currentTime;
+        } catch (e) {}
 
-    background.classList.add("show");
-
-    el.classList.add("active");
-
-    if (isVideo) {
-
-        if (el.readyState >= 1) {
-            try {
-                el.currentTime = audio.currentTime;
-            } catch (e) {}
-        }
-
-        el.play().catch(e => {
-            console.error("배경 영상 재생 실패:", e);
-        });
-    }
+        el.play().catch(() => {});
+    }
 }
 
 
-/* ==========================================
-   Playlist
-========================================== */
+/* =========================================================
+   PLAYLIST
+========================================================= */
 
 function renderPlaylist() {
 
-    playlist.innerHTML = "";
+    playlist.innerHTML = "";
 
-    songs.forEach((song, index) => {
+    playlistCount.textContent =
+        `${songs.length} TRACKS`;
 
-        const item =
-            document.createElement("li");
 
-        item.className = "song";
+    songs.forEach(
+        (song, index) => {
 
-        if (index === currentIndex) {
-            item.classList.add("active");
-        }
+            const item =
+                document.createElement(
+                    "li"
+                );
 
-        item.innerHTML = `
-            <span class="number">${index + 1}</span>
-            <span class="song-name">${song.title}</span>
-        `;
+            item.className =
+                "song";
 
-        item.addEventListener("click", () => {
-            loadSong(index);
-        });
 
-        playlist.appendChild(item);
-    });
+            if (
+                index ===
+                currentIndex
+            ) {
+                item.classList.add(
+                    "active"
+                );
+            }
+
+
+            item.innerHTML = `
+
+                <span class="number">
+                    ${index + 1}
+                </span>
+
+                <span class="song-info">
+
+                    <span class="song-name">
+                        ${song.title}
+                    </span>
+
+                    <span class="song-artist">
+                        ${song.artist}
+                    </span>
+
+                </span>
+
+                <span class="active-dot"></span>
+            `;
+
+
+            item.addEventListener(
+                "click",
+                () => {
+                    loadSong(index, true);
+                }
+            );
+
+
+            playlist.appendChild(
+                item
+            );
+        }
+    );
 }
 
 
-/* ==========================================
-   곡 변경
-========================================== */
+/* =========================================================
+   LOAD SONG
+========================================================= */
 
-function loadSong(index) {
+function loadSong(
+    index,
+    autoPlay = false
+) {
 
-    currentIndex = index;
+    currentIndex =
+        index;
 
-    const song = songs[currentIndex];
+    const song =
+        songs[currentIndex];
 
-    audio.pause();
 
-    hideAllBackgrounds();
+    audio.pause();
 
-    audio.src = song.file;
-    audio.load();
+    hideAllBackgrounds();
 
-    songTitle.textContent  = song.title;
-    songArtist.textContent = song.artist;
 
-    renderPlaylist();
+    audio.src =
+        song.file;
 
-    audio.play()
-        .then(() => {
-            if (song.background !== null) {
-                startBackground();
-            }
-        })
-        .catch(e => {
-            console.error("음악 재생 실패:", e);
-        });
+    audio.load();
+
+
+    songTitle.textContent =
+        song.title;
+
+    songArtist.textContent =
+        song.artist;
+
+
+    progressFill.style.width =
+        "0%";
+
+    progressKnob.style.left =
+        "0%";
+
+    currentTimeElement.textContent =
+        "0:00";
+
+    durationElement.textContent =
+        "0:00";
+
+
+    renderPlaylist();
+
+    updatePlayButton();
+
+
+    if (autoPlay) {
+
+        audio.play()
+            .then(() => {
+
+                startBackground();
+
+            })
+            .catch(() => {});
+    }
 }
 
 
-/* ==========================================
-   음악 재생
-========================================== */
+/* =========================================================
+   PLAY / PAUSE
+========================================================= */
 
-audio.addEventListener("play", () => {
+function togglePlay() {
 
-    const song = songs[currentIndex];
+    if (audio.paused) {
 
-    if (song.background !== null) {
-        startBackground();
-    } else {
-        hideAllBackgrounds();
-    }
-});
+        audio.play()
+            .then(() => {
+                startBackground();
+            })
+            .catch(() => {});
 
+    } else {
 
-/* ==========================================
-   음악 일시정지
-========================================== */
-
-audio.addEventListener("pause", () => {
-
-    const el = getBackgroundElement();
-
-    if (
-        el === backgroundVideo1 ||
-        el === backgroundVideo2
-    ) {
-        el.pause();
-    }
-});
+        audio.pause();
+    }
+}
 
 
-/* ==========================================
-   싱크
-========================================== */
+/* =========================================================
+   PLAY BUTTON STATE
+========================================================= */
 
-audio.addEventListener("timeupdate", () => {
+function updatePlayButton() {
 
-    const el = getBackgroundElement();
+    if (audio.paused) {
 
-    if (
-        el !== backgroundVideo1 &&
-        el !== backgroundVideo2
-    ) {
-        return;
-    }
+        playIcon.textContent =
+            "▶";
 
-    if (el.readyState < 2) {
-        return;
-    }
+        playButton.setAttribute(
+            "aria-label",
+            "재생"
+        );
 
-    const diff = Math.abs(
-        el.currentTime - audio.currentTime
-    );
+    } else {
 
-    if (diff > 0.35) {
-        try {
-            el.currentTime = audio.currentTime;
-        } catch (e) {}
-    }
-});
+        playIcon.textContent =
+            "Ⅱ";
+
+        playButton.setAttribute(
+            "aria-label",
+            "일시정지"
+        );
+    }
+}
 
 
-/* ==========================================
-   Seek
-========================================== */
+/* =========================================================
+   PREVIOUS
+========================================================= */
 
-audio.addEventListener("seeking", () => {
+function previousSong() {
 
-    const el = getBackgroundElement();
+    let index =
+        currentIndex - 1;
 
-    if (
-        el !== backgroundVideo1 &&
-        el !== backgroundVideo2
-    ) {
-        return;
-    }
+    if (index < 0) {
+        index =
+            songs.length - 1;
+    }
 
-    try {
-        el.currentTime = audio.currentTime;
-    } catch (e) {}
-});
-
-
-/* ==========================================
-   음악 종료
-========================================== */
-
-audio.addEventListener("ended", () => {
-
-    const next = (currentIndex + 1) % songs.length;
-    loadSong(next);
-});
+    loadSong(
+        index,
+        true
+    );
+}
 
 
-/* ==========================================
-   영상 로딩 완료 이벤트
-========================================== */
+/* =========================================================
+   NEXT
+========================================================= */
 
-backgroundVideo1.addEventListener("loadeddata", () => {
+function nextSong() {
 
-    if (
-        songs[currentIndex].background === "video1" &&
-        !audio.paused
-    ) {
-        startBackground();
-    }
-});
+    const index =
+        (currentIndex + 1)
+        % songs.length;
 
-backgroundVideo2.addEventListener("loadeddata", () => {
-
-    if (
-        songs[currentIndex].background === "video2" &&
-        !audio.paused
-    ) {
-        startBackground();
-    }
-});
+    loadSong(
+        index,
+        true
+    );
+}
 
 
-/* ==========================================
-   영상 오류
-========================================== */
+/* =========================================================
+   PROGRESS UPDATE
+========================================================= */
 
-backgroundVideo1.addEventListener("error", () => {
-    console.error("배경 영상1 로딩 실패:", backgroundVideo1.error);
-});
+function updateProgress() {
 
-backgroundVideo2.addEventListener("error", () => {
-    console.error("배경 영상2 로딩 실패:", backgroundVideo2.error);
-});
+    if (
+        !Number.isFinite(
+            audio.duration
+        )
+    ) {
+        return;
+    }
 
 
-/* ==========================================
-   초기화
-========================================== */
+    const percent =
+        (
+            audio.currentTime /
+            audio.duration
+        ) * 100;
+
+
+    progressFill.style.width =
+        `${percent}%`;
+
+    progressKnob.style.left =
+        `${percent}%`;
+
+
+    currentTimeElement.textContent =
+        formatTime(
+            audio.currentTime
+        );
+
+    durationElement.textContent =
+        formatTime(
+            audio.duration
+        );
+}
+
+
+/* =========================================================
+   SEEK
+========================================================= */
+
+function seekFromPointer(
+    event
+) {
+
+    const rect =
+        progressArea.getBoundingClientRect();
+
+
+    let percent =
+        (
+            event.clientX -
+            rect.left
+        ) / rect.width;
+
+
+    percent =
+        Math.max(
+            0,
+            Math.min(
+                1,
+                percent
+            )
+        );
+
+
+    if (
+        Number.isFinite(
+            audio.duration
+        )
+    ) {
+
+        audio.currentTime =
+            percent *
+            audio.duration;
+    }
+}
+
+
+/* =========================================================
+   POINTER EVENTS
+========================================================= */
+
+progressArea.addEventListener(
+    "pointerdown",
+    event => {
+
+        isDragging = true;
+
+        progressArea.classList.add(
+            "dragging"
+        );
+
+        progressArea.setPointerCapture(
+            event.pointerId
+        );
+
+        seekFromPointer(
+            event
+        );
+    }
+);
+
+
+progressArea.addEventListener(
+    "pointermove",
+    event => {
+
+        if (!isDragging) {
+            return;
+        }
+
+        seekFromPointer(
+            event
+        );
+    }
+);
+
+
+progressArea.addEventListener(
+    "pointerup",
+    () => {
+
+        isDragging = false;
+
+        progressArea.classList.remove(
+            "dragging"
+        );
+    }
+);
+
+
+/* =========================================================
+   AUDIO EVENTS
+========================================================= */
+
+audio.addEventListener(
+    "play",
+    () => {
+
+        updatePlayButton();
+
+        startBackground();
+    }
+);
+
+
+audio.addEventListener(
+    "pause",
+    () => {
+
+        updatePlayButton();
+
+
+        const el =
+            getBackgroundElement();
+
+
+        if (
+            el === backgroundVideo1 ||
+            el === backgroundVideo2
+        ) {
+
+            el.pause();
+        }
+    }
+);
+
+
+audio.addEventListener(
+    "timeupdate",
+    () => {
+
+        updateProgress();
+
+
+        const el =
+            getBackgroundElement();
+
+
+        if (
+            el !== backgroundVideo1 &&
+            el !== backgroundVideo2
+        ) {
+            return;
+        }
+
+
+        if (
+            el.readyState < 2
+        ) {
+            return;
+        }
+
+
+        const diff =
+            Math.abs(
+                el.currentTime -
+                audio.currentTime
+            );
+
+
+        if (
+            diff > 0.35
+        ) {
+
+            try {
+                el.currentTime =
+                    audio.currentTime;
+            } catch (e) {}
+        }
+    }
+);
+
+
+audio.addEventListener(
+    "loadedmetadata",
+    () => {
+
+        durationElement.textContent =
+            formatTime(
+                audio.duration
+            );
+    }
+);
+
+
+audio.addEventListener(
+    "seeking",
+    () => {
+
+        const el =
+            getBackgroundElement();
+
+
+        if (
+            el !== backgroundVideo1 &&
+            el !== backgroundVideo2
+        ) {
+            return;
+        }
+
+
+        try {
+            el.currentTime =
+                audio.currentTime;
+        } catch (e) {}
+    }
+);
+
+
+audio.addEventListener(
+    "ended",
+    () => {
+
+        nextSong();
+    }
+);
+
+
+/* =========================================================
+   BUTTON EVENTS
+========================================================= */
+
+playButton.addEventListener(
+    "click",
+    togglePlay
+);
+
+previousButton.addEventListener(
+    "click",
+    previousSong
+);
+
+nextButton.addEventListener(
+    "click",
+    nextSong
+);
+
+
+/* =========================================================
+   BACKGROUND VIDEO LOADING
+========================================================= */
+
+backgroundVideo1.addEventListener(
+    "loadeddata",
+    () => {
+
+        if (
+            songs[currentIndex].background ===
+            "video1" &&
+            !audio.paused
+        ) {
+            startBackground();
+        }
+    }
+);
+
+
+backgroundVideo2.addEventListener(
+    "loadeddata",
+    () => {
+
+        if (
+            songs[currentIndex].background ===
+            "video2" &&
+            !audio.paused
+        ) {
+            startBackground();
+        }
+    }
+);
+
+
+/* =========================================================
+   VIDEO ERRORS
+========================================================= */
+
+backgroundVideo1.addEventListener(
+    "error",
+    () => {
+        console.error(
+            "배경 영상1 로딩 실패:",
+            backgroundVideo1.error
+        );
+    }
+);
+
+
+backgroundVideo2.addEventListener(
+    "error",
+    () => {
+        console.error(
+            "배경 영상2 로딩 실패:",
+            backgroundVideo2.error
+        );
+    }
+);
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
 
 renderPlaylist();
-loadSong(0);
+
+loadSong(
+    0,
+    false
+);
 
 </script>
 
