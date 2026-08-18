@@ -391,7 +391,7 @@ body {
 
 
 /* ==========================================
-   Toast Notification (페이드 + 슬라이딩)
+   Toast Notification (부드러운 슬라이딩 & 페이드)
 ========================================== */
 
 .toast-container {
@@ -420,7 +420,8 @@ body {
 
     opacity: 0;
     transform: translateX(calc(100% + 80px));
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    /* 부드러운 시작/종료 곡선 적용 (0.6s ease-in-out) */
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     pointer-events: auto;
     min-width: 240px;
     max-width: 320px;
@@ -439,6 +440,79 @@ body {
     background: #ffffff;
     opacity: 0.8;
     flex-shrink: 0;
+}
+
+
+/* ==========================================
+   Mobile Responsive Adjustments (모바일 반응형)
+========================================== */
+
+@media (max-width: 480px) {
+    .player {
+        width: calc(100% - 24px);
+        max-width: 340px;
+        padding: 22px 18px;
+        border-radius: 16px;
+    }
+
+    .brand-tag {
+        font-size: 10px;
+        margin-bottom: 14px;
+    }
+
+    .track-info {
+        margin-bottom: 16px;
+    }
+
+    .title {
+        font-size: 17px;
+    }
+
+    .artist {
+        font-size: 12px;
+    }
+
+    .progress-section {
+        margin-bottom: 16px;
+    }
+
+    .controls {
+        gap: 28px;
+        margin-bottom: 18px;
+    }
+
+    .ctrl-btn svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    #playPauseBtn svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .song {
+        padding: 8px 10px;
+    }
+
+    .song-name {
+        font-size: 12px;
+    }
+
+    .toast-container {
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+        align-items: flex-end;
+    }
+
+    .toast {
+        min-width: unset;
+        width: 100%;
+        max-width: 280px;
+        padding: 11px 14px;
+        font-size: 12px;
+    }
 }
 
 </style>
@@ -556,7 +630,8 @@ const playlistHeader = document.getElementById("playlistHeader");
 const searchInput = document.getElementById("searchInput");
 const toastContainer = document.getElementById("toastContainer");
 
-let currentIndex = 0;
+/* -1 설정으로 초기 곡 선택 미활성화 */
+let currentIndex = -1;
 
 
 backgroundImage1.style.backgroundImage = "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/85a074861f51fc3a560a6077e1162bbb.gif')";
@@ -572,7 +647,7 @@ const songs = [
 
 
 /* ==========================================
-   토스트 알림 함수
+   토스트 알림 함수 (부드러운 슬라이드 및 페이드)
 ========================================== */
 
 function showToast(message) {
@@ -584,20 +659,20 @@ function showToast(message) {
 
     toastContainer.appendChild(toast);
 
-    void toast.offsetWidth; // 강제 동기 리플로우
+    void toast.offsetWidth; // 강제 리플로우
     toast.classList.add("show");
 
     setTimeout(() => {
-        toast.classList.remove("show");
+        toast.classList.remove("show"); // 천천히 화면 밖으로 슬라이드 및 페이드 아웃
         setTimeout(() => {
             toast.remove();
-        }, 500);
-    }, 2500);
+        }, 600); // CSS 0.6s 트랜지션 시간에 맞춤
+    }, 2600);
 }
 
 
 /* ==========================================
-   배경 숨김 및 제어 (노래 안 틀어있을 땐 검은색)
+   배경 제어
 ========================================== */
 
 function hideAllBackgrounds() {
@@ -611,6 +686,7 @@ function hideAllBackgrounds() {
 }
 
 function getBackgroundElement() {
+    if (currentIndex < 0 || currentIndex >= songs.length) return null;
     const song = songs[currentIndex];
     if (song.background === "video1") return backgroundVideo1;
     if (song.background === "video2") return backgroundVideo2;
@@ -664,7 +740,11 @@ function renderPlaylist(filter = "") {
         if (matchTitle || matchArtist) {
             const item = document.createElement("li");
             item.className = "song";
-            if (index === currentIndex) item.classList.add("active");
+            
+            /* currentIndex가 유효하고 해당 번호일 때만 active 클래스 지정 */
+            if (currentIndex !== -1 && index === currentIndex) {
+                item.classList.add("active");
+            }
 
             item.innerHTML = `
                 <span class="number">${index + 1}</span>
@@ -691,12 +771,12 @@ playlistHeader.addEventListener("click", () => {
    곡 로드 처리
 ========================================== */
 
-function loadSong(index, isInitial = false) {
+function loadSong(index) {
     currentIndex = index;
     const song = songs[currentIndex];
 
     audio.pause();
-    hideAllBackgrounds(); // 배경 숨겨서 검은색 유지
+    hideAllBackgrounds();
 
     audio.src = song.file;
     audio.load();
@@ -706,17 +786,13 @@ function loadSong(index, isInitial = false) {
 
     renderPlaylist(searchInput.value);
 
-    // 첫 진입 시에는 자동 재생하지 않고 안내 팝업만 표시
-    if (isInitial) {
-        showToast("원하는 노래를 틀어보세요!");
-    } else {
-        showToast(`'${song.title}' 곡이 선택되었습니다`);
-        audio.play()
-            .then(() => {
-                if (song.background !== null) startBackground();
-            })
-            .catch(e => console.error("Autoplay restricted or file not found:", e));
-    }
+    showToast(`'${song.title}' 곡이 선택되었습니다`);
+
+    audio.play()
+        .then(() => {
+            if (song.background !== null) startBackground();
+        })
+        .catch(e => console.error("Autoplay restricted or file not found:", e));
 }
 
 
@@ -725,6 +801,12 @@ function loadSong(index, isInitial = false) {
 ========================================== */
 
 playPauseBtn.addEventListener("click", () => {
+    // 초기 곡 미선택 상태에서 재생 클릭 시 첫 번째 곡 로드
+    if (currentIndex === -1) {
+        loadSong(0);
+        return;
+    }
+
     if (audio.paused) {
         audio.play().catch(e => console.error(e));
         showToast("노래 재생 성공");
@@ -735,6 +817,7 @@ playPauseBtn.addEventListener("click", () => {
 });
 
 rewindBtn.addEventListener("click", () => {
+    if (currentIndex === -1) return;
     if (audio.duration) {
         audio.currentTime = Math.max(0, audio.currentTime - 10);
     }
@@ -742,6 +825,7 @@ rewindBtn.addEventListener("click", () => {
 });
 
 forwardBtn.addEventListener("click", () => {
+    if (currentIndex === -1) return;
     if (audio.duration) {
         audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
     }
@@ -750,6 +834,7 @@ forwardBtn.addEventListener("click", () => {
 
 
 progressBarContainer.addEventListener("click", (e) => {
+    if (currentIndex === -1) return;
     const width = progressBarContainer.clientWidth;
     const clickX = e.offsetX;
     const duration = audio.duration;
@@ -761,18 +846,20 @@ progressBarContainer.addEventListener("click", (e) => {
 
 
 /* ==========================================
-   오디오 재생/일시정지 상태에 따른 배경 제어
+   오디오 이벤트
 ========================================== */
 
 audio.addEventListener("play", () => {
     playIcon.style.display = "none";
     pauseIcon.style.display = "block";
 
-    const song = songs[currentIndex];
-    if (song.background !== null) {
-        startBackground();
-    } else {
-        hideAllBackgrounds();
+    if (currentIndex !== -1) {
+        const song = songs[currentIndex];
+        if (song.background !== null) {
+            startBackground();
+        } else {
+            hideAllBackgrounds();
+        }
     }
 });
 
@@ -780,7 +867,6 @@ audio.addEventListener("pause", () => {
     playIcon.style.display = "block";
     pauseIcon.style.display = "none";
 
-    // 노래가 멈춰있을 땐 배경을 페이드아웃 후 검은색으로 고정
     hideAllBackgrounds();
 });
 
@@ -809,23 +895,24 @@ audio.addEventListener("seeking", () => {
 });
 
 audio.addEventListener("ended", () => {
+    if (currentIndex === -1) return;
     const next = (currentIndex + 1) % songs.length;
     loadSong(next);
 });
 
 
 backgroundVideo1.addEventListener("loadeddata", () => {
-    if (songs[currentIndex].background === "video1" && !audio.paused) startBackground();
+    if (currentIndex !== -1 && songs[currentIndex].background === "video1" && !audio.paused) startBackground();
 });
 
 backgroundVideo2.addEventListener("loadeddata", () => {
-    if (songs[currentIndex].background === "video2" && !audio.paused) startBackground();
+    if (currentIndex !== -1 && songs[currentIndex].background === "video2" && !audio.paused) startBackground();
 });
 
 
-/* 초기 실행: 첫 곡 설정만 하고 자동 재생 안 함 */
+/* 초기 실행: 곡 활성화 없이 목록 렌더링 및 첫 안내 팝업만 출력 */
 renderPlaylist();
-loadSong(0, true);
+showToast("원하는 노래를 틀어보세요!");
 
 </script>
 
