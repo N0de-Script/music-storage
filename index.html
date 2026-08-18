@@ -6,6 +6,7 @@
 
 <title>N0DE SOUNDS</title>
 
+<!-- Pretendard Web Font -->
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 
 <style>
@@ -24,9 +25,9 @@ html, body {
     height: 100%;
 }
 
-/* 배경 색상 121212 지정 */
+/* 배경 RGB (12, 12, 12) 및 기본 텍스트 흰색 지정 */
 body {
-    background: #121212;
+    background: rgb(12, 12, 12);
     color: #ffffff;
     min-height: 100vh;
     overflow: hidden;
@@ -47,7 +48,7 @@ body {
     height: 100vh;
     z-index: 0;
     overflow: hidden;
-    background: #121212;
+    background: rgb(12, 12, 12);
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.8s ease, visibility 0.8s ease;
@@ -68,7 +69,6 @@ body {
     height: 110%;
     object-fit: cover;
     display: block;
-    /* 배경 약간만 흐릿하게 (blur 8px) */
     filter: blur(8px) brightness(0.4) saturate(1.1);
     transform: scale(1.03);
     opacity: 0;
@@ -94,12 +94,12 @@ body {
     height: 100vh;
     z-index: 1;
     pointer-events: none;
-    background: radial-gradient(circle at center, rgba(18, 18, 18, 0.2) 0%, #121212 90%);
+    background: radial-gradient(circle at center, rgba(12, 12, 12, 0.2) 0%, rgb(12, 12, 12) 90%);
 }
 
 
 /* ==========================================
-   Solid Modern Player (Glass / 투명도 제거)
+   Player Card
 ========================================== */
 
 .player {
@@ -109,8 +109,8 @@ body {
     max-width: 380px;
     padding: 32px 26px;
     border-radius: 24px;
-    background: #1e1e24; /* 투명도 없는 단색 솔리드 배경 */
-    border: 1px solid #2d2d38;
+    background: rgb(22, 22, 22);
+    border: 1px solid rgb(35, 35, 35);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
     display: flex;
     flex-direction: column;
@@ -121,14 +121,14 @@ body {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.2em;
-    color: #6366f1;
+    color: #ffffff;
     margin-bottom: 20px;
     text-transform: uppercase;
 }
 
 
 /* ==========================================
-   Track Info
+   Track Info (모든 텍스트 흰색)
 ========================================== */
 
 .track-info {
@@ -150,7 +150,7 @@ body {
 
 .artist {
     font-size: 14px;
-    color: #94a3b8;
+    color: #ffffff;
     font-weight: 500;
 }
 
@@ -167,7 +167,7 @@ body {
 .progress-bar-container {
     width: 100%;
     height: 6px;
-    background: #2a2a36;
+    background: rgb(35, 35, 35);
     border-radius: 8px;
     cursor: pointer;
     position: relative;
@@ -177,7 +177,7 @@ body {
 .progress-fill {
     width: 0%;
     height: 100%;
-    background: #6366f1;
+    background: #ffffff;
     border-radius: 8px;
     transition: width 0.1s linear;
 }
@@ -186,14 +186,14 @@ body {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
-    color: #64748b;
+    color: #ffffff;
     margin-top: 8px;
     font-weight: 600;
 }
 
 
 /* ==========================================
-   Controls
+   Controls (버튼 RGB 16, 16, 16)
 ========================================== */
 
 .controls {
@@ -206,8 +206,8 @@ body {
 }
 
 .ctrl-btn {
-    background: #282834;
-    border: 1px solid #383848;
+    background: rgb(16, 16, 16);
+    border: 1px solid rgb(35, 35, 35);
     color: #ffffff;
     border-radius: 50%;
     cursor: pointer;
@@ -218,8 +218,8 @@ body {
 }
 
 .ctrl-btn:hover {
-    background: #323242;
-    border-color: #4a4a5e;
+    background: rgb(28, 28, 28);
+    border-color: rgb(50, 50, 50);
 }
 
 .ctrl-btn:active {
@@ -234,13 +234,13 @@ body {
 .ctrl-btn.play-btn {
     width: 60px;
     height: 60px;
-    background: #6366f1;
-    border: none;
-    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    background: rgb(16, 16, 16);
+    border: 1px solid rgb(45, 45, 45);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 .ctrl-btn.play-btn:hover {
-    background: #4f46e5;
+    background: rgb(28, 28, 28);
 }
 
 .ctrl-btn svg {
@@ -249,7 +249,7 @@ body {
 
 
 /* ==========================================
-   Playlist
+   Playlist (모든 텍스트 흰색)
 ========================================== */
 
 .playlist-container {
@@ -258,7 +258,7 @@ body {
 
 .playlist-title {
     font-size: 11px;
-    color: #64748b;
+    color: #ffffff;
     font-weight: 700;
     letter-spacing: 0.15em;
     margin-bottom: 12px;
@@ -270,8 +270,8 @@ body {
     max-height: 180px;
     overflow-y: auto;
     border-radius: 14px;
-    background: #141418;
-    border: 1px solid #282832;
+    background: rgb(16, 16, 16);
+    border: 1px solid rgb(30, 30, 30);
     padding: 6px;
 }
 
@@ -279,7 +279,7 @@ body {
     width: 4px;
 }
 .playlist::-webkit-scrollbar-thumb {
-    background: #2e2e3a;
+    background: rgb(40, 40, 40);
     border-radius: 8px;
 }
 
@@ -297,16 +297,16 @@ body {
 }
 
 .song:hover {
-    background: #1f1f28;
+    background: rgb(28, 28, 28);
 }
 
 .song.active {
-    background: #262636;
-    border: 1px solid #6366f1;
+    background: rgb(28, 28, 28);
+    border: 1px solid rgb(60, 60, 60);
 }
 
 .song.active .number {
-    color: #818cf8;
+    color: #ffffff;
     font-weight: 700;
 }
 
@@ -318,7 +318,7 @@ body {
 .number {
     width: 18px;
     text-align: center;
-    color: #64748b;
+    color: #ffffff;
     font-size: 12px;
 }
 
@@ -327,7 +327,7 @@ body {
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: 13.5px;
-    color: #cbd5e1;
+    color: #ffffff;
 }
 
 </style>
@@ -336,6 +336,7 @@ body {
 
 <body>
 
+<!-- 배경 이미지/동영상 -->
 <div id="videoBackground">
     <div id="backgroundImage1" class="background-image"></div>
     <video id="backgroundVideo1" class="background-video" muted loop playsinline preload="auto" src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/YTDown.com_YouTube_midwxst-i-told-u-v1-unofficial-video_Media_tAw4egw347o_001_1080p%20(2).mp4"></video>
@@ -346,15 +347,18 @@ body {
 <div id="videoOverlay"></div>
 
 
+<!-- Solid Modern Player Card -->
 <div class="player">
 
     <div class="brand-tag">N0DE SOUNDS</div>
 
+    <!-- Track Info -->
     <div class="track-info">
         <div class="title" id="songTitle">곡을 선택해주세요</div>
         <div class="artist" id="songArtist">N0DE SOUNDS</div>
     </div>
 
+    <!-- Progress Bar -->
     <div class="progress-section">
         <div class="progress-bar-container" id="progressBarContainer">
             <div class="progress-fill" id="progressFill"></div>
@@ -365,6 +369,7 @@ body {
         </div>
     </div>
 
+    <!-- Controls -->
     <div class="controls">
         <button class="ctrl-btn side-btn" id="prevBtn" title="이전 곡">
             <svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
@@ -378,8 +383,10 @@ body {
         </button>
     </div>
 
+    <!-- 숨겨진 오디오 태그 -->
     <audio id="audio" preload="metadata"></audio>
 
+    <!-- Playlist -->
     <div class="playlist-container">
         <div class="playlist-title">PLAYLIST</div>
         <ul class="playlist" id="playlist"></ul>
@@ -424,7 +431,7 @@ backgroundImage2.style.backgroundImage = "url('https://raw.githubusercontent.com
 
 
 /* ==========================================
-   음악 데이터 (BrooklynBloodPop! -> Syko 변경됨)
+   음악 데이터 (Syko 변경 유지)
 ========================================== */
 
 const songs = [
