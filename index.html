@@ -40,11 +40,10 @@ body {
 
 
 /* ==========================================
-   배경
+   배경 영상
 ========================================== */
 
 #videoBackground {
-
     position: fixed;
 
     inset: 0;
@@ -60,20 +59,25 @@ body {
 
     opacity: 0;
 
-    transition: opacity 0.5s ease;
+    visibility: hidden;
+
+    transition:
+        opacity 0.5s ease,
+        visibility 0.5s ease;
 
     pointer-events: none;
 }
 
 #videoBackground.show {
     opacity: 1;
+    visibility: visible;
 }
 
-#videoBackground video {
-
+#backgroundVideo {
     position: absolute;
 
-    inset: 0;
+    left: 0;
+    top: 0;
 
     width: 100%;
     height: 100%;
@@ -84,6 +88,7 @@ body {
 
     filter: brightness(0.55);
 
+    transform: translateZ(0);
 }
 
 
@@ -92,7 +97,6 @@ body {
 ========================================== */
 
 #videoOverlay {
-
     position: fixed;
 
     inset: 0;
@@ -105,7 +109,7 @@ body {
     pointer-events: none;
 
     background:
-        rgba(0,0,0,0.25);
+        rgba(0, 0, 0, 0.25);
 }
 
 
@@ -114,7 +118,6 @@ body {
 ========================================== */
 
 .player {
-
     position: relative;
 
     z-index: 10;
@@ -128,7 +131,7 @@ body {
     border-radius: 24px;
 
     background:
-        rgba(20,25,35,0.82);
+        rgba(20, 25, 35, 0.82);
 
     backdrop-filter: blur(18px);
 
@@ -136,11 +139,11 @@ body {
 
     border:
         1px solid
-        rgba(255,255,255,0.15);
+        rgba(255, 255, 255, 0.15);
 
     box-shadow:
         0 25px 60px
-        rgba(0,0,0,0.6);
+        rgba(0, 0, 0, 0.6);
 }
 
 
@@ -149,7 +152,6 @@ body {
 ========================================== */
 
 .album {
-
     width: 100%;
     height: 180px;
 
@@ -165,11 +167,11 @@ body {
     margin-bottom: 18px;
 
     background:
-        rgba(255,255,255,0.06);
+        rgba(255, 255, 255, 0.06);
 
     border:
         1px solid
-        rgba(255,255,255,0.1);
+        rgba(255, 255, 255, 0.1);
 }
 
 
@@ -178,7 +180,6 @@ body {
 ========================================== */
 
 .title {
-
     text-align: center;
 
     font-size: 19px;
@@ -191,7 +192,6 @@ body {
 }
 
 .artist {
-
     text-align: center;
 
     margin-top: 5px;
@@ -208,7 +208,6 @@ body {
 ========================================== */
 
 audio {
-
     width: 100%;
 
     margin-bottom: 22px;
@@ -220,7 +219,6 @@ audio {
 ========================================== */
 
 .playlist-title {
-
     font-size: 12px;
 
     color: #94a3b8;
@@ -233,7 +231,6 @@ audio {
 }
 
 .playlist {
-
     list-style: none;
 
     max-height: 210px;
@@ -243,11 +240,10 @@ audio {
     border-radius: 14px;
 
     background:
-        rgba(0,0,0,0.2);
+        rgba(0, 0, 0, 0.2);
 }
 
 .song {
-
     display: flex;
 
     align-items: center;
@@ -260,26 +256,23 @@ audio {
 
     border-bottom:
         1px solid
-        rgba(255,255,255,0.05);
+        rgba(255, 255, 255, 0.05);
 
     transition:
         background 0.2s ease;
 }
 
 .song:hover {
-
     background:
-        rgba(255,255,255,0.08);
+        rgba(255, 255, 255, 0.08);
 }
 
 .song.active {
-
     background:
-        rgba(99,102,241,0.35);
+        rgba(99, 102, 241, 0.35);
 }
 
 .number {
-
     width: 22px;
 
     min-width: 22px;
@@ -292,7 +285,6 @@ audio {
 }
 
 .song-name {
-
     overflow: hidden;
 
     white-space: nowrap;
@@ -310,17 +302,13 @@ audio {
 @media (max-width: 500px) {
 
     .player {
-
         padding: 20px;
-
     }
 
     .album {
-
         height: 150px;
 
         font-size: 50px;
-
     }
 
 }
@@ -345,8 +333,14 @@ audio {
         playsinline
         preload="auto">
 
+        <!--
+            GitHub Raw 대신 jsDelivr 사용
+            GitHub 저장소:
+            N0de-Script/mp4-storage
+        -->
+
         <source
-            src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/bg.mp4"
+            src="https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/bg.mp4"
             type="video/mp4">
 
     </video>
@@ -495,7 +489,13 @@ const playlist =
     document.getElementById("playlist");
 
 
+/* ==========================================
+   상태
+========================================== */
+
 let currentIndex = 0;
+
+let backgroundLoading = false;
 
 
 /* ==========================================
@@ -514,8 +514,11 @@ function renderPlaylist() {
         item.className = "song";
 
         if (index === currentIndex) {
+
             item.classList.add("active");
+
         }
+
 
         item.innerHTML = `
 
@@ -529,6 +532,7 @@ function renderPlaylist() {
 
         `;
 
+
         item.addEventListener(
             "click",
             () => {
@@ -537,6 +541,7 @@ function renderPlaylist() {
 
             }
         );
+
 
         playlist.appendChild(item);
 
@@ -566,50 +571,132 @@ function hideBackground() {
 
     backgroundVideo.pause();
 
-    try {
-        backgroundVideo.currentTime = 0;
-    } catch(e) {}
+}
+
+
+/* ==========================================
+   배경 영상 시간 맞추기
+========================================== */
+
+function syncBackground() {
+
+    if (
+        !backgroundVideo ||
+        !audio
+    ) {
+        return;
+    }
+
+
+    if (
+        backgroundVideo.readyState < 2
+    ) {
+        return;
+    }
+
+
+    const difference =
+        Math.abs(
+            backgroundVideo.currentTime -
+            audio.currentTime
+        );
+
+
+    if (difference > 0.25) {
+
+        try {
+
+            backgroundVideo.currentTime =
+                audio.currentTime;
+
+        } catch (error) {
+
+            console.warn(
+                "배경 영상 시간 동기화 실패:",
+                error
+            );
+
+        }
+
+    }
 
 }
 
 
 /* ==========================================
-   배경 시작
+   배경 영상 시작
 ========================================== */
 
-function startBackground() {
+async function startBackground() {
+
+    const song =
+        songs[currentIndex];
+
+
+    if (!song.background) {
+
+        hideBackground();
+
+        return;
+
+    }
+
 
     showBackground();
 
+
     /*
-     * 음악과 영상의 시작 시간을 맞춤
+     * 음악과 영상 시간 동기화
      */
 
     try {
 
-        backgroundVideo.currentTime =
-            audio.currentTime;
+        if (
+            backgroundVideo.readyState >= 1
+        ) {
 
-    } catch(e) {}
+            backgroundVideo.currentTime =
+                audio.currentTime;
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "배경 영상 시간 설정 실패:",
+            error
+        );
+
+    }
 
 
-    backgroundVideo
-        .play()
-        .then(() => {
+    /*
+     * 영상 재생
+     */
 
-            console.log(
-                "bg.mp4 재생 성공"
-            );
+    try {
 
-        })
-        .catch(error => {
+        await backgroundVideo.play();
 
-            console.error(
-                "bg.mp4 재생 실패:",
-                error
-            );
+        console.log(
+            "bg.mp4 재생 성공"
+        );
 
-        });
+    } catch (error) {
+
+        console.error(
+            "bg.mp4 재생 실패:",
+            error
+        );
+
+        /*
+         * 영상이 아직 로딩 중일 경우
+         * loadeddata 이후 다시 재생
+         */
+
+        backgroundLoading = true;
+
+    }
 
 }
 
@@ -620,21 +707,39 @@ function startBackground() {
 
 function loadSong(index) {
 
+    if (
+        index < 0 ||
+        index >= songs.length
+    ) {
+
+        return;
+
+    }
+
+
     currentIndex = index;
+
 
     const song =
         songs[currentIndex];
 
 
     /*
-     * 음악 정지
+     * 기존 음악 정지
      */
 
     audio.pause();
 
 
     /*
-     * 배경 처리
+     * 기존 배경 정지
+     */
+
+    backgroundVideo.pause();
+
+
+    /*
+     * 배경 초기화
      */
 
     if (song.background) {
@@ -644,6 +749,12 @@ function loadSong(index) {
     } else {
 
         hideBackground();
+
+        try {
+
+            backgroundVideo.currentTime = 0;
+
+        } catch (error) {}
 
     }
 
@@ -659,7 +770,7 @@ function loadSong(index) {
 
 
     /*
-     * 정보 변경
+     * 곡 정보 변경
      */
 
     songTitle.textContent =
@@ -669,11 +780,15 @@ function loadSong(index) {
         song.artist;
 
 
+    /*
+     * 플레이리스트 갱신
+     */
+
     renderPlaylist();
 
 
     /*
-     * 사용자가 클릭한 것이므로
+     * 사용자가 클릭해서 곡을 변경한 경우
      * 바로 재생
      */
 
@@ -710,6 +825,7 @@ audio.addEventListener(
         const song =
             songs[currentIndex];
 
+
         if (song.background) {
 
             startBackground();
@@ -739,7 +855,7 @@ audio.addEventListener(
 
 
 /* ==========================================
-   음악/영상 싱크
+   음악과 영상 싱크
 ========================================== */
 
 audio.addEventListener(
@@ -749,35 +865,45 @@ audio.addEventListener(
         const song =
             songs[currentIndex];
 
+
         if (!song.background) {
+
             return;
+
         }
 
 
-        if (
-            backgroundVideo.readyState < 2
-        ) {
+        syncBackground();
+
+    }
+);
+
+
+/* ==========================================
+   음악 seeking
+========================================== */
+
+audio.addEventListener(
+    "seeking",
+    () => {
+
+        const song =
+            songs[currentIndex];
+
+
+        if (!song.background) {
+
             return;
-        }
-
-
-        const difference =
-            Math.abs(
-                backgroundVideo.currentTime -
-                audio.currentTime
-            );
-
-
-        if (difference > 0.4) {
-
-            try {
-
-                backgroundVideo.currentTime =
-                    audio.currentTime;
-
-            } catch(e) {}
 
         }
+
+
+        try {
+
+            backgroundVideo.currentTime =
+                audio.currentTime;
+
+        } catch (error) {}
 
     }
 );
@@ -795,6 +921,7 @@ audio.addEventListener(
             (currentIndex + 1)
             % songs.length;
 
+
         loadSong(next);
 
     }
@@ -802,15 +929,15 @@ audio.addEventListener(
 
 
 /* ==========================================
-   영상 로딩
+   영상 로딩 시작
 ========================================== */
 
 backgroundVideo.addEventListener(
-    "loadeddata",
+    "loadstart",
     () => {
 
         console.log(
-            "bg.mp4 로딩 완료"
+            "bg.mp4 로딩 시작"
         );
 
     }
@@ -818,7 +945,7 @@ backgroundVideo.addEventListener(
 
 
 /* ==========================================
-   영상 메타데이터
+   영상 메타데이터 로딩
 ========================================== */
 
 backgroundVideo.addEventListener(
@@ -828,6 +955,79 @@ backgroundVideo.addEventListener(
         console.log(
             "bg.mp4 메타데이터 로딩 완료"
         );
+
+        console.log(
+            "영상 길이:",
+            backgroundVideo.duration
+        );
+
+    }
+);
+
+
+/* ==========================================
+   영상 데이터 로딩
+========================================== */
+
+backgroundVideo.addEventListener(
+    "loadeddata",
+    () => {
+
+        console.log(
+            "bg.mp4 영상 데이터 로딩 완료"
+        );
+
+
+        const song =
+            songs[currentIndex];
+
+
+        if (
+            song &&
+            song.background &&
+            !audio.paused
+        ) {
+
+            startBackground();
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   영상 준비 완료
+========================================== */
+
+backgroundVideo.addEventListener(
+    "canplay",
+    () => {
+
+        console.log(
+            "bg.mp4 재생 가능"
+        );
+
+
+        if (backgroundLoading) {
+
+            backgroundLoading = false;
+
+            const song =
+                songs[currentIndex];
+
+
+            if (
+                song &&
+                song.background &&
+                !audio.paused
+            ) {
+
+                startBackground();
+
+            }
+
+        }
 
     }
 );
@@ -850,6 +1050,12 @@ backgroundVideo.addEventListener(
         );
 
         console.error(
+            "영상 주소:",
+            backgroundVideo.currentSrc
+        );
+
+        console.error(
+            "영상 오류:",
             backgroundVideo.error
         );
 
@@ -862,12 +1068,69 @@ backgroundVideo.addEventListener(
 
 
 /* ==========================================
+   영상 재생 오류
+========================================== */
+
+backgroundVideo.addEventListener(
+    "stalled",
+    () => {
+
+        console.warn(
+            "bg.mp4 로딩이 일시적으로 멈췄습니다."
+        );
+
+    }
+);
+
+
+/* ==========================================
+   영상 버퍼링
+========================================== */
+
+backgroundVideo.addEventListener(
+    "waiting",
+    () => {
+
+        console.log(
+            "bg.mp4 버퍼링 중..."
+        );
+
+    }
+);
+
+
+/* ==========================================
    초기화
 ========================================== */
 
 renderPlaylist();
 
-loadSong(0);
+
+/*
+ * 첫 번째 곡을 준비만 하고
+ * 자동재생은 하지 않음.
+ *
+ * 브라우저의 자동재생 정책 때문에
+ * 페이지 로딩 시 play()를 호출하지 않음.
+ */
+
+currentIndex = 0;
+
+const firstSong =
+    songs[0];
+
+audio.src =
+    firstSong.file;
+
+songTitle.textContent =
+    firstSong.title;
+
+songArtist.textContent =
+    firstSong.artist;
+
+audio.load();
+
+renderPlaylist();
 
 
 </script>
