@@ -398,7 +398,7 @@ body {
     position: fixed;
     bottom: 24px;
     right: 24px;
-    z-index: 9999;
+    z-index: 999999;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -406,20 +406,20 @@ body {
 }
 
 .toast {
-    background: rgb(12, 12, 12);
-    border: 1px solid rgb(32, 32, 32);
+    background: rgb(16, 16, 16);
+    border: 1px solid rgb(40, 40, 40);
     color: #ffffff;
     padding: 14px 18px;
     border-radius: 12px;
     font-size: 13px;
     font-weight: 300;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
     display: flex;
     align-items: center;
     gap: 10px;
     opacity: 0;
-    transform: translateX(30px);
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: auto;
     min-width: 240px;
     max-width: 320px;
@@ -427,7 +427,7 @@ body {
 
 .toast.show {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
 }
 
 .toast-icon {
@@ -555,7 +555,6 @@ const searchInput = document.getElementById("searchInput");
 const toastContainer = document.getElementById("toastContainer");
 
 let currentIndex = 0;
-let isInitialLoad = true;
 
 
 backgroundImage1.style.backgroundImage = "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/85a074861f51fc3a560a6077e1162bbb.gif')";
@@ -575,21 +574,24 @@ const songs = [
 ========================================== */
 
 function showToast(message) {
+    if (!toastContainer) return;
+
     const toast = document.createElement("div");
     toast.className = "toast";
     toast.innerHTML = `<span class="toast-icon"></span><span>${message}</span>`;
 
     toastContainer.appendChild(toast);
 
-    requestAnimationFrame(() => {
+    // setTimeout을 이용해 DOM 생성 후 딜레이 없이 확실하게 트랜지션 실행
+    setTimeout(() => {
         toast.classList.add("show");
-    });
+    }, 10);
 
     setTimeout(() => {
         toast.classList.remove("show");
         setTimeout(() => {
             toast.remove();
-        }, 350);
+        }, 300);
     }, 2500);
 }
 
@@ -700,16 +702,14 @@ function loadSong(index) {
 
     renderPlaylist(searchInput.value);
 
-    // 초기 웹 로딩 시에는 알림 생략, 사용자 클릭으로 곡 변경 시 알림 표시
-    if (!isInitialLoad) {
-        showToast(`'${song.title}' 곡이 선택되었습니다!`);
-    }
+    // 곡 선택 시 팝업 알림 출력
+    showToast(`'${song.title}' 곡이 선택되었습니다!`);
 
     audio.play()
         .then(() => {
             if (song.background !== null) startBackground();
         })
-        .catch(e => console.error(e));
+        .catch(e => console.error("Autoplay restricted or file not found:", e));
 }
 
 
@@ -719,7 +719,7 @@ function loadSong(index) {
 
 playPauseBtn.addEventListener("click", () => {
     if (audio.paused) {
-        audio.play();
+        audio.play().catch(e => console.error(e));
         showToast("노래 재생을 시작했습니다!");
     } else {
         audio.pause();
@@ -730,15 +730,15 @@ playPauseBtn.addEventListener("click", () => {
 rewindBtn.addEventListener("click", () => {
     if (audio.duration) {
         audio.currentTime = Math.max(0, audio.currentTime - 10);
-        showToast("노래를 10초 뒤로 되돌렸습니다!");
     }
+    showToast("노래를 10초 뒤로 되돌렸습니다!");
 });
 
 forwardBtn.addEventListener("click", () => {
     if (audio.duration) {
         audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
-        showToast("노래를 10초 앞으로 건너뛰었습니다!");
     }
+    showToast("노래를 10초 앞으로 건너뛰었습니다!");
 });
 
 
@@ -817,7 +817,6 @@ backgroundVideo2.addEventListener("loadeddata", () => {
 /* 초기화 */
 renderPlaylist();
 loadSong(0);
-isInitialLoad = false;
 
 </script>
 
