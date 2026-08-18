@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>N0DE SOUNDS</title>
 
   <style>
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
+
 
     html,
     body {
@@ -18,7 +21,9 @@
       height: 100%;
     }
 
+
     body {
+
       font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -27,32 +32,38 @@
         Arial,
         sans-serif;
 
-      color: #f8fafc;
+      background: #0f172a;
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      color: white;
 
       min-height: 100vh;
 
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
       overflow: hidden;
 
-      background: #0f172a;
     }
 
-    /* ========================================
-       배경 영상
-    ======================================== */
 
-    .bg-video-container {
+    /* =========================================
+       배경 영상
+    ========================================= */
+
+    #background {
+
       position: fixed;
 
-      inset: 0;
+      top: 0;
+      left: 0;
 
       width: 100vw;
       height: 100vh;
 
-      z-index: 1;
+      z-index: 0;
 
       overflow: hidden;
 
@@ -63,569 +74,648 @@
       visibility: hidden;
 
       transition:
-        opacity 0.5s ease,
-        visibility 0.5s ease;
+        opacity 0.6s ease,
+        visibility 0.6s ease;
+
     }
 
-    .bg-video-container.show {
+
+    #background.active {
+
       opacity: 1;
+
       visibility: visible;
+
     }
 
-    .bg-video-container video {
+
+    #background video {
+
+      position: absolute;
+
+      top: 50%;
+      left: 50%;
+
       width: 100%;
       height: 100%;
+
+      transform:
+        translate(-50%, -50%)
+        scale(1.08);
 
       object-fit: cover;
 
       filter:
-        blur(30px)
-        brightness(0.5);
+        brightness(0.5)
+        blur(12px);
 
-      transform: scale(1.15);
-
-      pointer-events: none;
     }
 
-    /* ========================================
-       배경 오버레이
-    ======================================== */
 
-    .overlay {
+    /* =========================================
+       배경 어두운 오버레이
+    ========================================= */
+
+    #background-overlay {
+
       position: fixed;
 
-      inset: 0;
+      top: 0;
+      left: 0;
 
       width: 100vw;
       height: 100vh;
 
-      z-index: 2;
-
-      background:
-        rgba(15, 23, 42, 0.4);
+      z-index: 1;
 
       pointer-events: none;
+
+      background:
+        rgba(0, 0, 0, 0.25);
+
     }
 
-    /* ========================================
-       플레이어
-    ======================================== */
 
-    .player-container {
+    /* =========================================
+       플레이어
+    ========================================= */
+
+    .player {
+
       position: relative;
 
-      z-index: 3;
+      z-index: 10;
 
       width: calc(100% - 30px);
 
-      max-width: 420px;
+      max-width: 430px;
 
       padding: 28px;
 
+      border-radius: 24px;
+
       background:
-        rgba(30, 41, 59, 0.75);
-
-      backdrop-filter:
-        blur(16px);
-
-      -webkit-backdrop-filter:
-        blur(16px);
+        rgba(20, 25, 35, 0.78);
 
       border:
         1px solid
-        rgba(255, 255, 255, 0.15);
+        rgba(255,255,255,0.15);
 
-      border-radius: 24px;
+      backdrop-filter:
+        blur(20px);
+
+      -webkit-backdrop-filter:
+        blur(20px);
 
       box-shadow:
-        0 25px 50px -12px
-        rgba(0, 0, 0, 0.6);
+        0 25px 70px
+        rgba(0,0,0,0.55);
+
     }
 
-    /* ========================================
-       현재 재생 영역
-    ======================================== */
 
-    .now-playing {
-      text-align: center;
+    /* =========================================
+       앨범 영역
+    ========================================= */
 
-      margin-bottom: 20px;
-    }
+    .album {
 
-    .album-art {
       width: 100%;
-      height: 180px;
+
+      height: 190px;
+
+      border-radius: 18px;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      font-size: 65px;
+
+      margin-bottom: 18px;
 
       background:
         linear-gradient(
           135deg,
-          rgba(255,255,255,0.08),
-          rgba(255,255,255,0.02)
+          rgba(255,255,255,0.10),
+          rgba(255,255,255,0.025)
         );
-
-      border-radius: 16px;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      font-size: 56px;
-
-      margin-bottom: 16px;
 
       border:
         1px solid
         rgba(255,255,255,0.1);
 
-      user-select: none;
     }
 
-    .song-title {
-      font-size: 18px;
+
+    /* =========================================
+       곡 정보
+    ========================================= */
+
+    .title {
+
+      font-size: 19px;
 
       font-weight: 700;
 
-      margin-bottom: 4px;
+      text-align: center;
+
+      line-height: 1.4;
 
       word-break: break-word;
 
-      line-height: 1.4;
     }
+
 
     .artist {
+
+      margin-top: 5px;
+
+      margin-bottom: 18px;
+
       font-size: 14px;
 
-      color: #cbd5e1;
+      text-align: center;
 
-      margin-bottom: 16px;
+      color: #b7c0ce;
+
     }
 
-    /* ========================================
+
+    /* =========================================
        오디오
-    ======================================== */
+    ========================================= */
 
     audio {
+
+      display: block;
+
       width: 100%;
 
-      margin-bottom: 20px;
+      margin-bottom: 22px;
 
-      filter:
-        invert(0.9)
-        hue-rotate(180deg);
     }
 
-    /* ========================================
-       플레이리스트 제목
-    ======================================== */
 
-    .playlist-title {
+    /* =========================================
+       플레이리스트 제목
+    ========================================= */
+
+    .playlist-label {
+
       font-size: 12px;
 
       font-weight: 700;
 
       color: #94a3b8;
 
-      margin-bottom: 10px;
+      letter-spacing: 0.08em;
 
       text-transform: uppercase;
 
-      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+
     }
 
-    /* ========================================
+
+    /* =========================================
        플레이리스트
-    ======================================== */
+    ========================================= */
 
     .playlist {
-      list-style: none;
 
-      max-height: 200px;
+      width: 100%;
+
+      max-height: 210px;
 
       overflow-y: auto;
 
-      border-radius: 12px;
+      list-style: none;
+
+      border-radius: 14px;
 
       background:
-        rgba(15, 23, 42, 0.6);
+        rgba(0,0,0,0.20);
 
-      scrollbar-width: thin;
     }
+
 
     .playlist::-webkit-scrollbar {
+
       width: 5px;
+
     }
 
+
     .playlist::-webkit-scrollbar-thumb {
+
       background:
         rgba(255,255,255,0.2);
 
-      border-radius: 10px;
+      border-radius: 20px;
+
     }
 
-    /* ========================================
-       플레이리스트 아이템
-    ======================================== */
 
-    .playlist-item {
-      padding: 12px 16px;
+    /* =========================================
+       곡
+    ========================================= */
 
-      font-size: 13px;
+    .song {
 
-      border-bottom:
-        1px solid
-        rgba(255,255,255,0.05);
+      width: 100%;
 
-      cursor: pointer;
+      padding: 13px 15px;
 
       display: flex;
 
       align-items: center;
 
-      gap: 10px;
+      gap: 11px;
+
+      cursor: pointer;
+
+      border-bottom:
+        1px solid
+        rgba(255,255,255,0.05);
 
       transition:
         background 0.2s ease,
         transform 0.15s ease;
+
     }
 
-    .playlist-item:last-child {
+
+    .song:last-child {
+
       border-bottom: none;
+
     }
 
-    .playlist-item:hover {
+
+    .song:hover {
+
       background:
-        rgba(255,255,255,0.1);
+        rgba(255,255,255,0.08);
 
       transform:
         translateX(2px);
+
     }
 
-    .playlist-item.active {
+
+    .song.active {
+
       background:
-        rgba(99,102,241,0.35);
+        rgba(99,102,241,0.30);
 
-      color: #a5b4fc;
-
-      font-weight: 600;
     }
 
-    .playlist-number {
-      width: 20px;
 
-      min-width: 20px;
+    .number {
+
+      width: 22px;
+
+      min-width: 22px;
 
       text-align: center;
 
-      opacity: 0.7;
+      font-size: 12px;
+
+      color: #94a3b8;
+
     }
 
-    .playlist-name {
+
+    .song.active .number {
+
+      color: #a5b4fc;
+
+    }
+
+
+    .song-name {
+
+      flex: 1;
+
       overflow: hidden;
+
+      white-space: nowrap;
 
       text-overflow: ellipsis;
 
-      white-space: nowrap;
+      font-size: 13px;
+
     }
 
-    /* ========================================
+
+    /* =========================================
        모바일
-    ======================================== */
+    ========================================= */
 
     @media (max-width: 500px) {
 
-      .player-container {
+      .player {
+
         padding: 20px;
 
         border-radius: 20px;
+
       }
 
-      .album-art {
+
+      .album {
+
         height: 150px;
 
-        font-size: 48px;
+        font-size: 50px;
+
       }
 
-      .song-title {
-        font-size: 16px;
+
+      .title {
+
+        font-size: 17px;
+
       }
+
 
       .playlist {
+
         max-height: 180px;
+
       }
 
     }
+
   </style>
+
 </head>
+
 
 <body>
 
-  <!-- ========================================
-       i told u v1 전용 배경 영상
-  ======================================== -->
 
-  <div
-    class="bg-video-container"
-    id="bg-video-container"
-  >
+  <!-- =========================================
+       배경 영상
+  ========================================= -->
+
+  <div id="background">
 
     <video
-      id="bg-video"
+      id="backgroundVideo"
       src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/bg.mp4"
-      loop
       muted
+      loop
       playsinline
       preload="auto">
     </video>
 
   </div>
 
-  <div class="overlay"></div>
+
+  <div id="background-overlay"></div>
 
 
-  <!-- ========================================
+  <!-- =========================================
        음악 플레이어
-  ======================================== -->
+  ========================================= -->
 
-  <div class="player-container">
+  <div class="player">
 
-    <div class="now-playing">
 
-      <div class="album-art">
-        🎧
-      </div>
+    <div class="album">
 
-      <div
-        class="song-title"
-        id="current-title">
-        곡을 선택해주세요
-      </div>
-
-      <div
-        class="artist"
-        id="current-artist">
-        N0DE SOUNDS
-      </div>
-
-      <audio
-        id="audio-player"
-        controls
-        preload="metadata">
-      </audio>
+      🎧
 
     </div>
 
 
-    <div class="playlist-title">
+    <div
+      class="title"
+      id="songTitle">
+
+      곡을 선택해주세요
+
+    </div>
+
+
+    <div
+      class="artist"
+      id="songArtist">
+
+      N0DE SOUNDS
+
+    </div>
+
+
+    <audio
+      id="audio"
+      controls
+      preload="metadata">
+    </audio>
+
+
+    <div class="playlist-label">
+
       Playlist
+
     </div>
+
 
     <ul
       class="playlist"
       id="playlist">
     </ul>
 
+
   </div>
 
 
   <script>
 
-    /* ========================================
+
+    /* =========================================
        음악 목록
-       
-       중요:
-       MP3들은 index.html과 같은
-       music-storage 저장소에 있으므로
-       상대경로로 불러옵니다.
-    ======================================== */
+    ========================================= */
 
     const songs = [
 
       {
-        title: "NUMBER TWERKNATION28",
-        artist: "sped up / nightcore",
 
-        audioSrc:
+        title:
+          "NUMBER TWERKNATION28",
+
+        artist:
+          "sped up / nightcore",
+
+        file:
           "./NUMBER%20TWERKNATION28%20(sped%20upnightcore).mp3",
 
-        hasBackground: false
+        background:
+          false
+
       },
 
 
       {
-        title: "BrooklynBloodPop!",
-        artist: "Nightcore",
 
-        audioSrc:
+        title:
+          "BrooklynBloodPop!",
+
+        artist:
+          "Nightcore",
+
+        file:
           "./Nightcore%20-%20BrooklynBloodPop!.mp3",
 
-        hasBackground: false
+        background:
+          false
+
       },
 
 
       {
-        title: "i told u v1",
-        artist: "midwxst",
 
-        audioSrc:
+        title:
+          "i told u v1",
+
+        artist:
+          "midwxst",
+
+        file:
           "./midwxst%20-%20i%20told%20u%20v1%20%5Bunofficial%20video%5D.mp3",
 
-        hasBackground: true
+        background:
+          true
+
       },
 
 
       {
-        title: "너",
-        artist: "ycs",
 
-        audioSrc:
+        title:
+          "너",
+
+        artist:
+          "ycs",
+
+        file:
           "./ycs%20-%20%EB%84%88%20(Official%20Audio).mp3",
 
-        hasBackground: false
+        background:
+          false
+
       },
 
 
       {
-        title: "relations",
-        artist: "이상형",
 
-        audioSrc:
+        title:
+          "relations",
+
+        artist:
+          "이상형",
+
+        file:
           "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3",
 
-        hasBackground: false
+        background:
+          false
+
       }
 
     ];
 
 
-    /* ========================================
+    /* =========================================
        요소
-    ======================================== */
+    ========================================= */
 
-    const audioPlayer =
-      document.getElementById(
-        "audio-player"
-      );
+    const audio =
+      document.getElementById("audio");
 
-    const bgVideo =
-      document.getElementById(
-        "bg-video"
-      );
 
-    const bgVideoContainer =
-      document.getElementById(
-        "bg-video-container"
-      );
+    const background =
+      document.getElementById("background");
 
-    const currentTitle =
-      document.getElementById(
-        "current-title"
-      );
 
-    const currentArtist =
+    const backgroundVideo =
       document.getElementById(
-        "current-artist"
-      );
-
-    const playlistElement =
-      document.getElementById(
-        "playlist"
+        "backgroundVideo"
       );
 
 
-    /* ========================================
+    const songTitle =
+      document.getElementById("songTitle");
+
+
+    const songArtist =
+      document.getElementById("songArtist");
+
+
+    const playlist =
+      document.getElementById("playlist");
+
+
+    /* =========================================
        현재 곡
-    ======================================== */
+    ========================================= */
 
     let currentIndex = 0;
 
 
-    /* ========================================
-       배경 영상 표시 여부
-    ======================================== */
-
-    function updateBackground() {
-
-      const song =
-        songs[currentIndex];
-
-
-      if (song.hasBackground) {
-
-        /*
-         * i told u v1
-         * 배경 영상 표시
-         */
-
-        bgVideoContainer.classList.add(
-          "show"
-        );
-
-      } else {
-
-        /*
-         * 다른 곡
-         * 배경 영상 제거
-         */
-
-        bgVideoContainer.classList.remove(
-          "show"
-        );
-
-        bgVideo.pause();
-
-        bgVideo.currentTime = 0;
-
-      }
-
-    }
-
-
-    /* ========================================
+    /* =========================================
        플레이리스트 생성
-    ======================================== */
+    ========================================= */
 
     function renderPlaylist() {
 
-      playlistElement.innerHTML = "";
+      playlist.innerHTML = "";
 
 
       songs.forEach(
         (song, index) => {
 
-          const li =
-            document.createElement(
-              "li"
+          const item =
+            document.createElement("li");
+
+
+          item.className =
+            "song";
+
+
+          if (
+            index === currentIndex
+          ) {
+
+            item.classList.add(
+              "active"
             );
 
-
-          li.className =
-            "playlist-item" +
-            (
-              index === currentIndex
-                ? " active"
-                : ""
-            );
+          }
 
 
-          li.innerHTML = `
+          item.innerHTML = `
 
-            <span class="playlist-number">
+            <span class="number">
               ${index + 1}
             </span>
 
-            <span class="playlist-name">
+            <span class="song-name">
               ${song.title}
             </span>
 
           `;
 
 
-          li.addEventListener(
+          item.addEventListener(
             "click",
             () => {
 
-              loadSong(
+              changeSong(
                 index,
                 true
               );
@@ -634,9 +724,7 @@
           );
 
 
-          playlistElement.appendChild(
-            li
-          );
+          playlist.appendChild(item);
 
         }
       );
@@ -644,130 +732,241 @@
     }
 
 
-    /* ========================================
-       곡 불러오기
-    ======================================== */
+    /* =========================================
+       배경 영상 끄기
+    ========================================= */
 
-    function loadSong(
-      index,
-      shouldPlay = false
-    ) {
+    function hideBackground() {
 
-      currentIndex = index;
+      background.classList.remove(
+        "active"
+      );
+
+
+      backgroundVideo.pause();
+
+
+      /*
+       * 영상 위치를 처음으로 돌림
+       */
+
+      try {
+
+        backgroundVideo.currentTime = 0;
+
+      } catch (error) {}
+
+    }
+
+
+    /* =========================================
+       배경 영상 표시
+    ========================================= */
+
+    function showBackground() {
+
+      background.classList.add(
+        "active"
+      );
+
+    }
+
+
+    /* =========================================
+       현재 곡의 배경 처리
+    ========================================= */
+
+    function updateBackground() {
 
       const song =
         songs[currentIndex];
 
 
-      /*
-       * 현재 곡 정보
-       */
+      if (
+        song.background === true
+      ) {
 
-      currentTitle.textContent =
-        song.title;
+        /*
+         * i told u v1
+         */
 
-      currentArtist.textContent =
-        song.artist;
+        showBackground();
 
+      } else {
 
-      /*
-       * 배경 영상 변경
-       */
+        /*
+         * 나머지 곡
+         */
 
-      updateBackground();
-
-
-      /*
-       * 기존 음악 완전히 정지
-       */
-
-      audioPlayer.pause();
-
-      audioPlayer.removeAttribute(
-        "src"
-      );
-
-      audioPlayer.load();
-
-
-      /*
-       * 새 음악 주소 설정
-       */
-
-      audioPlayer.src =
-        song.audioSrc;
-
-
-      /*
-       * 브라우저에 로드 요청
-       */
-
-      audioPlayer.load();
-
-
-      /*
-       * 플레이리스트 업데이트
-       */
-
-      renderPlaylist();
-
-
-      /*
-       * 재생 버튼을 눌러 곡을 선택한 경우
-       */
-
-      if (shouldPlay) {
-
-        playCurrentSong();
+        hideBackground();
 
       }
 
     }
 
 
-    /* ========================================
-       현재 곡 재생
-    ======================================== */
+    /* =========================================
+       곡 변경
+    ========================================= */
 
-    function playCurrentSong() {
+    function changeSong(
+      index,
+      autoPlay = false
+    ) {
+
+      currentIndex = index;
+
 
       const song =
         songs[currentIndex];
 
 
-      audioPlayer.play()
-        .then(() => {
+      /*
+       * 음악 정지
+       */
 
-          /*
-           * i told u v1일 때만
-           * 배경 영상 재생
-           */
+      audio.pause();
 
-          if (song.hasBackground) {
 
-            bgVideo.play()
-              .catch(() => {});
+      /*
+       * 배경 먼저 변경
+       */
 
-          }
+      updateBackground();
 
-        })
-        .catch((error) => {
 
-          console.log(
-            "음악 자동재생이 브라우저에 의해 차단되었습니다.",
-            error
-          );
+      /*
+       * 음악 주소 변경
+       */
 
-        });
+      audio.src =
+        song.file;
+
+
+      /*
+       * 브라우저에 로드
+       */
+
+      audio.load();
+
+
+      /*
+       * 정보 변경
+       */
+
+      songTitle.textContent =
+        song.title;
+
+
+      songArtist.textContent =
+        song.artist;
+
+
+      /*
+       * 리스트 업데이트
+       */
+
+      renderPlaylist();
+
+
+      /*
+       * 재생
+       */
+
+      if (autoPlay) {
+
+        playSong();
+
+      }
 
     }
 
 
-    /* ========================================
-       음악 재생 이벤트
-    ======================================== */
+    /* =========================================
+       현재 음악 재생
+    ========================================= */
 
-    audioPlayer.addEventListener(
+    function playSong() {
+
+      const song =
+        songs[currentIndex];
+
+
+      audio.play()
+        .then(() => {
+
+          /*
+           * i told u v1일 경우
+           * 배경 영상도 재생
+           */
+
+          if (
+            song.background === true
+          ) {
+
+            startBackgroundVideo();
+
+          }
+
+        })
+        .catch(
+          (error) => {
+
+            console.log(
+              "음악 재생 실패:",
+              error
+            );
+
+          }
+        );
+
+    }
+
+
+    /* =========================================
+       배경 영상 시작
+    ========================================= */
+
+    function startBackgroundVideo() {
+
+      /*
+       * 현재 음악 시간과
+       * 영상 시간을 맞춤
+       */
+
+      try {
+
+        backgroundVideo.currentTime =
+          audio.currentTime;
+
+      } catch (error) {}
+
+
+      /*
+       * 영상 재생
+       */
+
+      backgroundVideo
+        .play()
+        .catch(
+          (error) => {
+
+            console.log(
+              "배경 영상 재생 실패:",
+              error
+            );
+
+          }
+        );
+
+    }
+
+
+    /* =========================================
+       음악 PLAY
+    ========================================= */
+
+    audio.addEventListener(
       "play",
       () => {
 
@@ -775,14 +974,17 @@
           songs[currentIndex];
 
 
-        if (song.hasBackground) {
+        if (
+          song.background === true
+        ) {
 
-          bgVideo.play()
-            .catch(() => {});
+          showBackground();
+
+          startBackgroundVideo();
 
         } else {
 
-          bgVideo.pause();
+          hideBackground();
 
         }
 
@@ -790,25 +992,25 @@
     );
 
 
-    /* ========================================
-       음악 일시정지
-    ======================================== */
+    /* =========================================
+       음악 PAUSE
+    ========================================= */
 
-    audioPlayer.addEventListener(
+    audio.addEventListener(
       "pause",
       () => {
 
-        bgVideo.pause();
+        backgroundVideo.pause();
 
       }
     );
 
 
-    /* ========================================
-       음악과 영상 싱크
-    ======================================== */
+    /* =========================================
+       음악 시간 변경
+    ========================================= */
 
-    audioPlayer.addEventListener(
+    audio.addEventListener(
       "timeupdate",
       () => {
 
@@ -817,52 +1019,57 @@
 
 
         /*
-         * i told u v1이 아니면
-         * 영상 싱크를 사용하지 않음
+         * i told u v1만 싱크
          */
 
-        if (!song.hasBackground) {
+        if (
+          song.background !== true
+        ) {
+
           return;
+
         }
 
 
-        /*
-         * 음악과 영상의 현재 시간
-         */
+        if (
+          backgroundVideo.readyState < 2
+        ) {
+
+          return;
+
+        }
+
 
         const musicTime =
-          audioPlayer.currentTime;
+          audio.currentTime;
+
 
         const videoTime =
-          bgVideo.currentTime;
+          backgroundVideo.currentTime;
 
 
         const difference =
           Math.abs(
-            musicTime - videoTime
+            musicTime -
+            videoTime
           );
 
 
         /*
-         * 0.5초 이상 차이나면
-         * 영상 시간을 음악에 맞춤
+         * 0.3초 이상 차이나면
+         * 영상 시간 보정
          */
 
-        if (difference > 0.5) {
+        if (
+          difference > 0.3
+        ) {
 
           try {
 
-            bgVideo.currentTime =
+            backgroundVideo.currentTime =
               musicTime;
 
-          } catch (error) {
-
-            console.log(
-              "배경 영상 싱크 조정 실패",
-              error
-            );
-
-          }
+          } catch (error) {}
 
         }
 
@@ -870,39 +1077,26 @@
     );
 
 
-    /* ========================================
+    /* =========================================
        곡 종료
-    ======================================== */
+    ========================================= */
 
-    audioPlayer.addEventListener(
+    audio.addEventListener(
       "ended",
       () => {
 
         /*
-         * 현재 배경 영상 정지
+         * 다음 곡
          */
 
-        bgVideo.pause();
-
-        bgVideo.currentTime = 0;
-
-
-        /*
-         * 다음 곡으로 이동
-         */
-
-        currentIndex =
+        const nextIndex =
           (
             currentIndex + 1
           ) % songs.length;
 
 
-        /*
-         * 다음 곡 재생
-         */
-
-        loadSong(
-          currentIndex,
+        changeSong(
+          nextIndex,
           true
         );
 
@@ -910,54 +1104,71 @@
     );
 
 
-    /* ========================================
-       음악 로딩 오류
-    ======================================== */
+    /* =========================================
+       배경 영상 로딩 완료
+    ========================================= */
 
-    audioPlayer.addEventListener(
-      "error",
+    backgroundVideo.addEventListener(
+      "loadedmetadata",
       () => {
 
         const song =
           songs[currentIndex];
 
 
-        console.error(
-          "음악 파일을 불러오지 못했습니다:",
-          song.audioSrc
-        );
+        if (
+          song.background === true &&
+          !audio.paused
+        ) {
+
+          try {
+
+            backgroundVideo.currentTime =
+              audio.currentTime;
+
+          } catch (error) {}
+
+
+          backgroundVideo
+            .play()
+            .catch(
+              () => {}
+            );
+
+        }
 
       }
     );
 
 
-    /* ========================================
-       배경 영상 오류
-    ======================================== */
+    /* =========================================
+       배경 영상 오류 확인
+    ========================================= */
 
-    bgVideo.addEventListener(
+    backgroundVideo.addEventListener(
       "error",
       () => {
 
         console.error(
-          "bg.mp4를 불러오지 못했습니다."
+          "bg.mp4 로딩 오류"
         );
 
       }
     );
 
 
-    /* ========================================
+    /* =========================================
        초기화
-    ======================================== */
+    ========================================= */
 
     renderPlaylist();
 
 
-    loadSong(
+    changeSong(
       0,
       false
     );
+
 
   </script>
 
