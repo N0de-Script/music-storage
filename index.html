@@ -26,7 +26,6 @@ html, body {
     height: 100%;
 }
 
-/* 전체 배경: RGB (8, 8, 8) */
 body {
     background: rgb(8, 8, 8);
     color: #ffffff;
@@ -119,12 +118,12 @@ body {
 }
 
 .brand-tag {
-    font-size: 10px;
-    font-weight: 400;
-    letter-spacing: 0.25em;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
     color: #ffffff;
     opacity: 0.6;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     text-transform: uppercase;
 }
 
@@ -164,7 +163,7 @@ body {
 
 .progress-section {
     width: 100%;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .progress-bar-container {
@@ -197,28 +196,30 @@ body {
 
 
 /* ==========================================
-   Controls (동그란 배경 제거 & 아이콘 전용)
+   Controls (동그란 테두리 완전히 제거된 아이콘 형태)
 ========================================== */
 
 .controls {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 32px;
-    margin-bottom: 22px;
+    gap: 36px;
+    margin-bottom: 24px;
     width: 100%;
 }
 
 .ctrl-btn {
-    background: none;
-    border: none;
-    outline: none;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
     color: #ffffff;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px;
+    padding: 0;
     opacity: 0.85;
     transition: opacity 0.2s ease, transform 0.15s ease;
 }
@@ -226,8 +227,6 @@ body {
 .ctrl-btn:hover {
     opacity: 1;
     transform: scale(1.12);
-    background: none;
-    border: none;
 }
 
 .ctrl-btn:active {
@@ -236,6 +235,7 @@ body {
 
 .ctrl-btn svg {
     fill: #ffffff;
+    display: block;
 }
 
 
@@ -283,7 +283,6 @@ body {
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 열고 닫히는 애니메이션 영역 */
 .playlist-wrapper {
     max-height: 250px;
     opacity: 1;
@@ -303,7 +302,6 @@ body {
     transform: rotate(180deg);
 }
 
-/* 검색창 스타일 */
 .search-input {
     width: 100%;
     padding: 8px 12px;
@@ -326,7 +324,6 @@ body {
     border-color: rgb(50, 50, 50);
 }
 
-/* 곡 목록 */
 .playlist {
     list-style: none;
     max-height: 150px;
@@ -409,9 +406,10 @@ body {
 <div id="videoOverlay"></div>
 
 
-<!-- Solid Modern Player Card -->
+<!-- Player Card -->
 <div class="player">
 
+    <!-- 브랜드 타이틀 -->
     <div class="brand-tag">N1gh7m4r3 Playlist</div>
 
     <!-- Track Info -->
@@ -431,24 +429,24 @@ body {
         </div>
     </div>
 
-    <!-- Controls (동그라미 제거 및 깔끔한 화살표 아이콘 변경) -->
+    <!-- Controls (요청하신 화살표 전용 아이콘 스타일) -->
     <div class="controls">
         <button class="ctrl-btn" id="rewindBtn" title="10초 뒤로">
-            <svg width="28" height="24" viewBox="0 0 24 24">
-                <path d="M11 16.05V7.95c0-.56-.62-.9-1.08-.58l-5.6 4.05c-.39.28-.39.87 0 1.15l5.6 4.05c.46.33 1.08-.02 1.08-.57zm10 0V7.95c0-.56-.62-.9-1.08-.58l-5.6 4.05c-.39.28-.39.87 0 1.15l5.6 4.05c.46.33 1.08-.02 1.08-.57z"/>
+            <svg width="32" height="32" viewBox="0 0 24 24">
+                <path d="M11 7.19v9.62c0 .58-.65.91-1.12.57L3.6 12.57c-.43-.31-.43-.95 0-1.26l6.28-4.8c.47-.35 1.12-.01 1.12.57zm9.5 0v9.62c0 .58-.65.91-1.12.57l-6.28-4.81c-.43-.31-.43-.95 0-1.26l6.28-4.8c.47-.35 1.12-.01 1.12.57z"/>
             </svg>
         </button>
         <button class="ctrl-btn" id="playPauseBtn" title="재생/일시정지">
-            <svg id="playIcon" width="30" height="30" viewBox="0 0 24 24">
+            <svg id="playIcon" width="36" height="36" viewBox="0 0 24 24">
                 <path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/>
             </svg>
-            <svg id="pauseIcon" width="30" height="30" viewBox="0 0 24 24" style="display:none;">
+            <svg id="pauseIcon" width="36" height="36" viewBox="0 0 24 24" style="display:none;">
                 <path d="M8 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zm6-12v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z"/>
             </svg>
         </button>
         <button class="ctrl-btn" id="forwardBtn" title="10초 앞으로">
-            <svg width="28" height="24" viewBox="0 0 24 24">
-                <path d="M13 7.95v8.1c0 .56.62.9 1.08.58l5.6-4.05c.39-.28.39-.87 0-1.15l-5.6-4.05c-.46-.32-1.08.02-1.08.57zm-10 0v8.1c0 .56.62.9 1.08.58l5.6-4.05c.39-.28.39-.87 0-1.15L4.08 7.37C3.62 7.05 3 7.39 3 7.95z"/>
+            <svg width="32" height="32" viewBox="0 0 24 24">
+                <path d="M13 16.81V7.19c0-.58.65-.91 1.12-.57l6.28 4.8c.43.31.43.95 0 1.26l-6.28 4.81c-.47.34-1.12 0-1.12-.58zm-9.5 0V7.19c0-.58.65-.91 1.12-.57l6.28 4.8c.43.31.43.95 0 1.26l-6.28 4.81c-.47.34-1.12 0-1.12-.58z"/>
             </svg>
         </button>
     </div>
@@ -506,17 +504,9 @@ const searchInput = document.getElementById("searchInput");
 let currentIndex = 0;
 
 
-/* ==========================================
-   배경 이미지 로드
-========================================== */
-
 backgroundImage1.style.backgroundImage = "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/85a074861f51fc3a560a6077e1162bbb.gif')";
 backgroundImage2.style.backgroundImage = "url('https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/40d89af3f71dddcdca7065a07fc6e069.jpg')";
 
-
-/* ==========================================
-   음악 데이터
-========================================== */
 
 const songs = [
     { title: "BrooklynBloodPop!", artist: "Syko", file: "./Nightcore%20-%20BrooklynBloodPop!.mp3", background: "image1" },
@@ -525,10 +515,6 @@ const songs = [
     { title: "relations", artist: "이상형", file: "./%EC%9D%B4%EC%83%81%ED%98%95%20-%20relations%20%5BOfficial%20Music%20Video%5D.mp3", background: "image2" }
 ];
 
-
-/* ==========================================
-   배경 제어
-========================================== */
 
 function hideAllBackgrounds() {
     backgroundVideo1.pause();
@@ -570,14 +556,10 @@ function startBackground() {
         if (el.readyState >= 1) {
             try { el.currentTime = audio.currentTime; } catch (e) {}
         }
-        el.play().catch(e => console.error("배경 영상 재생 실패:", e));
+        el.play().catch(e => console.error(e));
     }
 }
 
-
-/* ==========================================
-   시간 포맷
-========================================== */
 
 function formatTime(seconds) {
     if (isNaN(seconds)) return "0:00";
@@ -586,10 +568,6 @@ function formatTime(seconds) {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
-
-/* ==========================================
-   Playlist 렌더링 & 검색
-========================================== */
 
 function renderPlaylist(filter = "") {
     playlist.innerHTML = "";
@@ -620,18 +598,10 @@ searchInput.addEventListener("input", (e) => {
 });
 
 
-/* ==========================================
-   목록창 열기 / 닫기
-========================================== */
-
 playlistHeader.addEventListener("click", () => {
     playlistContainer.classList.toggle("collapsed");
 });
 
-
-/* ==========================================
-   곡 변경
-========================================== */
 
 function loadSong(index) {
     currentIndex = index;
@@ -652,13 +622,9 @@ function loadSong(index) {
         .then(() => {
             if (song.background !== null) startBackground();
         })
-        .catch(e => console.error("음악 재생 실패:", e));
+        .catch(e => console.error(e));
 }
 
-
-/* ==========================================
-   컨트롤 버튼 이벤트 (10초 건너뛰기)
-========================================== */
 
 playPauseBtn.addEventListener("click", () => {
     if (audio.paused) {
@@ -681,10 +647,6 @@ forwardBtn.addEventListener("click", () => {
 });
 
 
-/* ==========================================
-   프로그레스 바 클릭/시크
-========================================== */
-
 progressBarContainer.addEventListener("click", (e) => {
     const width = progressBarContainer.clientWidth;
     const clickX = e.offsetX;
@@ -695,10 +657,6 @@ progressBarContainer.addEventListener("click", (e) => {
     }
 });
 
-
-/* ==========================================
-   오디오 이벤트
-========================================== */
 
 audio.addEventListener("play", () => {
     playIcon.style.display = "none";
@@ -752,10 +710,6 @@ audio.addEventListener("ended", () => {
 });
 
 
-/* ==========================================
-   비디오 로딩 / 에러 핸들러
-========================================== */
-
 backgroundVideo1.addEventListener("loadeddata", () => {
     if (songs[currentIndex].background === "video1" && !audio.paused) startBackground();
 });
@@ -764,13 +718,6 @@ backgroundVideo2.addEventListener("loadeddata", () => {
     if (songs[currentIndex].background === "video2" && !audio.paused) startBackground();
 });
 
-backgroundVideo1.addEventListener("error", () => console.error("배경 영상1 로딩 실패:", backgroundVideo1.error));
-backgroundVideo2.addEventListener("error", () => console.error("배경 영상2 로딩 실패:", backgroundVideo2.error));
-
-
-/* ==========================================
-   초기화
-========================================== */
 
 renderPlaylist();
 loadSong(0);
