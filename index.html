@@ -131,9 +131,12 @@
 </head>
 <body>
 
-  <!-- 배경 비디오 (동일 저장소 내 videoplayback.mp4 사용) -->
+  <!-- mp4-storage 저장소의 videoplayback.mp4 직접 불러오기 -->
   <div class="bg-video-container">
-    <video id="bg-video" src="videoplayback.mp4" autoplay loop muted playsinline></video>
+    <video id="bg-video" autoplay loop muted playsinline>
+      <source src="https://raw.githubusercontent.com/N0de-Script/mp4-storage/main/videoplayback.mp4" type="video/mp4">
+      <source src="https://cdn.jsdelivr.net/gh/N0de-Script/mp4-storage@main/videoplayback.mp4" type="video/mp4">
+    </video>
   </div>
   <div class="overlay"></div>
 
@@ -151,7 +154,6 @@
   </div>
 
   <script>
-    // 이미지 파일 목록명과 100% 동일한 상대 경로 사용
     const songs = [
       {
         title: "midwxst - i told u v1",
@@ -164,7 +166,7 @@
         audioSrc: "Nightcore - BrooklynBloodPop!.mp3"
       },
       {
-        title: "NUMBER TWERKNATION28 (sped upnightcore)",
+        title: "NUMBER TWERKNATION28 (sped up/nightcore)",
         artist: "Artist",
         audioSrc: "NUMBER TWERKNATION28 (sped upnightcore).mp3"
       },
