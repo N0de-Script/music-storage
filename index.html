@@ -645,27 +645,24 @@ function clearBackground() {
         "show"
     );
 
-
     backgroundVideo.classList.remove(
         "show"
     );
-
 
     backgroundImage.classList.remove(
         "show"
     );
 
+    backgroundVideo.onloadedmetadata = null;
+    backgroundVideo.oncanplay = null;
 
     backgroundVideo.pause();
-
 
     backgroundVideo.removeAttribute(
         "src"
     );
 
-
     backgroundVideo.load();
-
 
     backgroundImage.style.backgroundImage =
         "none";
@@ -710,32 +707,60 @@ function setBackground(song) {
 
 
     /* ======================================
-       JPG 배경
+       JPG 이미지 배경
     ====================================== */
 
     if (
         song.backgroundType === "image"
     ) {
 
-        backgroundImage.style.backgroundImage =
-            `url("${url}")`;
+        const img = new Image();
 
+        img.onload = () => {
 
-        background.classList.add(
-            "show"
-        );
+            backgroundImage.style.backgroundImage =
+                `url("${url}")`;
 
+            background.classList.add(
+                "show"
+            );
 
-        backgroundImage.classList.add(
-            "show"
-        );
+            backgroundImage.classList.add(
+                "show"
+            );
 
+            console.log(
+                "이미지 배경 표시 성공:",
+                url
+            );
 
-        console.log(
-            "이미지 배경 표시:",
-            url
-        );
+        };
 
+        img.onerror = () => {
+
+            console.error(
+                "이미지 로딩 실패:",
+                url
+            );
+
+        };
+
+        img.src = url;
+
+        if (img.complete) {
+
+            backgroundImage.style.backgroundImage =
+                `url("${url}")`;
+
+            background.classList.add(
+                "show"
+            );
+
+            backgroundImage.classList.add(
+                "show"
+            );
+
+        }
 
         return;
 
@@ -743,69 +768,68 @@ function setBackground(song) {
 
 
     /* ======================================
-       MP4 배경
+       MP4 동영상 배경
     ====================================== */
 
     background.classList.add(
         "show"
     );
 
+    backgroundVideo.src = url;
 
-    backgroundVideo.src =
-        url;
+    function playVideoSync() {
 
+        try {
+
+            backgroundVideo.currentTime =
+                audio.currentTime;
+
+        } catch (error) {
+
+            console.error(
+                "영상 위치 설정 실패:",
+                error
+            );
+
+        }
+
+        background.classList.add(
+            "show"
+        );
+
+        backgroundVideo.classList.add(
+            "show"
+        );
+
+        backgroundVideo.play()
+            .catch(
+                error => {
+
+                    console.warn(
+                        "배경 영상 재생 대기 중 (사용자 상호작용 필요):",
+                        error
+                    );
+
+                }
+            );
+
+    }
+
+    if (backgroundVideo.readyState >= 1) {
+
+        playVideoSync();
+
+    } else {
+
+        backgroundVideo.onloadedmetadata = playVideoSync;
+        backgroundVideo.oncanplay = playVideoSync;
+
+    }
 
     backgroundVideo.load();
 
-
-    backgroundVideo.addEventListener(
-        "loadedmetadata",
-        function syncVideo() {
-
-            backgroundVideo.removeEventListener(
-                "loadedmetadata",
-                syncVideo
-            );
-
-
-            try {
-
-                backgroundVideo.currentTime =
-                    audio.currentTime;
-
-            } catch (error) {
-
-                console.error(
-                    "영상 위치 설정 실패:",
-                    error
-                );
-
-            }
-
-
-            backgroundVideo.classList.add(
-                "show"
-            );
-
-
-            backgroundVideo.play()
-                .catch(
-                    error => {
-
-                        console.error(
-                            "배경 영상 재생 실패:",
-                            error
-                        );
-
-                    }
-                );
-
-        }
-    );
-
-
     console.log(
-        "영상 배경 로딩:",
+        "영상 배경 로딩 시작:",
         url
     );
 
@@ -917,33 +941,17 @@ function loadSong(index) {
     );
 
 
-    /*
-     * 기존 음악 정지
-     */
-
     audio.pause();
 
 
-    /*
-     * 기존 배경 제거
-     */
-
     clearBackground();
 
-
-    /*
-     * 음악 변경
-     */
 
     audio.src =
         song.file;
 
     audio.load();
 
-
-    /*
-     * 제목 변경
-     */
 
     songTitle.textContent =
         song.title;
@@ -953,32 +961,20 @@ function loadSong(index) {
         song.artist;
 
 
-    /*
-     * Playlist
-     */
-
     renderPlaylist();
 
-
-    /*
-     * 배경 먼저 설정
-     */
 
     setBackground(
         song
     );
 
 
-    /*
-     * 음악 재생
-     */
-
     audio.play()
         .catch(
             error => {
 
-                console.error(
-                    "음악 재생 실패:",
+                console.warn(
+                    "자동재생 차단됨 (클릭 시 정상 재생됩니다):",
                     error
                 );
 
@@ -1001,7 +997,7 @@ audio.addEventListener(
 
 
         if (
-            !song.background
+            !song || !song.background
         ) {
 
             return;
@@ -1009,33 +1005,25 @@ audio.addEventListener(
         }
 
 
-        /*
-         * 영상이 이미 로드되어 있다면
-         * 음악과 다시 동기화
-         */
-
         if (
             song.backgroundType === "video"
         ) {
 
-            if (
-                backgroundVideo.readyState >= 2
-            ) {
+            background.classList.add("show");
+            backgroundVideo.classList.add("show");
 
-                try {
+            try {
 
-                    backgroundVideo.currentTime =
-                        audio.currentTime;
+                backgroundVideo.currentTime =
+                    audio.currentTime;
 
-                } catch (error) {}
+            } catch (error) {}
 
 
-                backgroundVideo.play()
-                    .catch(
-                        () => {}
-                    );
-
-            }
+            backgroundVideo.play()
+                .catch(
+                    () => {}
+                );
 
         }
 
@@ -1070,7 +1058,7 @@ audio.addEventListener(
 
 
         if (
-            song.backgroundType !== "video"
+            !song || song.backgroundType !== "video"
         ) {
 
             return;
@@ -1079,7 +1067,7 @@ audio.addEventListener(
 
 
         if (
-            backgroundVideo.readyState < 2
+            backgroundVideo.readyState < 1
         ) {
 
             return;
@@ -1124,16 +1112,7 @@ audio.addEventListener(
 
 
         if (
-            song.backgroundType !== "video"
-        ) {
-
-            return;
-
-        }
-
-
-        if (
-            backgroundVideo.readyState < 1
+            !song || song.backgroundType !== "video"
         ) {
 
             return;
